@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joey Zhang - Product Manager Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== CSS Reset & Base ========== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #1a1a1a;
+      --gray-900: #222222;
+      --gray-700: #444444;
+      --gray-500: #777777;
+      --gray-300: #bbbbbb;
+      --gray-100: #f0f0f0;
+      --white: #ffffff;
+      --paper: #fafafa;
+      --accent: #0a0a0a;
+      --transition-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gray-100);
+      color: var(--dark);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ========== Noise Texture Overlay ========== */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ========== Page / Paper ========== */
+    .page-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .paper {
+      background: var(--white);
+      border-radius: 2px;
+      box-shadow:
+        0 1px 3px rgba(0,0,0,0.04),
+        0 4px 12px rgba(0,0,0,0.06),
+        0 20px 60px rgba(0,0,0,0.08);
+      padding: 72px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle top accent line */
+    .paper::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--black) 0%, transparent 100%);
+    }
+
+    /* ========== Animations ========== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(32px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes revealLine {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    @keyframes drawBorder {
+      from { stroke-dashoffset: 1000; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* ========== Scroll Reveal ========== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s var(--transition-smooth), transform 0.8s var(--transition-smooth);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-32px);
+      transition: opacity 0.8s var(--transition-smooth), transform 0.8s var(--transition-smooth);
+    }
+
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ========== Header / Hero ========== */
+    .header {
+      text-align: left;
+      margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--gray-100);
+      position: relative;
+    }
+
+    .header-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      line-height: 1.1;
+      animation: fadeInUp 1s var(--transition-smooth) both;
+    }
+
+    .header-title {
+      font-size: 1.125rem;
+      font-weight: 400;
+      color: var(--gray-500);
+      margin-top: 8px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      animation: fadeInUp 1s var(--transition-smooth) 0.15s both;
+    }
+
+    .header-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 1px;
+      background: var(--gray-300);
+      animation: revealLine 1.2s var(--transition-smooth) 0.4s both;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-top: 20px;
+      animation: fadeInUp 1s var(--transition-smooth) 0.3s both;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--gray-700);
+      transition: color 0.3s ease;
+    }
+
+    .contact-item:hover {
+      color: var(--black);
+    }
+
+    .contact-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .contact-item a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    .contact-item a:hover {
+      border-bottom-color: var(--gray-700);
+    }
+
+    /* ========== Sections ========== */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.375rem;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gray-300) 0%, transparent 100%);
+    }
+
+    /* ========== Summary ========== */
+    .summary-text {
+      font-size: 1rem;
+      color: var(--gray-700);
+      line-height: 1.85;
+      max-width: 640px;
+    }
+
+    /* ========== Experience ========== */
+    .experience-item {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--gray-100);
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    .experience-item:last-child {
+      border-bottom: none;
+    }
+
+    .experience-item::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 32px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--black);
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s var(--transition-bounce);
+      transform: scale(0);
+    }
+
+    .experience-item:hover::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .exp-company {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    .exp-date {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+      letter-spacing: 0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .exp-role {
+      font-size: 0.925rem;
+      color: var(--gray-700);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .exp-details {
+      list-style: none;
+      padding: 0;
+    }
+
+    .exp-details li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: var(--gray-700);
+      line-height: 1.7;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .exp-details li:hover {
+      color: var(--black);
+      transform: translateX(4px);
+    }
+
+    .exp-details li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 11px;
+      width: 6px;
+      height: 1px;
+      background: var(--gray-500);
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    .exp-details li:hover::before {
+      width: 10px;
+      background: var(--black);
+    }
+
+    /* ========== Skills ========== */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .skill-category h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--black);
+      margin-bottom: 12px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-tag {
+      font-size: 0.8rem;
+      padding: 5px 14px;
+      border: 1px solid var(--gray-300);
+      border-radius: 100px;
+      color: var(--gray-700);
+      background: transparent;
+      transition: all 0.35s var(--transition-smooth);
+      cursor: default;
+    }
+
+    .skill-tag:hover {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* ========== Education ========== */
+    .education-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .education-item:last-child {
+      border-bottom: none;
+    }
+
+    .edu-info h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    .edu-info p {
+      font-size: 0.9rem;
+      color: var(--gray-700);
+      margin-top: 2px;
+    }
+
+    .edu-date {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ========== Projects ========== */
+    .project-item {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .project-item:last-child {
+      border-bottom: none;
+    }
+
+    .project-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 4px;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--gray-700);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .project-highlights {
+      list-style: none;
+      padding: 0;
+    }
+
+    .project-highlights li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 6px;
+      font-size: 0.875rem;
+      color: var(--gray-700);
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .project-highlights li:hover {
+      color: var(--black);
+      transform: translateX(4px);
+    }
+
+    .project-highlights li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--gray-500);
+      transition: transform 0.3s ease;
+    }
+
+    .project-highlights li:hover::before {
+      transform: translateX(3px);
+    }
+
+    /* ========== Footer ========== */
+    .footer {
+      text-align: center;
+      padding-top: 32px;
+      margin-top: 24px;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      letter-spacing: 0.06em;
+    }
+
+    /* ========== Stagger Children ========== */
+    .stagger-children > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s var(--transition-smooth), transform 0.6s var(--transition-smooth);
+    }
+
+    .stagger-children.visible > *:nth-child(1) { transition-delay: 0s; }
+    .stagger-children.visible > *:nth-child(2) { transition-delay: 0.08s; }
+    .stagger-children.visible > *:nth-child(3) { transition-delay: 0.16s; }
+    .stagger-children.visible > *:nth-child(4) { transition-delay: 0.24s; }
+    .stagger-children.visible > *:nth-child(5) { transition-delay: 0.32s; }
+    .stagger-children.visible > *:nth-child(6) { transition-delay: 0.40s; }
+    .stagger-children.visible > *:nth-child(7) { transition-delay: 0.48s; }
+    .stagger-children.visible > *:nth-child(8) { transition-delay: 0.56s; }
+
+    .stagger-children.visible > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========== Magnetic Hover on Paper ========== */
+    .paper {
+      transition: box-shadow 0.5s var(--transition-smooth), transform 0.5s var(--transition-smooth);
+    }
+
+    .paper:hover {
+      box-shadow:
+        0 2px 6px rgba(0,0,0,0.04),
+        0 8px 24px rgba(0,0,0,0.08),
+        0 32px 80px rgba(0,0,0,0.12);
+    }
+
+    /* ========== Cursor Trail Effect ========== */
+    .cursor-dot {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: var(--black);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.15s ease;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-ring {
+      position: fixed;
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9997;
+      transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* ========== Responsive ========== */
+    @media (max-width: 768px) {
+      .paper {
+        padding: 48px 32px;
+      }
+
+      .header-name {
+        font-size: 2.25rem;
+      }
+
+      .contact-row {
+        gap: 16px;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .exp-header {
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .education-item {
+        flex-direction: column;
+        gap: 4px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-wrapper {
+        padding: 16px 8px 40px;
+      }
+
+      .paper {
+        padding: 36px 24px;
+      }
+
+      .header-name {
+        font-size: 1.875rem;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cursor-dot, .cursor-ring {
+        display: none;
+      }
+    }
+
+    /* ========== Print Styles ========== */
+    @media print {
+      body {
+        background: white;
+      }
+
+      body::before {
+        display: none;
+      }
+
+      .page-wrapper {
+        padding: 0;
+      }
+
+      .paper {
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .cursor-dot, .cursor-ring {
+        display: none;
+      }
+
+      .reveal, .reveal-left {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      .stagger-children > * {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <div class="page-wrapper">
+    <div class="paper" id="paper">
+
+      <!-- ===== HEADER ===== -->
+      <header class="header">
+        <h1 class="header-name">Joey Zhang</h1>
+        <p class="header-title">Senior Product Manager</p>
+        <div class="contact-row">
+          <span class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:joey.zhang@email.com">joey.zhang@email.com</a>
+          </span>
+          <span class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            +86 138-0000-0000
+          </span>
+          <span class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Shanghai, China
+          </span>
+          <span class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            <a href="https://github.com/Joeyzzyy" target="_blank">github.com/Joeyzzyy</a>
+          </span>
+        </div>
+        <div class="header-line"></div>
+      </header>
+
+      <!-- ===== SUMMARY ===== -->
+      <section class="section reveal">
+        <h2 class="section-title">About</h2>
+        <p class="summary-text">
+          Results-driven Senior Product Manager with 6+ years of experience building and scaling digital products across SaaS, e-commerce, and AI-powered platforms. Skilled in translating complex business requirements into intuitive user experiences, with a proven track record of driving 40%+ growth in key product metrics. Passionate about leveraging data-driven insights and cross-functional collaboration to deliver products that delight users and achieve business goals.
+        </p>
+      </section>
+
+      <!-- ===== EXPERIENCE ===== -->
+      <section class="section reveal">
+        <h2 class="section-title">Experience</h2>
+        <div class="stagger-children" id="experience-list">
+
+          <div class="experience-item">
+            <div class="exp-header">
+              <span class="exp-company">ByteDance</span>
+              <span class="exp-date">2022.03 — Present</span>
+            </div>
+            <div class="exp-role">Senior Product Manager — AI Platform</div>
+            <ul class="exp-details">
+              <li>Led the product strategy and roadmap for an AI-powered content generation platform serving 50M+ users</li>
+              <li>Defined and launched 3 major product features that increased user retention by 35% and DAU by 28%</li>
+              <li>Collaborated with engineering, design, and data science teams to implement ML-driven recommendation systems</li>
+              <li>Established a data-driven experimentation framework running 20+ A/B tests monthly</li>
+            </ul>
+          </div>
+
+          <div class="experience-item">
+            <div class="exp-header">
+              <span class="exp-company">Alibaba Group</span>
+              <span class="exp-date">2020.06 — 2022.02</span>
+            </div>
+            <div class="exp-role">Product Manager — E-commerce Platform</div>
+            <ul class="exp-details">
+              <li>Owned the end-to-end product lifecycle for merchant tools used by 2M+ sellers on Tmall</li>
+              <li>Redesigned the seller dashboard, improving task completion rate by 42% and reducing support tickets by 30%</li>
+              <li>Drove cross-team alignment across 4 engineering pods to deliver a unified seller analytics experience</li>
+              <li>Launched a dynamic pricing recommendation engine that increased merchant GMV by 18%</li>
+            </ul>
+          </div>
+
+          <div class="experience-item">
+            <div class="exp-header">
+              <span class="exp-company">Tencent</span>
+              <span class="exp-date">2018.07 — 2020.05</span>
+            </div>
+            <div class="exp-role">Associate Product Manager — Social Platform</div>
+            <ul class="exp-details">
+              <li>Managed product features for a social communication app with 200M+ monthly active users</li>
+              <li>Conducted extensive user research (interviews, surveys, usability tests) to inform product decisions</li>
+              <li>Shipped a real-time collaboration feature that drove a 25% increase in daily message volume</li>
+              <li>Built and maintained detailed PRDs, user flows, and wireframes using Figma and Axure</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===== PROJECTS ===== -->
+      <section class="section reveal">
+        <h2 class="section-title">Key Projects</h2>
+        <div class="stagger-children" id="projects-list">
+
+          <div class="project-item">
+            <div class="project-name">AI Content Studio</div>
+            <p class="project-desc">Conceived and led a 0-to-1 AI-powered content creation suite that enables creators to generate, edit, and publish multi-format content with natural language prompts.</p>
+            <ul class="project-highlights">
+              <li>Grew from beta to 5M MAU within 6 months of launch</li>
+              <li>Reduced average content creation time by 60% compared to traditional workflows</li>
+              <li>Secured ¥20M additional investment based on product traction and roadmap vision</li>
+            </ul>
+          </div>
+
+          <div class="project-item">
+            <div class="project-name">Smart Merchant Analytics Dashboard</div>
+            <p class="project-desc">Led the complete redesign of the merchant analytics platform, consolidating 8 fragmented data tools into a single intelligent dashboard.</p>
+            <ul class="project-highlights">
+              <li>Increased merchant adoption of data tools from 23% to 67%</li>
+              <li>Integrated predictive analytics that helped merchants forecast demand with 85% accuracy</li>
+              <li>Won internal "Best Product Innovation" award for Q3 2021</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===== SKILLS ===== -->
+      <section class="section reveal">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills-grid stagger-children" id="skills-grid">
+
+          <div class="skill-category">
+            <h4>Product</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">Product Strategy</span>
+              <span class="skill-tag">Roadmapping</span>
+              <span class="skill-tag">User Research</span>
+              <span class="skill-tag">A/B Testing</span>
+              <span class="skill-tag">PRD Writing</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <h4>Technical</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">SQL</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">API Design</span>
+              <span class="skill-tag">Data Analysis</span>
+              <span class="skill-tag">AI / ML Basics</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <h4>Design</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">Figma</span>
+              <span class="skill-tag">Axure</span>
+              <span class="skill-tag">Prototyping</span>
+              <span class="skill-tag">Design Systems</span>
+            </div>
+          </div>
+
+          <div class="skill-category">
+            <h4>Soft Skills</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">Cross-functional Leadership</span>
+              <span class="skill-tag">Stakeholder Mgmt</span>
+              <span class="skill-tag">Agile / Scrum</span>
+              <span class="skill-tag">Communication</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===== EDUCATION ===== -->
+      <section class="section reveal">
+        <h2 class="section-title">Education</h2>
+        <div class="stagger-children" id="education-list">
+
+          <div class="education-item">
+            <div class="edu-info">
+              <h3>Fudan University</h3>
+              <p>Master of Business Administration (MBA)</p>
+            </div>
+            <span class="edu-date">2016 — 2018</span>
+          </div>
+
+          <div class="education-item">
+            <div class="edu-info">
+              <h3>Zhejiang University</h3>
+              <p>B.S. in Computer Science</p>
+            </div>
+            <span class="edu-date">2012 — 2016</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===== FOOTER ===== -->
+      <div class="footer reveal">
+        <p class="footer-text">References available upon request · Last updated Feb 2026</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* ============================================
+       Scroll Reveal with Intersection Observer
+       ============================================ */
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -60px 0px',
+      threshold: 0.1
+    };
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Don't unobserve — allows re-animation if we want
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal, .reveal-left, .stagger-children').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    /* ============================================
+       Custom Cursor
+       ============================================ */
+    const cursorDot = document.getElementById('cursorDot');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    // Only show custom cursor on non-touch devices
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    if (!isTouchDevice) {
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorDot.style.left = mouseX - 3 + 'px';
+        cursorDot.style.top = mouseY - 3 + 'px';
+      });
+
+      function animateRing() {
+        ringX += (mouseX - ringX) * 0.12;
+        ringY += (mouseY - ringY) * 0.12;
+        cursorRing.style.left = ringX - 16 + 'px';
+        cursorRing.style.top = ringY - 16 + 'px';
+        requestAnimationFrame(animateRing);
+      }
+      animateRing();
+
+      // Scale cursor on hoverable elements
+      const hoverTargets = document.querySelectorAll('a, .skill-tag, .experience-item, .project-item');
+      hoverTargets.forEach(target => {
+        target.addEventListener('mouseenter', () => {
+          cursorRing.style.width = '48px';
+          cursorRing.style.height = '48px';
+          cursorRing.style.borderColor = 'rgba(0,0,0,0.4)';
+          cursorRing.style.left = ringX - 24 + 'px';
+          cursorRing.style.top = ringY - 24 + 'px';
+          cursorDot.style.transform = 'scale(1.5)';
+        });
+        target.addEventListener('mouseleave', () => {
+          cursorRing.style.width = '32px';
+          cursorRing.style.height = '32px';
+          cursorRing.style.borderColor = 'rgba(0,0,0,0.2)';
+          cursorDot.style.transform = 'scale(1)';
+        });
+      });
+    } else {
+      cursorDot.style.display = 'none';
+      cursorRing.style.display = 'none';
+    }
+
+    /* ============================================
+       Subtle Parallax on Paper (Mouse)
+       ============================================ */
+    const paper = document.getElementById('paper');
+
+    if (!isTouchDevice) {
+      paper.addEventListener('mousemove', (e) => {
+        const rect = paper.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        paper.style.transform = `perspective(1200px) rotateY(${x * 1.2}deg) rotateX(${-y * 1.2}deg)`;
+      });
+
+      paper.addEventListener('mouseleave', () => {
+        paper.style.transform = 'perspective(1200px) rotateY(0deg) rotateX(0deg)';
+      });
+    }
+
+    /* ============================================
+       Smooth section reveal on load
+       ============================================ */
+    window.addEventListener('load', () => {
+      document.body.style.opacity = '1';
+    });
+  </script>
+</body>
+</html>
