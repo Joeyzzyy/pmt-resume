@@ -120,11 +120,7 @@ export default function HomePage() {
           <p className={styles.aboutText}>
             以下 5 个维度，是我从零运营 maidinhk.com 3
             个月的真实成果。所有数据均来自 Google Search Console
-            导出，可随时验证。更完整的数据分析请查看{" "}
-            <Link href="/gsc" className={styles.inlineLink}>
-              GSC 数据洞察
-            </Link>
-            {" "}页面。
+            导出，可随时验证。
           </p>
         </ScrollReveal>
 
@@ -259,20 +255,6 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
 
-        <ScrollReveal>
-          <div className={styles.gscCta}>
-            <div className={styles.gscCtaContent}>
-              <span className={styles.gscCtaLabel}>Live Data</span>
-              <h3 className={styles.gscCtaTitle}>想看更完整的数据？</h3>
-              <p className={styles.gscCtaDesc}>
-                我用 Claude Code 从零开发了一个 GSC 数据面板，实时展示搜索词排名、页面表现、四象限分析等深度洞察——不只是截图，是可交互的完整数据产品。
-              </p>
-            </div>
-            <Link href="/gsc" className={styles.gscCtaButton}>
-              查看 GSC 数据洞察 →
-            </Link>
-          </div>
-        </ScrollReveal>
       </section>
 
       {/* ===== TOOLBOX ===== */}
@@ -365,13 +347,13 @@ export default function HomePage() {
               <span className={styles.toolCategoryNum}>04</span>
               <div>
                 <h3 className={styles.toolCategoryTitle}>工程与开发</h3>
-                <p className={styles.toolCategoryDesc}>选型逻辑：非工程背景，但技术 SEO 离不开代码，AI 时代更需要「会用工具的人」。我在学 SEO 的同时自学了 Claude Code，从零搭建了你正在浏览的这个网站和 GSC 数据面板。</p>
+                <p className={styles.toolCategoryDesc}>选型逻辑：非工程背景，但技术 SEO 离不开代码，AI 时代更需要「会用工具的人」。我在学 SEO 的同时自学了 Claude Code，从零搭建了你正在浏览的这个网站。</p>
               </div>
             </div>
             <div className={styles.toolCategoryItems}>
               <div className={styles.toolItem}>
                 <div className={styles.toolItemName}>Claude Code</div>
-                <div className={styles.toolItemDesc}>AI 编程搭档。用它搭建本站（Next.js + Tailwind）、开发 GSC 数据面板（API 设计 + 数据可视化 + Supabase）、调试技术 SEO 问题。从 0 到 1 体现的是快速学习和跨领域整合能力</div>
+                <div className={styles.toolItemDesc}>AI 编程搭档。用它搭建本站（Next.js + Tailwind）、调试技术 SEO 问题。从 0 到 1 体现的是快速学习和跨领域整合能力</div>
               </div>
             </div>
           </div>
@@ -445,10 +427,7 @@ export default function HomePage() {
             如果你正在寻找一个懂内容、懂数据、有 SEO 实战经验的运营人，欢迎联系我
           </p>
           <div className={styles.ctaButtons}>
-            <Link href="/gsc" className={styles.ctaButton}>
-              查看 GSC 数据洞察 →
-            </Link>
-            <Link href="/blog" className={styles.ctaButtonOutline}>
+            <Link href="/blog" className={styles.ctaButton}>
               阅读 SEO 实战笔记 →
             </Link>
           </div>

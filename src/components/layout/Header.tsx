@@ -35,16 +35,6 @@ export default function Header() {
           >
             SEO 实战笔记
           </Link>
-          <Link
-            href="/gsc"
-            className={`text-[0.78rem] font-medium uppercase tracking-[0.14em] transition-all duration-300 ${
-              isActive("/gsc")
-                ? "text-[#FF2D55]"
-                : "text-[#bbb] hover:text-[#1a1a1a]"
-            }`}
-          >
-            GSC 数据洞察
-          </Link>
         </nav>
       </div>
       <div className="mx-auto max-w-[860px] px-6">
