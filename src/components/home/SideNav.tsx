@@ -8,7 +8,6 @@ const sections = [
   { id: "about", label: "经历与项目" },
   { id: "key-results", label: "SEO 成果" },
   { id: "toolbox", label: "工具与选型" },
-  { id: "posts", label: "实战笔记" },
 ];
 
 export default function SideNav() {

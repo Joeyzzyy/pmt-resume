@@ -18,7 +18,7 @@ export default function Header() {
           <Link
             href="/"
             className={`text-[0.78rem] font-medium uppercase tracking-[0.14em] transition-all duration-300 ${
-              isActive("/") && !isActive("/blog")
+              isActive("/")
                 ? "text-[#FF2D55]"
                 : "text-[#bbb] hover:text-[#1a1a1a]"
             }`}
@@ -26,9 +26,9 @@ export default function Header() {
             首页
           </Link>
           <Link
-            href="/blog"
+            href="/articles"
             className={`text-[0.78rem] font-medium uppercase tracking-[0.14em] transition-all duration-300 ${
-              isActive("/blog")
+              isActive("/articles")
                 ? "text-[#FF2D55]"
                 : "text-[#bbb] hover:text-[#1a1a1a]"
             }`}

@@ -4,7 +4,6 @@ import styles from "@/styles/home.module.css";
 import ScrollReveal from "@/components/resume/ScrollReveal";
 import SideNav from "@/components/home/SideNav";
 import LightboxImage from "@/components/home/LightboxImage";
-import { getLatestPosts, getTotalPostCount, phases } from "@/data/posts";
 
 export const dynamic = "force-static";
 
@@ -35,11 +34,13 @@ export const metadata: Metadata = {
     locale: "zh_CN",
     type: "website",
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function HomePage() {
-  const latestPosts = getLatestPosts(3);
-
   return (
     <>
       <SideNav />
@@ -360,63 +361,6 @@ export default function HomePage() {
         </ScrollReveal>
       </section>
 
-      {/* ===== FEATURED POSTS ===== */}
-      <section id="posts" className={styles.section} style={{ paddingBottom: 80 }}>
-        <ScrollReveal>
-          <p className={styles.sectionLabel}>Featured Posts</p>
-          <h2 className={styles.sectionHeading}>SEO 实战笔记精选</h2>
-          <p className={styles.aboutText}>
-            我把每一步实践写成了文章——从理论到落地，完整记录一个 SEO
-            新手的成长过程。
-          </p>
-        </ScrollReveal>
-
-        <ScrollReveal>
-          <div className={styles.featuredGrid}>
-            {latestPosts.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className={styles.featuredCard}
-              >
-                <div className={styles.featuredMeta}>
-                  <span className={styles.featuredCategory}>
-                    {post.category}
-                  </span>
-                  {post.tools.length > 0 && (
-                    <span className={styles.featuredTools}>
-                      {post.tools.join(" · ")}
-                    </span>
-                  )}
-                </div>
-                <h3 className={styles.featuredTitle}>{post.title}</h3>
-                <p className={styles.featuredExcerpt}>{post.excerpt}</p>
-                <div className={styles.featuredBottom}>
-                  <span className={styles.featuredDate}>
-                    {(() => {
-                      const d = new Date(post.publishDate);
-                      return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-                    })()}
-                  </span>
-                  <span className={styles.featuredPhase}>
-                    Phase {String(post.phase).padStart(2, "0")} · {phases.find(p => p.id === post.phase)?.label}
-                  </span>
-                </div>
-                <span className={styles.featuredLink}>阅读全文 →</span>
-              </Link>
-            ))}
-          </div>
-        </ScrollReveal>
-
-        <ScrollReveal>
-          <div className={styles.viewAll}>
-            <Link href="/blog" className={styles.viewAllLink}>
-              查看全部 {getTotalPostCount()} 篇文章 →
-            </Link>
-          </div>
-        </ScrollReveal>
-      </section>
-
       {/* ===== CTA ===== */}
       <ScrollReveal>
         <section className={styles.cta}>
@@ -427,7 +371,7 @@ export default function HomePage() {
             如果你正在寻找一个懂内容、懂数据、有 SEO 实战经验的运营人，欢迎联系我
           </p>
           <div className={styles.ctaButtons}>
-            <Link href="/blog" className={styles.ctaButton}>
+            <Link href="/articles" className={styles.ctaButton}>
               阅读 SEO 实战笔记 →
             </Link>
           </div>

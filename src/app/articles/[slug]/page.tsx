@@ -1,0 +1,166 @@
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { contentfulClient } from "@/lib/contentful/client";
+import {
+  documentToReactComponents,
+  type Options,
+} from "@contentful/rich-text-react-renderer";
+import { BLOCKS } from "@contentful/rich-text-types";
+import type { Block, Inline } from "@contentful/rich-text-types";
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+const renderOptions: Options = {
+  renderNode: {
+    [BLOCKS.TABLE]: (node: Block | Inline, children: ReactNode) => {
+      const rows = (node as Block).content;
+      const headerRow = rows[0];
+      const bodyRows = rows.slice(1);
+
+      return (
+        <div className="my-6 overflow-x-auto">
+          <table className="w-full border-collapse text-[0.9rem]">
+            <thead>
+              <tr>
+                {headerRow.content.map((cell, i) => (
+                  <th
+                    key={i}
+                    className="border border-[#ddd] bg-[#f5f5f5] px-4 py-2.5 text-left font-semibold text-[#1a1a1a]"
+                  >
+                    {documentToReactComponents(
+                      {
+                        nodeType: BLOCKS.DOCUMENT,
+                        data: {},
+                        content: (cell as Block).content,
+                      },
+                      renderOptions,
+                    )}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bodyRows.map((row, ri) => (
+                <tr key={ri} className="transition-colors hover:bg-[#fafafa]">
+                  {(row as Block).content.map((cell, ci) => (
+                    <td
+                      key={ci}
+                      className="border border-[#eee] px-4 py-2.5 text-[#333]"
+                    >
+                      {documentToReactComponents(
+                        {
+                          nodeType: BLOCKS.DOCUMENT,
+                          data: {},
+                          content: (cell as Block).content,
+                        },
+                        renderOptions,
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    },
+    [BLOCKS.TABLE_ROW]: (_node: Block | Inline, children: ReactNode) => (
+      <tr>{children}</tr>
+    ),
+    [BLOCKS.TABLE_CELL]: (_node: Block | Inline, children: ReactNode) => (
+      <td>{children}</td>
+    ),
+    [BLOCKS.TABLE_HEADER_CELL]: (_node: Block | Inline, children: ReactNode) => (
+      <th>{children}</th>
+    ),
+  },
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parsePost(entry: any) {
+  return {
+    id: entry.sys.id,
+    title: entry.fields.title as string,
+    slug: entry.fields.slug as string,
+    description: (entry.fields.description || "") as string,
+    content: entry.fields.content,
+    cluster: (entry.fields.cluster || "") as string,
+    author: (entry.fields.author || "") as string,
+    keywords: (entry.fields.keywords || "") as string,
+    createdAt: entry.sys.createdAt as string,
+  };
+}
+
+async function getPostBySlug(slug: string) {
+  const result = await contentfulClient.getEntries({
+    content_type: "blogPost",
+    "fields.slug": slug,
+    limit: 1,
+    include: 2,
+  });
+  if (result.items.length === 0) return null;
+  return parsePost(result.items[0]);
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  if (!post) return {};
+  return {
+    title: `${post.title} — 庞梦桐`,
+    description: post.description,
+    keywords: post.keywords,
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
+export default async function ArticlePage({ params }: Props) {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  if (!post) notFound();
+
+  return (
+    <div className="mx-auto max-w-[860px] px-5 py-12">
+      <Link
+        href="/articles"
+        className="mb-8 inline-block text-sm text-[#999] transition-colors hover:text-[#1a1a1a]"
+      >
+        &larr; 返回博客
+      </Link>
+
+      <article>
+        <header className="mb-10">
+          {post.cluster && (
+            <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-[#999]">
+              {post.cluster}
+            </p>
+          )}
+          <h1 className="font-serif text-3xl font-bold leading-tight tracking-tight text-[#1a1a1a] sm:text-4xl">
+            {post.title}
+          </h1>
+          <div className="mt-4 flex items-center gap-3 text-xs text-[#bbb]">
+            {post.author && <span>{post.author}</span>}
+            <span>
+              {new Intl.DateTimeFormat("zh-CN", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }).format(new Date(post.createdAt))}
+            </span>
+          </div>
+        </header>
+
+        <div className="prose prose-neutral max-w-none text-[#333] leading-relaxed [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#1a1a1a] [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#1a1a1a] [&_p]:mb-4 [&_p]:text-[0.95rem] [&_p]:leading-[1.8] [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-1 [&_li]:text-[0.95rem] [&_a]:text-[#FF2D55] [&_a]:underline [&_blockquote]:border-l-2 [&_blockquote]:border-[#ddd] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-[#888]">
+          {documentToReactComponents(post.content, renderOptions)}
+        </div>
+      </article>
+    </div>
+  );
+}
