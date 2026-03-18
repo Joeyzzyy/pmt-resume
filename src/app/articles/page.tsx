@@ -3,6 +3,8 @@ import Link from "next/link";
 import { contentfulClient } from "@/lib/contentful/client";
 import ArticlesSideNav from "@/components/articles/ArticlesSideNav";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "博客 — 庞梦桐",
   description: "来自 Contentful 的博客文章",
