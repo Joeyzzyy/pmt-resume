@@ -8,7 +8,7 @@ import {
   type Options,
 } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
-import type { Block, Inline } from "@contentful/rich-text-types";
+import type { Block, Inline, TopLevelBlock } from "@contentful/rich-text-types";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -18,7 +18,7 @@ const renderOptions: Options = {
   renderNode: {
     [BLOCKS.TABLE]: (node: Block | Inline, children: ReactNode) => {
       const rows = (node as Block).content;
-      const headerRow = rows[0];
+      const headerRow = rows[0] as Block;
       const bodyRows = rows.slice(1);
 
       return (
@@ -35,7 +35,7 @@ const renderOptions: Options = {
                       {
                         nodeType: BLOCKS.DOCUMENT,
                         data: {},
-                        content: (cell as Block).content,
+                        content: (cell as Block).content as TopLevelBlock[],
                       },
                       renderOptions,
                     )}
@@ -55,7 +55,7 @@ const renderOptions: Options = {
                         {
                           nodeType: BLOCKS.DOCUMENT,
                           data: {},
-                          content: (cell as Block).content,
+                          content: (cell as Block).content as TopLevelBlock[],
                         },
                         renderOptions,
                       )}
