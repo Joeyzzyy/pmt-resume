@@ -35,6 +35,16 @@ export default function Header() {
           >
             SEO 实战笔记
           </Link>
+          <Link
+            href="/data-master"
+            className={`text-[0.78rem] font-medium uppercase tracking-[0.14em] transition-all duration-300 ${
+              isActive("/data-master")
+                ? "text-[#FF2D55]"
+                : "text-[#bbb] hover:text-[#1a1a1a]"
+            }`}
+          >
+            数据管理大师
+          </Link>
         </nav>
       </div>
       <div className="mx-auto max-w-[860px] px-6">
