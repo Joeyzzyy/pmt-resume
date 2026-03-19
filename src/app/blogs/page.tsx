@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { contentfulClient } from "@/lib/contentful/client";
 import ArticlesSideNav from "@/components/articles/ArticlesSideNav";
+import ScrollToTop from "@/components/blog/ScrollToTop";
 
 export const revalidate = 60;
 
@@ -198,6 +199,7 @@ export default async function ArticlesPage() {
           </div>
         )}
       </div>
+      <ScrollToTop />
     </>
   );
 }

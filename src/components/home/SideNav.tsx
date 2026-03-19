@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import styles from "@/styles/sidenav.module.css";
 
 const sections = [
-  { id: "hero", label: "回到顶部" },
   { id: "about", label: "经历与项目" },
   { id: "key-results", label: "SEO 成果" },
   { id: "toolbox", label: "工具与选型" },

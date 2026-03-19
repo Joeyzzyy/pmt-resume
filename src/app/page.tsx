@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "@/styles/home.module.css";
 import ScrollReveal from "@/components/resume/ScrollReveal";
 import SideNav from "@/components/home/SideNav";
+import ScrollToTop from "@/components/blog/ScrollToTop";
 import LightboxImage from "@/components/home/LightboxImage";
 
 export const dynamic = "force-static";
@@ -377,6 +378,7 @@ export default function HomePage() {
           </div>
         </section>
       </ScrollReveal>
+    <ScrollToTop />
     </>
   );
 }
