@@ -136,9 +136,6 @@ export default function GSCPerformanceChart() {
 
   function formatDate(dateStr: string) {
     const date = parseISO(dateStr);
-    if (timeRange === "24h") {
-      return format(date, "HH:mm");
-    }
     if (timeRange === "7d") {
       return format(date, "EEE", { locale: zhCN });
     }
