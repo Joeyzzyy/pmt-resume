@@ -67,7 +67,7 @@ export default async function CategoryPage({
           Unable to load content
         </p>
         <Link
-          href="/articles"
+          href="/blogs"
           className="mt-4 inline-block text-sm text-[var(--color-gray-500)] underline"
         >
           Back to Blog

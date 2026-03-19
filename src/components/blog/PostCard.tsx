@@ -7,7 +7,7 @@ export default function PostCard({ post }: { post: BlogPost }) {
   return (
     <article className="group overflow-hidden rounded-sm bg-[#fafafa] border border-[#eee] transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:-translate-y-1 hover:border-[#ddd] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
       {post.coverImage && (
-        <Link href={`/articles/${post.slug}`}>
+        <Link href={`/blogs/${post.slug}`}>
           <div className="relative aspect-[16/9] overflow-hidden">
             <Image
               src={`${post.coverImage.url}?w=600&h=338&fit=fill`}
@@ -33,7 +33,7 @@ export default function PostCard({ post }: { post: BlogPost }) {
             ))}
           </div>
         )}
-        <Link href={`/articles/${post.slug}`}>
+        <Link href={`/blogs/${post.slug}`}>
           <h2 className="mb-2 font-serif text-xl font-semibold leading-tight tracking-tight text-[#1a1a1a] transition-colors group-hover:text-[#555]">
             {post.title}
           </h2>

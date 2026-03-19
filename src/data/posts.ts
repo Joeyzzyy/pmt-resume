@@ -87,7 +87,7 @@ const posts: StaticPost[] = [
     title: "告别盲目！SEO 小白入门的第一周：搭建我的监控塔",
     excerpt:
       "刚开始做 SEO 毫无头绪？分享我第一周搭建 GSC (Google Search Console) 与 GA4 的实战经历。带你避开「盲目发词」的坑，建立数据驱动的 Seed Keywords 意识。",
-    publishDate: "2024-09-15",
+    publishDate: "2026-03-17",
     category: "SEO 实战笔记",
     tags: ["SEO入门", "Google Search Console", "GSC设置", "种子词研究"],
     tools: ["Google Search Console"],
@@ -162,7 +162,7 @@ Sitemap（站点地图）这个概念，在入门之前我完全没听说过。�
     title: "从零开始查词：手把手教你用 Semrush 挖掘第一批长尾关键词",
     excerpt:
       "告别拍脑袋想标题！分享我作为 SEO 小白，第一次使用 Semrush 挖掘 Long-tail Keywords 的经历。带你读懂 KD 与 Volume，锁定第一批好排名的潜力词。",
-    publishDate: "2024-09-22",
+    publishDate: "2026-03-17",
     category: "工具与方法论",
     tags: ["Semrush入门", "关键词查询", "长尾关键词", "KD值", "SEO工具"],
     tools: ["Semrush"],
@@ -251,7 +251,7 @@ Semrush 给我的最大启示不是某个具体的词有多好，而是一个方
     title: "别浪费图片的流量！Contentful 编辑中那些被忽视的 SEO 细节",
     excerpt:
       "你知道 Contentful 的图片 Title 会直接影响 Ranking 吗？分享我在内容编辑中的 On-Page SEO 细节：从文件名命名到 Alt Text 填充，及如何通过 H1-H6 建立严谨的逻辑树。",
-    publishDate: "2024-09-29",
+    publishDate: "2026-03-17",
     category: "SEO 实战笔记",
     tags: ["Alt Text", "Contentful SEO", "图片SEO优化", "H标签规范", "内容优化"],
     tools: ["Contentful"],
@@ -346,7 +346,7 @@ Semrush 给我的最大启示不是某个具体的词有多好，而是一个方
     title: "SEO 不止是排名：母婴类网站如何建立 Google 信任的 E-E-A-T",
     excerpt:
       "做母婴内容最怕被 Google 判定为不可靠。结合我的法律背景，聊聊如何通过 Disclaimer (免责声明) 提升网站的 E-E-A-T 权重，以及为什么这是小白第一个月最该补的一课。",
-    publishDate: "2024-10-06",
+    publishDate: "2026-03-17",
     category: "复盘与思考",
     tags: ["EEAT准则", "YMYL网站优化", "SEO免责声明", "网站可靠性", "母婴SEO"],
     tools: [],
@@ -438,7 +438,7 @@ Google 的质量评估师会查看内容的作者是谁。所以我在网站上�
     title: "别等 Google 来找你！利用 Sitemap 和 GSC 让网站秒被收录",
     excerpt:
       "刚建好的网站搜不到？分享我第一次提交 Sitemap 的过程，并利用 GSC 检查网页是否被正常抓取。掌握最底层的收录规则，让 Google 快速看懂你的站。",
-    publishDate: "2024-10-13",
+    publishDate: "2026-03-17",
     category: "SEO 实战笔记",
     tags: ["Sitemap提交", "网站收录", "GSC教程", "Google抓取", "SEO底层规则"],
     tools: ["Google Search Console"],
@@ -542,7 +542,7 @@ Sitemap（站点地图）本质上就是一个 XML 文件，列出了你网站�
     title: "拒绝盲目写文！如何利用 Semrush 与 Gemini 锁定高转化「用户意图」",
     excerpt:
       "流量不等于转化。分享我结合 Semrush 数据与 Gemini 意图分析的实战心得：如何针对香港外佣市场痛点，通过分析商业意图决定内容布局，让流量变现。",
-    publishDate: "2024-10-20",
+    publishDate: "2026-03-17",
     category: "工具与方法论",
     tags: ["搜索意图分析", "Search Intent", "Semrush教程", "Gemini SEO", "转化率优化"],
     tools: ["Gemini", "Semrush"],
@@ -639,7 +639,7 @@ Gemini 通常会给出 5-8 个具体的痛点，比如：
     title: "拒绝 AI 幻觉：利用 Perplexity 溯源与 QuickCreator 审计构建 YMYL 防线",
     excerpt:
       "记录利用 Perplexity 垂直检索香港劳工处等官方源，并配合 QuickCreator 进行 EEAT 审计的实战。通过权威文献溯源与实时评分，确保母婴/家政内容专业合规。",
-    publishDate: "2024-10-27",
+    publishDate: "2026-03-17",
     category: "工具与方法论",
     tags: ["EEAT审计", "Perplexity溯源", "YMYL优化", "官方外链", "内容权威性"],
     tools: ["Perplexity", "QuickCreator Extension"],
@@ -726,7 +726,7 @@ QuickCreator 会基于 Google 的 E-E-A-T 标准对内容进行评分，并指�
     title: "爆发式产出 SOP：Contentful 结构化发布与 QuickCreator 自动化审计",
     excerpt:
       "揭秘我的内容工厂！利用 Contentful 无头架构实现快速上线，配合 QuickCreator 进行即时关键词侦测与 TDK 校验。让每一篇内容在发布前都符合 SEO 完美标准。",
-    publishDate: "2024-11-03",
+    publishDate: "2026-03-17",
     category: "工具与方法论",
     tags: ["Contentful教程", "QuickCreator插件", "SEO审计", "内容发布流程", "自动化SEO"],
     tools: ["Contentful", "QuickCreator Extension"],
@@ -819,7 +819,7 @@ QuickCreator 会基于 Google 的 E-E-A-T 标准对内容进行评分，并指�
     title: "视觉点击率黑客：利用 AI 海报在 SERP 中瞬间脱颖而出",
     excerpt:
       "好的 TDK 决定排名，好的视觉决定点击。分享我利用 YouMind 创作吸引力海报的逻辑，探讨视觉增效对 CTR (点击率) 的直接拉动作用。",
-    publishDate: "2024-11-10",
+    publishDate: "2026-03-17",
     category: "工具与方法论",
     tags: ["CTR优化", "AI绘图", "YouMind实战", "搜索结果视觉优化", "封面设计"],
     tools: ["YouMind"],
@@ -905,7 +905,7 @@ QuickCreator 会基于 Google 的 E-E-A-T 标准对内容进行评分，并指�
     title: "别被虚假繁荣欺骗：通过 GSC 真实数据进行内容意图纠偏",
     excerpt:
       "为什么排名好却没转化？记录我利用 GSC 进行流量监控与意图纠偏的过程。通过分析真实搜索词，利用 Contentful 瞬间完成老文章的二次调优。",
-    publishDate: "2024-11-17",
+    publishDate: "2026-03-17",
     category: "复盘与思考",
     tags: ["Google Search Console复盘", "流量监控", "意图纠偏", "TDK调优", "排名优化"],
     tools: ["Google Search Console", "Contentful"],
@@ -1015,7 +1015,7 @@ CTR 提升了 **7 倍**，排名也从第二页进入了首页。
     title: "告别内容孤岛：利用 QuickCreator 与 Contentful 构建站内「神经网络」",
     excerpt:
       "拒绝让好文章变「孤岛」！分享我利用 QuickCreator 侦测关键词分布，并在 Contentful 中通过 Internal Link 构建权重流的实战。让老文章带新文章。",
-    publishDate: "2024-11-24",
+    publishDate: "2026-03-17",
     category: "SEO 实战笔记",
     tags: ["内链优化", "Internal Link", "权重传递", "页面收录", "QuickCreator"],
     tools: ["QuickCreator Extension", "Contentful"],
@@ -1119,7 +1119,7 @@ Contentful 的 Rich Text 编辑器支持直接插入超链接。但手动管理�
     title: "别再问 AI 要关键词！SEO 思维进化：从「盲目发散」到「精准筛选」",
     excerpt:
       "告别低效！记录我从依赖 AI 猜词到利用 Semrush 数据进行「真词筛选」的转变。分享如何利用真实搜索数据驱动内容决策，建立高效的 Keyword 建模逻辑。",
-    publishDate: "2024-12-01",
+    publishDate: "2026-03-17",
     category: "复盘与思考",
     tags: ["SEO思维", "关键词筛选", "Semrush技巧", "搜索意图", "数据驱动SEO"],
     tools: ["Semrush"],
@@ -1212,7 +1212,7 @@ Semrush 的数据直接来自 Google，每一个数字都是真实用户的搜�
     title: "以点带面的降维打击：用「母词拆解法」锁定半年的内容大纲",
     excerpt:
       "拒绝零散写文！分享我利用 Semrush 全量扫描「母词」、进行逻辑聚类的实战过程。通过场景化拆解，一次性锁定数月内容排产。",
-    publishDate: "2024-12-08",
+    publishDate: "2026-03-17",
     category: "SEO 实战笔记",
     tags: ["母词拆解", "关键词聚类", "内容规划", "Semrush实战", "场景化SEO"],
     tools: ["Semrush"],
@@ -1303,7 +1303,7 @@ Semrush 的数据直接来自 Google，每一个数字都是真实用户的搜�
     title: "构建网站的百科全书：Topic Cluster 如何通过权重传导封锁流量入口",
     excerpt:
       "单兵作战已死！记录我构建 Topic Cluster 的实战，探讨 Internal Link 如何在集群内传导权重，利用海量长尾词封锁搜索入口。",
-    publishDate: "2024-12-10",
+    publishDate: "2026-03-17",
     category: "复盘与思考",
     tags: ["主题集群", "Topic Cluster", "权重传导", "内部链接", "主题权威度"],
     tools: [],
@@ -1400,7 +1400,7 @@ Topic Cluster 就是把"写文章"这件事从"单兵作战"升级为"集团军�
     title: "存量市场的掘金术：利用 GSC 数据进行 TDK 极致调优以提升 CTR",
     excerpt:
       "排名没变，流量也能翻倍？分享我通过 GSC 挖掘「高曝光、低点击」页面的过程。针对用户真实意图，精练「广告语+CTA」，实现存量文章的二次流量爆发。",
-    publishDate: "2024-12-15",
+    publishDate: "2026-03-17",
     category: "SEO 实战笔记",
     tags: ["CTR优化", "GSC数据分析", "TDK调优", "搜索点击率", "存量优化"],
     tools: ["Google Search Console"],

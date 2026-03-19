@@ -371,7 +371,7 @@ export default function HomePage() {
             如果你正在寻找一个懂内容、懂数据、有 SEO 实战经验的运营人，欢迎联系我
           </p>
           <div className={styles.ctaButtons}>
-            <Link href="/articles" className={styles.ctaButton}>
+            <Link href="/blogs" className={styles.ctaButton}>
               阅读 SEO 实战笔记 →
             </Link>
           </div>

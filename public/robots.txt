@@ -1,0 +1,7 @@
+User-Agent: *
+Allow: /
+Disallow: /api/
+Disallow: /category/
+Disallow: /tag/
+
+Sitemap: https://itspmt.com/sitemap.xml

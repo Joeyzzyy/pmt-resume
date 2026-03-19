@@ -9,9 +9,11 @@ import {
 } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
 import type { Block, Inline, TopLevelBlock } from "@contentful/rich-text-types";
+import ScrollToTop from "@/components/blog/ScrollToTop";
+import ClusterSideNav from "@/components/blog/ClusterSideNav";
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ cluster: string; slug: string }>;
 };
 
 const renderOptions: Options = {
@@ -95,6 +97,23 @@ function parsePost(entry: any) {
   };
 }
 
+async function getClusterPosts(cluster: string) {
+  const result = await contentfulClient.getEntries({
+    content_type: "blogPost",
+    "fields.cluster": cluster,
+    select: ["fields.title", "fields.slug", "fields.cluster"],
+    order: ["sys.createdAt"],
+    limit: 50,
+  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return result.items.map((entry: any) => ({
+    slug: entry.fields.slug as string,
+    title: entry.fields.title as string,
+    shortTitle: (entry.fields.shortTitle || "") as string,
+    cluster: (entry.fields.cluster || "") as string,
+  }));
+}
+
 async function getPostBySlug(slug: string) {
   const result = await contentfulClient.getEntries({
     content_type: "blogPost",
@@ -122,17 +141,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArticlePage({ params }: Props) {
-  const { slug } = await params;
+  const { cluster, slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
+  // Verify the cluster in URL matches the post's actual cluster
+  if (post.cluster && post.cluster !== cluster) notFound();
+
+  const siblingPosts = post.cluster ? await getClusterPosts(post.cluster) : [];
+
   return (
-    <div className="mx-auto max-w-[860px] px-5 py-12">
+    <>
+      {siblingPosts.length > 1 && <ClusterSideNav posts={siblingPosts} />}
+      <div className="mx-auto max-w-[860px] px-5 py-12">
       <Link
-        href="/articles"
+        href="/blogs"
         className="mb-8 inline-block text-sm text-[#999] transition-colors hover:text-[#1a1a1a]"
       >
-        &larr; 返回博客
+        &larr; SEO 实战笔记
       </Link>
 
       <article>
@@ -161,6 +187,8 @@ export default async function ArticlePage({ params }: Props) {
           {documentToReactComponents(post.content, renderOptions)}
         </div>
       </article>
+      <ScrollToTop />
     </div>
+    </>
   );
 }

@@ -26,9 +26,9 @@ export default function Header() {
             首页
           </Link>
           <Link
-            href="/articles"
+            href="/blogs"
             className={`text-[0.78rem] font-medium uppercase tracking-[0.14em] transition-all duration-300 ${
-              isActive("/articles")
+              isActive("/blogs")
                 ? "text-[#FF2D55]"
                 : "text-[#bbb] hover:text-[#1a1a1a]"
             }`}
