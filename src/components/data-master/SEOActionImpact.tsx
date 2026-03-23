@@ -13,6 +13,7 @@ interface OptimizationTask {
   page: {
     url: string;
     title: string;
+    slug: string;
     currentMetrics: {
       clicks: number;
       impressions: number;
@@ -50,164 +51,169 @@ interface OptimizationTask {
 }
 
 // ============================================
-// Mock Data - Top 5 待优化页面
+// Data - 基于 maidinhk.com GSC Excel 真实数据 (2026-03-22)
 // ============================================
 
 const DEFAULT_TASKS: OptimizationTask[] = [
   {
     id: "task-001",
     page: {
-      url: "https://maidinhk.com/blog/domestic-helper-contract",
-      title: "外佣合约条款详解",
+      url: "https://maidinhk.com/blog/minimum-wage-and-budget",
+      title: "外佣最低工资与预算",
+      slug: "minimum-wage-and-budget",
       currentMetrics: {
-        clicks: 45,
-        impressions: 3200,
-        ctr: 1.4,
-        position: 8.5,
+        clicks: 34,
+        impressions: 10367,
+        ctr: 0.3,
+        position: 7.9,
       },
     },
     issue: {
       type: "high_impression_low_click",
       severity: "high",
-      description: "展示量高但 CTR 极低，Title 未匹配用户搜索意图",
+      description: "展示量 10,367 (全站第1) 但 CTR 仅 0.3%，Title 未突出"2024最新工资标准"",
     },
     suggestion: {
-      title: "TDK 重构 + 意图匹配",
-      description: "用户在搜'解约'而非'签约'，需要调整 Title 和 Meta Description",
+      title: "Title 重构 + 数字强化",
+      description: "用户搜'最低工资''人工计算'，当前 Title 缺乏吸引力和时效性",
       steps: [
-        "分析 GSC 查询词，发现用户搜'解约'、'终止合约'占 60%",
-        "Title 改为：外佣合约指南：签订、解约、续约全攻略 2024",
-        "Meta Description 加入'提前终止'、'解约赔偿'关键词",
-        "首段内容增加'解约流程'章节，前置到文章前 1/3",
+        "Title 改为：外佣最低工资2024｜印傭菲傭人工計算+僱主預算全攻略",
+        "Meta Description 加入'HK$4,870'具体数字和'僱主支出總覽'",
+        "首段直接给出'2024年最低工資：HK$4,870/月'",
+        "添加工资计算器或对比表格",
       ],
-      expectedImpact: "CTR 预计从 1.4% → 4%+，点击量提升 150%+",
+      expectedImpact: "CTR 预计从 0.3% → 3%+，点击量提升 10 倍",
     },
     status: "pending",
-    createdAt: "2026-03-20",
+    createdAt: "2026-03-22",
   },
   {
     id: "task-002",
     page: {
-      url: "https://maidinhk.com/blog/maid-agency-fee-comparison",
-      title: "女佣中介费用对比",
+      url: "https://maidinhk.com/blog/filipino-vs-indonesian-salary-cost",
+      title: "菲佣 vs 印佣薪资成本对比",
+      slug: "filipino-vs-indonesian-salary-cost",
       currentMetrics: {
-        clicks: 67,
-        impressions: 2800,
-        ctr: 2.4,
-        position: 6.2,
+        clicks: 43,
+        impressions: 6737,
+        ctr: 0.6,
+        position: 10.5,
       },
     },
     issue: {
-      type: "low_ctr",
+      type: "high_impression_low_click",
       severity: "high",
-      description: "排名第 6 但 CTR 仅 2.4%，SERP 摘要缺乏吸引力",
+      description: "展示量 6,737 (全站第3) 但 CTR 仅 0.6%，排名卡在第二页",
     },
     suggestion: {
-      title: "SERP 视觉优化 + 数字增强",
-      description: "SERP 中缺乏具体数字和差异化信息，用户没有点击动力",
+      title: "SERP 摘要优化 + 对比可视化",
+      description: "高商业意图搜索词，但 SERP 缺乏具体对比数据吸引点击",
       steps: [
-        "Title 中加入具体金额：'中介费 $8,000-$15,000 全解析'",
-        "Meta Description 加入'隐藏费用清单'、'2024 最新价目'",
-        "添加 Featured Image，提升 SERP 视觉吸引力",
-        "在首段直接给出'平均中介费 HK$11,500'的结论",
+        "Title 加入具体数字：'菲傭印傭人工對比 2024｜月薪/假期/保險差異'",
+        "Meta Description 强调'一表看清'、'全成本比較'",
+        "添加对比表格：菲傭月薪、印傭月薪、假期差異、保險成本",
+        "增加 FAQ Schema：'菲傭印傭哪個好？'",
       ],
-      expectedImpact: "CTR 预计从 2.4% → 5%+，排名有望进入前 3",
+      expectedImpact: "CTR 预计从 0.6% → 4%+，排名进入首页",
     },
     status: "pending",
-    createdAt: "2026-03-20",
+    createdAt: "2026-03-22",
   },
   {
     id: "task-003",
     page: {
-      url: "https://maidinhk.com/blog/helper-insurance",
-      title: "外佣保险购买指南",
+      url: "https://maidinhk.com/blog/visa-application-process",
+      title: "签证申请流程",
+      slug: "visa-application-process",
       currentMetrics: {
-        clicks: 32,
-        impressions: 2100,
-        ctr: 1.5,
-        position: 12.3,
+        clicks: 190,
+        impressions: 7228,
+        ctr: 2.6,
+        position: 9.7,
       },
     },
     issue: {
       type: "ranking_stuck",
       severity: "medium",
-      description: "排名卡在第 2 页，内容深度不足，缺乏 E-E-A-T 信号",
+      description: "点击表现不错，但排名卡在第9位，需要提升进入 Top 5",
     },
     suggestion: {
-      title: "内容深度补强 + 权威引用",
-      description: "内容过于单薄，需要增加案例和数据，建立专业度",
+      title: "内容深度 + 内链权重",
+      description: "内容质量良好但缺乏权威性引用和内部链接支持",
       steps: [
-        "补充'2024 年 6 大保险公司对比表'，含保费、保障范围",
-        "引用香港保险业联会数据，添加 .gov.hk 法规链接",
-        "增加真实案例：'雇主理赔成功经验分享'",
-        "添加 FAQ Schema，争取 Rich Snippet 展示",
+        "引用入境處最新 ID990A 表格链接 (immd.gov.hk)",
+        "添加'常見拒簽原因'章节（高搜索量关键词）",
+        "从'外佣雇佣指南'支柱页添加内链指向此页",
+        "增加办理时间线图表",
       ],
-      expectedImpact: "排名预计从 12+ → 8-，进入首页",
+      expectedImpact: "排名预计从 #9 → #5，点击量提升 50%",
     },
     status: "pending",
-    createdAt: "2026-03-20",
+    createdAt: "2026-03-22",
   },
   {
     id: "task-004",
     page: {
-      url: "https://maidinhk.com/blog/filipino-vs-indonesian",
-      title: "菲佣 vs 印佣比较",
+      url: "https://maidinhk.com/blog/contract-renewal-procedures",
+      title: "合约续约流程",
+      slug: "contract-renewal-procedures",
       currentMetrics: {
-        clicks: 89,
-        impressions: 4500,
-        ctr: 2.0,
-        position: 5.8,
-      },
-    },
-    issue: {
-      type: "content_gap",
-      severity: "medium",
-      description: "排名好但跳出率高，用户没找到想要的对比维度",
-    },
-    suggestion: {
-      title: "增加对比维度 + 交互表格",
-      description: "现有对比维度单一，需增加薪资、语言、技能等多维度",
-      steps: [
-        "制作交互式对比表：薪资、语言、烹饪、照顾老人/小孩",
-        "增加'性格特点'对比（基于雇主调研数据）",
-        "添加视频 testimonials：真实雇主分享经验",
-        "增加'选择决策树'，帮助用户快速判断适合哪种",
-      ],
-      expectedImpact: "停留时间预计提升 80%，转化率提升",
-    },
-    status: "pending",
-    createdAt: "2026-03-20",
-  },
-  {
-    id: "task-005",
-    page: {
-      url: "https://maidinhk.com/blog/visa-renewal",
-      title: "外佣签证续期流程",
-      currentMetrics: {
-        clicks: 56,
-        impressions: 1800,
-        ctr: 3.1,
-        position: 9.2,
+        clicks: 83,
+        impressions: 5011,
+        ctr: 1.7,
+        position: 19.2,
       },
     },
     issue: {
       type: "ranking_stuck",
-      severity: "low",
-      description: "内容质量不错但缺乏内链支持，权重不足",
+      severity: "high",
+      description: "排名在第 2 页 (#19)，内容未针对'續約'关键词优化",
     },
     suggestion: {
-      title: "内链建设 + Topic Cluster 强化",
-      description: "该页面是孤岛，需要从支柱页面引入权重",
+      title: "关键词重构 + 内容重组",
+      description: "用户搜'續約'相关词占比高，但页面未突出此意图",
       steps: [
-        "在'外佣雇佣指南'支柱页添加指向此页的链接",
-        "在'合约指南'页添加'续约 vs 重新签约'对比链接",
-        "创建'签证专题'侧边栏导航，串联相关文章",
-        "添加内部推荐：'续约后别忘了更新保险'",
+        "Title 改为：外傭續約完整流程｜合約到期前3個月準備事項",
+        "首段增加'續約 vs 重新聘請'决策对比",
+        "添加續約时间线：到期前3月、1月、到期日",
+        "从'合约法规'支柱页增加内链",
       ],
-      expectedImpact: "排名预计从 9 → 6，权重提升带动全站",
+      expectedImpact: "排名预计从 #19 → #10，进入首页",
     },
     status: "pending",
-    createdAt: "2026-03-20",
+    createdAt: "2026-03-22",
+  },
+  {
+    id: "task-005",
+    page: {
+      url: "https://maidinhk.com/blog/long-service-payment-rules",
+      title: "长期服务金规定",
+      slug: "long-service-payment-rules",
+      currentMetrics: {
+        clicks: 33,
+        impressions: 3458,
+        ctr: 0.9,
+        position: 14.5,
+      },
+    },
+    issue: {
+      type: "low_ctr",
+      severity: "medium",
+      description: "CTR 0.9% 低于平均，内容专业但缺乏易懂的计算示例",
+    },
+    suggestion: {
+      title: "添加计算示例 + 案例说明",
+      description: "YMYL 内容需要更清晰的解释和官方引用",
+      steps: [
+        "Title 加入'計算方法'：長期服務金計算方法 2024｜外傭 LSP 完整指南",
+        "添加计算示例：'假設工人姐姐工作5年，月薪$5,000...'",
+        "引用勞工處官方计算器链接",
+        "增加 FAQ：'解約要付長期服務金嗎？'",
+      ],
+      expectedImpact: "CTR 预计从 0.9% → 3%，排名提升至 Top 10",
+    },
+    status: "pending",
+    createdAt: "2026-03-22",
   },
 ];
 
@@ -236,7 +242,7 @@ const getSeverityColor = (severity: OptimizationTask["issue"]["severity"]) => {
 
 const calculateImprovement = (before: number, after: number, isPosition = false) => {
   if (isPosition) {
-    const change = before - after; // 排名下降是正向
+    const change = before - after;
     const percent = ((before - after) / before) * 100;
     return { change, percent, isPositive: change > 0 };
   }
@@ -333,7 +339,7 @@ function TaskCard({
           >
             {task.page.title}
           </a>
-          <p className="truncate text-xs text-[#999]">{task.page.url}</p>
+          <p className="truncate text-xs text-[#999]">/blog/{task.page.slug}</p>
         </div>
 
         {/* Metrics Preview */}
@@ -367,7 +373,7 @@ function TaskCard({
               {/* Current Metrics */}
               <div className="mb-4 grid grid-cols-4 gap-2">
                 <MetricBadge label="点击" value={task.page.currentMetrics.clicks} />
-                <MetricBadge label="展示" value={task.page.currentMetrics.impressions} />
+                <MetricBadge label="展示" value={task.page.currentMetrics.impressions.toLocaleString()} />
                 <MetricBadge label="CTR" value={task.page.currentMetrics.ctr} unit="%" />
                 <MetricBadge label="排名" value={`#${task.page.currentMetrics.position}`} />
               </div>
@@ -478,11 +484,11 @@ function UploadDataModal({
         className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl"
       >
         <h3 className="mb-4 text-lg font-bold text-[#1a1a1a]">上传优化后数据</h3>
-        <p className="mb-4 text-sm text-[#666]">请输入 GSC 中该页面优化后的最新数据：</p>
+        <p className="mb-4 text-sm text-[#666]">请从 GSC Excel 导出该页面优化后的最新数据：</p>
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs text-[#666]">点击量</label>
+            <label className="text-xs text-[#666]">点击量 (Clicks)</label>
             <input
               type="number"
               value={formData.clicks}
@@ -492,7 +498,7 @@ function UploadDataModal({
             />
           </div>
           <div>
-            <label className="text-xs text-[#666]">展示量</label>
+            <label className="text-xs text-[#666]">展示量 (Impressions)</label>
             <input
               type="number"
               value={formData.impressions}
@@ -513,7 +519,7 @@ function UploadDataModal({
             />
           </div>
           <div>
-            <label className="text-xs text-[#666]">平均排名</label>
+            <label className="text-xs text-[#666]">平均排名 (Position)</label>
             <input
               type="number"
               step="0.1"
@@ -567,7 +573,8 @@ export default function SEOActionImpact() {
     const optimized = tasks.filter((t) => t.status === "optimized").length;
     const verified = tasks.filter((t) => t.status === "verified").length;
     const highSeverity = tasks.filter((t) => t.issue.severity === "high").length;
-    return { pending, optimized, verified, highSeverity, total: tasks.length };
+    const totalImpressions = tasks.reduce((sum, t) => sum + t.page.currentMetrics.impressions, 0);
+    return { pending, optimized, verified, highSeverity, totalImpressions, total: tasks.length };
   }, [tasks]);
 
   const handleOptimize = (taskId: string) => {
@@ -620,7 +627,7 @@ export default function SEOActionImpact() {
           </div>
           <div>
             <h3 className="font-serif text-xl font-bold text-[#1a1a1a]">SEO 动作影响追踪</h3>
-            <p className="text-xs text-[#999]">发现 → 优化 → 验证 → 追踪</p>
+            <p className="text-xs text-[#999]">基于 GSC 数据 · 发现 → 优化 → 验证 → 追踪</p>
           </div>
         </div>
 
@@ -643,6 +650,11 @@ export default function SEOActionImpact() {
             <p className="text-[10px] text-[#666]">已验证</p>
           </div>
         </div>
+        
+        <p className="mt-2 text-xs text-[#999]">
+          数据源: maidinhk.com-Performance-on-Search-2026-03-22.xlsx · 
+          Top 5 待优化页面总展示量: {stats.totalImpressions.toLocaleString()}
+        </p>
       </div>
 
       {/* Task List */}
@@ -669,7 +681,7 @@ export default function SEOActionImpact() {
       {/* Footer */}
       <div className="mt-6 border-t border-[#f0f0f0] pt-4">
         <p className="text-xs text-[#999]">
-          💡 提示：完成优化后点击"标记为已优化"，7-14 天后上传 GSC 新数据查看效果
+          💡 提示：完成优化后点击"标记为已优化"，上传新的 GSC Excel 数据查看效果对比
         </p>
       </div>
     </div>
