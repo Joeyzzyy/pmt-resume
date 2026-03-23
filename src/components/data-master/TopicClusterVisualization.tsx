@@ -516,7 +516,7 @@ function TechnicalNote() {
               </p>
               <p>
                 <strong className="text-[#1a1a1a]">展示内容：</strong>
-                Top 15 页面按点击量分层（高点击>100、中点击50-100、低点击&lt;50）
+                Top 15 页面按点击量分层（高点击{'>'}100、中点击50-100、低点击{'<'}50）
               </p>
               <p>
                 <strong className="text-[#1a1a1a]">总览：</strong>
@@ -597,7 +597,7 @@ export default function TopicClusterVisualization() {
       <div className="mb-4 flex gap-4">
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-[#27c3da]" />
-          <span className="text-xs text-[#666]">高点击 &gt;100 (5个)</span>
+          <span className="text-xs text-[#666]">高点击 {'>'}100 (5个)</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-[#8e24aa]" />
@@ -605,7 +605,7 @@ export default function TopicClusterVisualization() {
         </div>
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-[#ab47bc]" />
-          <span className="text-xs text-[#666]">低点击 &lt;50 (5个)</span>
+          <span className="text-xs text-[#666]">低点击 {'<'}50 (5个)</span>
         </div>
       </div>
 
