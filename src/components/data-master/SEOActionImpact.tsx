@@ -57,7 +57,7 @@ const DEFAULT_TASKS: OptimizationTask[] = [
   {
     id: "task-001",
     page: {
-      url: "https://maidinhk.com/guides/domestic-helper-contract",
+      url: "https://maidinhk.com/blog/domestic-helper-contract",
       title: "外佣合约条款详解",
       currentMetrics: {
         clicks: 45,
@@ -119,7 +119,7 @@ const DEFAULT_TASKS: OptimizationTask[] = [
   {
     id: "task-003",
     page: {
-      url: "https://maidinhk.com/guides/helper-insurance",
+      url: "https://maidinhk.com/blog/helper-insurance",
       title: "外佣保险购买指南",
       currentMetrics: {
         clicks: 32,
@@ -181,7 +181,7 @@ const DEFAULT_TASKS: OptimizationTask[] = [
   {
     id: "task-005",
     page: {
-      url: "https://maidinhk.com/guides/visa-renewal",
+      url: "https://maidinhk.com/blog/visa-renewal",
       title: "外佣签证续期流程",
       currentMetrics: {
         clicks: 56,
