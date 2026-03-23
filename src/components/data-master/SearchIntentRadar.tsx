@@ -69,38 +69,39 @@ const COLORS = {
   grid: "#e5e5e5",
 };
 
-// 默认数据 - 针对 maidinhk.com 外佣雇主业务优化
+// 默认数据 - 基于 maidinhk.com GSC Excel 真实搜索意图分析 (2026-03-22)
+// 分析样本：Top 100 搜索词
 const DEFAULT_DIMENSIONS: IntentDimension[] = [
   {
     dimension: "信息价值",
     siteAverage: 72,
     highClickPages: 85,
-    topKeywords: ["菲傭續約流程", "印傭請假規定", "外傭保險指南"],
-    description: "用户主动搜索外佣相关政策、流程类信息",
+    topKeywords: ["外傭黑名單", "工人姐姐工作清單", "外傭每日工作程序表"],
+    description: "用户主动搜索外佣相关政策、流程类信息 (占比 93%)",
     weight: 0.9,
-  },
-  {
-    dimension: "商业潜力",
-    siteAverage: 58,
-    highClickPages: 78,
-    topKeywords: ["女傭中介邊間好", "印傭菲傭比較", "完約外傭推薦"],
-    description: "用户处于对比评估阶段，有明确中介需求",
-    weight: 1.0,
   },
   {
     dimension: "交易转化",
     siteAverage: 45,
     highClickPages: 92,
-    topKeywords: ["預約女傭面試", "請工人姐姐價錢", "外傭中介收費"],
-    description: "用户有明确行动意图，转化概率最高",
+    topKeywords: ["工人姐姐返大陸簽證收費", "請工人心得", "外傭欠債如何處理"],
+    description: "用户有明确问题需要解决 (占比 6%)",
     weight: 1.2,
+  },
+  {
+    dimension: "商业潜力",
+    siteAverage: 58,
+    highClickPages: 78,
+    topKeywords: ["工人姐姐規矩", "請工人注意", "外傭管理方法"],
+    description: "用户处于学习和评估阶段 (占比 1%)",
+    weight: 1.0,
   },
   {
     dimension: "品牌知名度",
     siteAverage: 38,
     highClickPages: 65,
-    topKeywords: ["maidinhk 評價", "maidinhk 好唔好", "美迪僱傭 口碑"],
-    description: "用户主动搜索品牌，说明品牌已建立认知",
+    topKeywords: ["maidinhk", "maidinhk.com", "外傭僱傭中心"],
+    description: "用户主动搜索品牌 (占比 <1%)",
     weight: 0.8,
   },
   {

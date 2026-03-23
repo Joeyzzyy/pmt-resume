@@ -22,289 +22,273 @@ interface ContentCluster {
   }[];
   color: string;
   angle: number;
-  category: "core" | "longtail";
-  pillarContent?: string;
+  category: "high" | "medium" | "low";
 }
 
 // ============================================
-// Data - maidinhk.com 实际内容集群 (15个主题)
+// Data - 基于 maidinhk.com GSC Excel 真实 Top 15 页面 (2026-03-22)
 // ============================================
 
 const MAIDINHK_CLUSTERS: ContentCluster[] = [
-  // 核心支柱页面 (Pillar Pages) - 内圈
+  // 高点击页面 (>100 clicks) - 内圈
   {
-    id: "hiring-guide",
-    title: "外佣雇佣指南",
-    url: "/guides/domestic-helper-hiring",
-    clicks: 342,
-    position: 3.2,
-    impressions: 8900,
-    ctr: 3.8,
+    id: "helper-blacklist",
+    title: "外佣黑名单",
+    url: "https://maidinhk.com/blog/helper-blacklist",
+    clicks: 476,
+    position: 4.7,
+    impressions: 4006,
+    ctr: 11.9,
     color: "#27c3da",
     angle: 0,
-    category: "core",
-    pillarContent: "Pillar Page",
+    category: "high",
     topQueries: [
-      { query: "如何請外傭", clicks: 89, position: 2.1 },
-      { query: "請工人姐姐流程", clicks: 76, position: 3.5 },
-      { query: "外傭中介推薦", clicks: 67, position: 4.2 },
-      { query: "聘請外傭手續", clicks: 54, position: 5.1 },
-      { query: "first time hire maid hk", clicks: 43, position: 6.8 },
+      { query: "外傭黑名單", clicks: 107, position: 3.4 },
+      { query: "工人姐姐黑名單", clicks: 49, position: 4.4 },
+      { query: "工人黑名單", clicks: 45, position: 4.8 },
+      { query: "菲傭黑名單", clicks: 18, position: 3.3 },
+      { query: "印傭黑名單", clicks: 14, position: 3.7 },
     ],
   },
   {
-    id: "salary-cost",
-    title: "外佣薪资费用",
-    url: "/guides/domestic-helper-salary",
-    clicks: 289,
-    position: 2.8,
-    impressions: 7200,
-    ctr: 4.0,
+    id: "work-schedule",
+    title: "工作时间表",
+    url: "https://maidinhk.com/blog/work-schedule",
+    clicks: 216,
+    position: 7.8,
+    impressions: 3623,
+    ctr: 6.0,
     color: "#27c3da",
     angle: 51.4,
-    category: "core",
-    pillarContent: "Pillar Page",
+    category: "high",
     topQueries: [
-      { query: "外傭最低工資2024", clicks: 98, position: 1.5 },
-      { query: "請工人姐姐幾錢", clicks: 87, position: 2.3 },
-      { query: "外傭人工計算", clicks: 54, position: 4.8 },
-      { query: "菲傭印傭薪金分別", clicks: 32, position: 6.5 },
-      { query: "maid salary hong kong", clicks: 18, position: 8.2 },
-    ],
-  },
-  {
-    id: "contract-law",
-    title: "合约与法规",
-    url: "/guides/contract-law",
-    clicks: 267,
-    position: 4.5,
-    impressions: 6500,
-    ctr: 4.1,
-    color: "#27c3da",
-    angle: 102.8,
-    category: "core",
-    pillarContent: "Pillar Page",
-    topQueries: [
-      { query: "外傭合約條款", clicks: 76, position: 3.8 },
-      { query: "標準僱傭合約", clicks: 65, position: 5.2 },
-      { query: "外傭勞工法例", clicks: 54, position: 6.1 },
-      { query: "合約解約手續", clicks: 43, position: 7.5 },
-      { query: "foreign domestic helper contract", clicks: 29, position: 9.2 },
+      { query: "工人姐姐工作清單", clicks: 24, position: 8.9 },
+      { query: "外傭每日工作程序表", clicks: 14, position: 6.9 },
+      { query: "工人姐姐時間表", clicks: 11, position: 9.0 },
+      { query: "工人工作時間表", clicks: 11, position: 8.3 },
+      { query: "初生嬰兒工人時間表", clicks: 8, position: 7.6 },
     ],
   },
   {
     id: "visa-application",
     title: "签证申请流程",
-    url: "/guides/visa-application",
-    clicks: 198,
-    position: 5.8,
-    impressions: 4800,
-    ctr: 4.1,
+    url: "https://maidinhk.com/blog/visa-application-process",
+    clicks: 190,
+    position: 9.7,
+    impressions: 7228,
+    ctr: 2.6,
+    color: "#27c3da",
+    angle: 102.8,
+    category: "high",
+    topQueries: [
+      { query: "工人姐姐返大陸簽證收費", clicks: 8, position: 12.0 },
+      { query: "工人姐姐返大陸簽證代辦", clicks: 7, position: 10.9 },
+      { query: "工人姐姐返大陸簽證多次", clicks: 7, position: 7.3 },
+      { query: "外傭簽證申請", clicks: 5, position: 8.5 },
+      { query: "id990a表格", clicks: 4, position: 9.2 },
+    ],
+  },
+  {
+    id: "work-schedule-download",
+    title: "工作时间表下载",
+    url: "https://maidinhk.com/blog/work-schedule-download",
+    clicks: 127,
+    position: 7.4,
+    impressions: 1896,
+    ctr: 6.7,
     color: "#27c3da",
     angle: 154.2,
-    category: "core",
-    pillarContent: "Pillar Page",
+    category: "high",
     topQueries: [
-      { query: "外傭簽證申請", clicks: 65, position: 4.5 },
-      { query: "id990a表格", clicks: 54, position: 6.2 },
-      { query: "工人姐姐簽證續期", clicks: 43, position: 7.8 },
-      { query: "外傭工作簽證", clicks: 32, position: 9.1 },
-      { query: "helper visa extension", clicks: 21, position: 11.5 },
+      { query: "工人姐姐工作表", clicks: 6, position: 8.1 },
+      { query: "外傭工作表範本", clicks: 4, position: 7.8 },
+      { query: "工人工作表下載", clicks: 3, position: 6.9 },
+      { query: "外傭每日工作表", clicks: 3, position: 9.5 },
     ],
   },
   {
-    id: "agency-comparison",
-    title: "中介比较评测",
-    url: "/reviews/agency-comparison",
-    clicks: 245,
-    position: 6.2,
-    impressions: 5800,
-    ctr: 4.2,
+    id: "accommodation-standards",
+    title: "住宿标准",
+    url: "https://maidinhk.com/blog/accommodation-standards",
+    clicks: 104,
+    position: 6.8,
+    impressions: 2151,
+    ctr: 4.8,
     color: "#27c3da",
     angle: 205.6,
-    category: "core",
-    pillarContent: "Pillar Page",
+    category: "high",
     topQueries: [
-      { query: "女傭中介邊間好", clicks: 87, position: 4.8 },
-      { query: "外傭中介比較", clicks: 76, position: 6.1 },
-      { query: "印傭中介推薦", clicks: 54, position: 7.5 },
-      { query: "maid agency hong kong", clicks: 32, position: 9.8 },
-      { query: "best helper agency hk", clicks: 21, position: 12.3 },
-    ],
-  },
-  {
-    id: "interview-tips",
-    title: "面试技巧指南",
-    url: "/guides/interview-tips",
-    clicks: 178,
-    position: 5.5,
-    impressions: 4200,
-    ctr: 4.2,
-    color: "#27c3da",
-    angle: 257,
-    category: "core",
-    pillarContent: "Pillar Page",
-    topQueries: [
-      { query: "外傭面試問題", clicks: 54, position: 4.2 },
-      { query: "菲傭面試要問什麼", clicks: 43, position: 5.8 },
-      { query: "印傭面試技巧", clicks: 32, position: 7.5 },
-      { query: "maid interview questions", clicks: 21, position: 9.2 },
-      { query: "面試外傭注意事項", clicks: 18, position: 10.8 },
-    ],
-  },
-  {
-    id: "daily-management",
-    title: "日常管理指南",
-    url: "/guides/daily-management",
-    clicks: 156,
-    position: 7.2,
-    impressions: 3800,
-    ctr: 4.1,
-    color: "#27c3da",
-    angle: 308.4,
-    category: "core",
-    pillarContent: "Pillar Page",
-    topQueries: [
-      { query: "外傭管理方法", clicks: 43, position: 5.5 },
-      { query: "工人姐姐放假安排", clicks: 32, position: 7.2 },
-      { query: "外傭手機使用", clicks: 21, position: 8.8 },
-      { query: "helper day off rules", clicks: 18, position: 10.5 },
-      { query: "外傭工作表現評估", clicks: 15, position: 12.1 },
+      { query: "工人房法例", clicks: 10, position: 7.9 },
+      { query: "外傭住宿要求", clicks: 5, position: 6.2 },
+      { query: "工人姐姐房間", clicks: 4, position: 8.1 },
     ],
   },
 
-  // 长尾集群内容 (Cluster Content) - 外圈
+  // 中点击页面 (50-100 clicks) - 中圈
   {
-    id: "renewal-process",
-    title: "外佣续约流程",
-    url: "/blog/foreign-helper-renewal",
-    clicks: 234,
-    position: 3.5,
-    impressions: 5200,
-    ctr: 4.5,
+    id: "timeline-comparison",
+    title: "本地vs海外工人时间对比",
+    url: "https://maidinhk.com/blog/local-vs-overseas-helper-timeline-comparison",
+    clicks: 103,
+    position: 10.2,
+    impressions: 2615,
+    ctr: 3.9,
     color: "#8e24aa",
     angle: 25.7,
-    category: "longtail",
+    category: "medium",
     topQueries: [
-      { query: "外傭續約流程", clicks: 76, position: 2.8 },
-      { query: "菲傭續約手續", clicks: 54, position: 4.2 },
-      { query: "印傭續約費用", clicks: 43, position: 5.5 },
-      { query: "contract renewal helper", clicks: 32, position: 7.1 },
-      { query: "外傭續約幾時開始", clicks: 29, position: 8.8 },
+      { query: "本地工人海外工人分別", clicks: 5, position: 9.8 },
+      { query: "完約工人幾時到港", clicks: 4, position: 11.2 },
+      { query: "海外工人申請時間", clicks: 3, position: 10.5 },
     ],
   },
   {
-    id: "insurance-guide",
-    title: "外佣保险指南",
-    url: "/guides/helper-insurance",
-    clicks: 189,
-    position: 6.8,
-    impressions: 4100,
-    ctr: 4.6,
+    id: "contract-renewal",
+    title: "合约续约流程",
+    url: "https://maidinhk.com/blog/contract-renewal-procedures",
+    clicks: 83,
+    position: 19.2,
+    impressions: 5011,
+    ctr: 1.7,
     color: "#8e24aa",
     angle: 77.1,
-    category: "longtail",
+    category: "medium",
     topQueries: [
-      { query: "外傭保險比較", clicks: 65, position: 5.2 },
-      { query: "工人姐姐保險", clicks: 54, position: 6.8 },
-      { query: "外傭保險邊間好", clicks: 32, position: 8.5 },
-      { query: "helper insurance hk", clicks: 21, position: 10.2 },
-      { query: "外傭保險價錢", clicks: 17, position: 12.5 },
+      { query: "外傭續約流程", clicks: 8, position: 15.2 },
+      { query: "工人姐姐續約手續", clicks: 5, position: 18.5 },
+      { query: "合約到期續約", clicks: 4, position: 20.1 },
     ],
   },
   {
-    id: "termination-guide",
-    title: "解约处理指南",
-    url: "/guides/contract-termination",
-    clicks: 167,
-    position: 7.5,
-    impressions: 3600,
-    ctr: 4.6,
+    id: "contract-differences",
+    title: "本地vs海外工人合约差异",
+    url: "https://maidinhk.com/blog/local-vs-overseas-helper-contract-differences",
+    clicks: 66,
+    position: 9.1,
+    impressions: 2252,
+    ctr: 2.9,
     color: "#8e24aa",
     angle: 128.5,
-    category: "longtail",
+    category: "medium",
     topQueries: [
-      { query: "外傭解約手續", clicks: 54, position: 5.8 },
-      { query: "提前解約賠償", clicks: 43, position: 7.2 },
-      { query: "外傭斷約處理", clicks: 32, position: 8.8 },
-      { query: "termination of contract", clicks: 21, position: 10.5 },
-      { query: "外傭辭工通知期", clicks: 17, position: 12.8 },
+      { query: "本地工人合約", clicks: 4, position: 8.5 },
+      { query: "海外工人合約分別", clicks: 3, position: 9.8 },
     ],
   },
   {
-    id: "filipino-vs-indonesian",
-    title: "菲佣vs印佣",
-    url: "/blog/filipino-vs-indonesian-helpers",
-    clicks: 212,
-    position: 4.8,
-    impressions: 4900,
-    ctr: 4.3,
+    id: "hiring-break-contract",
+    title: "聘请断约工人",
+    url: "https://maidinhk.com/blog/hiring-break-contract-helper",
+    clicks: 63,
+    position: 9.4,
+    impressions: 1645,
+    ctr: 3.8,
     color: "#8e24aa",
     angle: 180,
-    category: "longtail",
+    category: "medium",
     topQueries: [
-      { query: "菲傭印傭比較", clicks: 76, position: 3.5 },
-      { query: "菲律賓女傭特點", clicks: 54, position: 5.2 },
-      { query: "印尼女傭好唔好", clicks: 43, position: 6.8 },
-      { query: "filipino vs indonesian maid", clicks: 32, position: 8.5 },
-      { query: "菲傭印傭薪金分別", clicks: 21, position: 10.2 },
+      { query: "斷約工人留港", clicks: 8, position: 8.8 },
+      { query: "請斷約工人注意", clicks: 4, position: 9.5 },
+      { query: "完約外傭聘請", clicks: 3, position: 10.2 },
     ],
   },
   {
-    id: "first-week-guide",
-    title: "到港首周安排",
-    url: "/blog/first-week-guide",
-    clicks: 145,
-    position: 8.2,
-    impressions: 3200,
-    ctr: 4.5,
+    id: "loan-problems",
+    title: "外佣借贷问题",
+    url: "https://maidinhk.com/blog/loan-problems-solutions",
+    clicks: 61,
+    position: 7.4,
+    impressions: 1533,
+    ctr: 4.0,
     color: "#8e24aa",
     angle: 231.4,
-    category: "longtail",
+    category: "medium",
     topQueries: [
-      { query: "外傭到港安排", clicks: 43, position: 6.5 },
-      { query: "新外傭第一週", clicks: 32, position: 8.1 },
-      { query: "工人姐姐適應期", clicks: 21, position: 9.8 },
-      { query: "new helper first week", clicks: 18, position: 11.5 },
-      { query: "外傭培訓方法", clicks: 15, position: 13.2 },
+      { query: "外傭欠債如何處理", clicks: 7, position: 13.8 },
+      { query: "工人姐姐借錢", clicks: 5, position: 8.5 },
+      { query: "外傭借貸問題", clicks: 4, position: 7.9 },
     ],
   },
+
+  // 低点击页面 (<50 clicks) - 外圈
   {
-    id: "problem-solving",
-    title: "常见问题处理",
-    url: "/blog/common-problems",
-    clicks: 198,
-    position: 6.5,
-    impressions: 4500,
-    ctr: 4.4,
-    color: "#8e24aa",
+    id: "digital-payment",
+    title: "数字支付",
+    url: "https://maidinhk.com/blog/digital-payment",
+    clicks: 58,
+    position: 7.0,
+    impressions: 1037,
+    ctr: 5.6,
+    color: "#ab47bc",
     angle: 282.8,
-    category: "longtail",
+    category: "low",
     topQueries: [
-      { query: "外傭偷懶點算", clicks: 54, position: 5.2 },
-      { query: "工人姐姐情緒問題", clicks: 43, position: 6.8 },
-      { query: "外傭工作效率低", clicks: 32, position: 8.5 },
-      { query: "helper performance issues", clicks: 21, position: 10.1 },
-      { query: "外傭想換雇主", clicks: 18, position: 11.8 },
+      { query: "外傭薪金轉數快", clicks: 4, position: 6.8 },
+      { query: "工人姐姐支薪方式", clicks: 3, position: 7.2 },
     ],
   },
   {
-    id: "rest-day-rules",
-    title: "休息日规定",
-    url: "/guides/rest-day-rules",
-    clicks: 134,
-    position: 9.1,
-    impressions: 2900,
-    ctr: 4.6,
-    color: "#8e24aa",
+    id: "id407-contract",
+    title: "ID407合约指南",
+    url: "https://maidinhk.com/blog/id407-contract-guide",
+    clicks: 56,
+    position: 7.2,
+    impressions: 1047,
+    ctr: 5.4,
+    color: "#ab47bc",
     angle: 334.2,
-    category: "longtail",
+    category: "low",
     topQueries: [
-      { query: "外傭法定假期", clicks: 43, position: 6.8 },
-      { query: "外傭年假幾多天", clicks: 32, position: 8.5 },
-      { query: "工人姐姐放假安排", clicks: 21, position: 10.2 },
-      { query: "helper rest day rules", clicks: 18, position: 11.8 },
-      { query: "外傭公眾假期表", clicks: 15, position: 13.5 },
+      { query: "id407合約", clicks: 5, position: 6.5 },
+      { query: "標準僱傭合約", clicks: 4, position: 7.8 },
+    ],
+  },
+  {
+    id: "elderly-interview",
+    title: "照顾老人面试",
+    url: "https://maidinhk.com/blog/elderly-interview",
+    clicks: 51,
+    position: 10.2,
+    impressions: 1250,
+    ctr: 4.1,
+    color: "#ab47bc",
+    angle: 51.4,
+    category: "low",
+    topQueries: [
+      { query: "照顧老人面試問題", clicks: 4, position: 9.8 },
+      { query: "長者護理面試", clicks: 3, position: 10.5 },
+    ],
+  },
+  {
+    id: "missing-helper",
+    title: "外佣失踪处理",
+    url: "https://maidinhk.com/blog/missing-helper-procedures",
+    clicks: 49,
+    position: 6.3,
+    impressions: 954,
+    ctr: 5.1,
+    color: "#ab47bc",
+    angle: 102.8,
+    category: "low",
+    topQueries: [
+      { query: "外傭失蹤點算", clicks: 5, position: 6.1 },
+      { query: "工人姐姐走左點算", clicks: 4, position: 6.8 },
+    ],
+  },
+  {
+    id: "helper-theft",
+    title: "外佣盗窃报警",
+    url: "https://maidinhk.com/blog/helper-theft-police",
+    clicks: 46,
+    position: 4.8,
+    impressions: 1382,
+    ctr: 3.3,
+    color: "#ab47bc",
+    angle: 154.2,
+    category: "low",
+    topQueries: [
+      { query: "外傭偷嘢報警", clicks: 6, position: 4.5 },
+      { query: "工人姐姐偷錢", clicks: 4, position: 5.2 },
     ],
   },
 ];
@@ -314,8 +298,9 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
 // ============================================
 
 const CATEGORY_CONFIG = {
-  core: { label: "支柱页面", color: "#27c3da", bg: "#e0f7fa" },
-  longtail: { label: "集群内容", color: "#8e24aa", bg: "#f3e5f5" },
+  high: { label: "高点击 (>100)", color: "#27c3da", bg: "#e0f7fa" },
+  medium: { label: "中点击 (50-100)", color: "#8e24aa", bg: "#f3e5f5" },
+  low: { label: "低点击 (<50)", color: "#ab47bc", bg: "#fce4ec" },
 };
 
 // ============================================
@@ -340,7 +325,7 @@ function CentralNode() {
       <span className="mt-1 text-center text-[10px] font-bold leading-tight text-white">
         maidinhk.com
         <br />
-        外佣雇主指南
+        Top 15 页面
       </span>
     </motion.div>
   );
@@ -363,15 +348,10 @@ function ClusterCard({
 
   return (
     <motion.div
-      className={`absolute z-30 w-36 cursor-pointer rounded-xl border bg-white p-3 shadow-lg transition-all ${
-        isSelected
-          ? "border-[#27c3da] shadow-xl shadow-[#27c3da]/20"
-          : "border-[#e5e5e5] hover:border-[#27c3da]/50"
+      className={`absolute z-30 w-36 cursor-pointer rounded-lg border bg-white p-2.5 shadow-md transition-all ${
+        isSelected ? "border-[#27c3da] shadow-lg shadow-[#27c3da]/20" : "border-[#e5e5e5] hover:border-[#27c3da]/50"
       }`}
-      style={{
-        left: `calc(50% + ${x}px - 72px)`,
-        top: `calc(50% + ${y}px - 40px)`,
-      }}
+      style={{ left: `calc(50% + ${x}px - 72px)`, top: `calc(50% + ${y}px - 35px)` }}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       whileHover={{ scale: 1.08, zIndex: 40 }}
@@ -379,27 +359,25 @@ function ClusterCard({
     >
       {/* 排名徽章 */}
       <div
-        className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold text-white"
-        style={{
-          backgroundColor: cluster.position <= 5 ? "#27c3da" : config.color,
-        }}
+        className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold text-white"
+        style={{ backgroundColor: cluster.position <= 5 ? "#27c3da" : config.color }}
       >
         {cluster.position <= 5 ? "★" : cluster.position.toFixed(0)}
       </div>
 
       {/* 分类标签 */}
       <div
-        className="mb-1 inline-block rounded px-1.5 py-0.5 text-[8px] font-medium"
+        className="mb-1 inline-block rounded px-1 py-0.5 text-[7px] font-medium"
         style={{ backgroundColor: config.bg, color: config.color }}
       >
-        {cluster.pillarContent || config.label}
+        {config.label}
       </div>
 
       {/* 标题 */}
-      <h4 className="truncate text-xs font-semibold text-[#1a1a1a]">{cluster.title}</h4>
+      <h4 className="truncate text-[11px] font-semibold leading-tight text-[#1a1a1a]">{cluster.title}</h4>
 
       {/* 指标 */}
-      <div className="mt-2 flex items-center justify-between text-[10px]">
+      <div className="mt-1.5 flex items-center justify-between border-t border-[#f0f0f0] pt-1 text-[9px]">
         <span className="text-[#27c3da]">{cluster.clicks} 点击</span>
         <span style={{ color: config.color }}>#{cluster.position}</span>
       </div>
@@ -426,16 +404,14 @@ function ConnectionLine({
       style={{
         width: length,
         transform: `rotate(${angle}deg)`,
-        background: isActive
-          ? `linear-gradient(90deg, #27c3da 0%, ${color} 100%)`
-          : "linear-gradient(90deg, #e5e5e5 0%, #d0d0d0 100%)",
+        background: isActive ? `linear-gradient(90deg, #27c3da 0%, ${color} 100%)` : "linear-gradient(90deg, #e5e5e5 0%, #d0d0d0 100%)",
       }}
     >
       <motion.div
         className="absolute inset-0"
         style={{
           background: isActive
-            ? `linear-gradient(90deg, transparent 0%, rgba(39, 195, 218, 0.8) 50%, transparent 100%)`
+            ? `linear-gradient(90deg, transparent 0%, ${color}80 50%, transparent 100%)`
             : "linear-gradient(90deg, transparent 0%, rgba(200, 200, 200, 0.5) 50%, transparent 100%)",
           width: "30%",
         }}
@@ -446,13 +422,7 @@ function ConnectionLine({
   );
 }
 
-function ClusterDetailPanel({
-  cluster,
-  onClose,
-}: {
-  cluster: ContentCluster;
-  onClose: () => void;
-}) {
+function ClusterDetailPanel({ cluster, onClose }: { cluster: ContentCluster; onClose: () => void }) {
   const config = CATEGORY_CONFIG[cluster.category];
 
   return (
@@ -469,14 +439,10 @@ function ClusterDetailPanel({
           </div>
           <div>
             <h4 className="text-sm font-semibold text-[#1a1a1a]">{cluster.title}</h4>
-            <p className="text-[10px] text-[#999]">
-              {cluster.pillarContent || config.label} · CTR {cluster.ctr}%
-            </p>
+            <p className="text-[10px] text-[#999]">{config.label} · CTR {(cluster.ctr * 100).toFixed(1)}%</p>
           </div>
         </div>
-        <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f0f0f0] text-[#666]">
-          ✕
-        </button>
+        <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f0f0f0] text-[#666]">✕</button>
       </div>
 
       <div className="mb-3 grid grid-cols-3 gap-2">
@@ -526,11 +492,9 @@ function TechnicalNote() {
       <button onClick={() => setIsExpanded(!isExpanded)} className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-lg">⚡</span>
-          <span className="text-sm font-semibold text-[#1a1a1a]">内链权重传递机制</span>
+          <span className="text-sm font-semibold text-[#1a1a1a]">数据说明</span>
         </div>
-        <motion.span animate={{ rotate: isExpanded ? 180 : 0 }} className="text-[#666]">
-          ▼
-        </motion.span>
+        <motion.span animate={{ rotate: isExpanded ? 180 : 0 }} className="text-[#666]">▼</motion.span>
       </button>
 
       <AnimatePresence>
@@ -543,33 +507,21 @@ function TechnicalNote() {
           >
             <div className="mt-4 space-y-3 border-t border-[#f0f0f0] pt-4 text-sm text-[#666]">
               <p>
-                <strong className="text-[#1a1a1a]">Topic Cluster 架构：</strong>
-                maidinhk.com 采用 7+8 双层集群架构。内圈 7 个支柱页面（Pillar Pages）覆盖外佣雇佣的核心主题，
-                外圈 8 个长尾集群内容深入细分话题。
+                <strong className="text-[#1a1a1a]">数据来源：</strong>
+                maidinhk.com-Performance-on-Search-2026-03-22.xlsx
               </p>
               <p>
-                <strong className="text-[#1a1a1a]">权重传导路径：</strong>
-                所有集群内容通过 next/link 反向链接至支柱页面，支柱页面聚合链接至各集群内容，
-                形成双向权重循环，实现 100% 链接权重传递。
+                <strong className="text-[#1a1a1a]">数据范围：</strong>
+                2025-12-21 至 2026-03-20（90天）
               </p>
               <p>
-                <strong className="text-[#1a1a1a]">搜索入口封锁：</strong>
-                通过覆盖外佣雇佣全链路的关键词（从"如何请外佣"到"外佣解约处理"），
-                构建完整的主题权威度，封锁垂直领域搜索入口。
+                <strong className="text-[#1a1a1a]">展示内容：</strong>
+                Top 15 页面按点击量分层（高点击>100、中点击50-100、低点击&lt;50）
               </p>
-              <div className="rounded-lg bg-[#1a1a2e] p-3 font-mono text-xs text-gray-300">
-                <span className="text-[#27c3da]">// 支柱页面向集群内容传递权重</span>
-                <br />
-                &lt;Link href=&quot;/guides/domestic-helper-salary&quot; prefetch&gt;
-                <br />
-                &nbsp;&nbsp;&lt;a hrefLang=&quot;zh-HK&quot; rel=&quot;tag&quot;&gt;
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;查看外佣薪资详细指南 →
-                <br />
-                &nbsp;&nbsp;&lt;/a&gt;
-                <br />
-                &lt;/Link&gt;
-              </div>
+              <p>
+                <strong className="text-[#1a1a1a]">总览：</strong>
+                236 个页面，2,990 总点击，111,897 展示，平均 CTR 2.67%
+              </p>
             </div>
           </motion.div>
         )}
@@ -590,33 +542,23 @@ export default function TopicClusterVisualization() {
     setMounted(true);
   }, []);
 
-  // 统计数据
+  // 统计
   const stats = useMemo(() => {
     const totalClicks = MAIDINHK_CLUSTERS.reduce((sum, c) => sum + c.clicks, 0);
     const totalImpressions = MAIDINHK_CLUSTERS.reduce((sum, c) => sum + c.impressions, 0);
     const avgPosition = MAIDINHK_CLUSTERS.reduce((sum, c) => sum + c.position, 0) / MAIDINHK_CLUSTERS.length;
+    const highCount = MAIDINHK_CLUSTERS.filter((c) => c.category === "high").length;
     const top5Count = MAIDINHK_CLUSTERS.filter((c) => c.position <= 5).length;
-    const pillarCount = MAIDINHK_CLUSTERS.filter((c) => c.category === "core").length;
 
-    return {
-      totalClicks,
-      totalImpressions,
-      avgPosition: avgPosition.toFixed(1),
-      top5Count,
-      pillarCount,
-      clusterCount: MAIDINHK_CLUSTERS.length,
-    };
+    return { totalClicks, totalImpressions, avgPosition: avgPosition.toFixed(1), highCount, top5Count, totalCount: MAIDINHK_CLUSTERS.length };
   }, []);
 
-  // 计算位置 - 双层环形
+  // 计算位置 - 三层环形布局
   const getClusterPosition = (cluster: ContentCluster) => {
-    const isCore = cluster.category === "core";
-    const radius = isCore ? 130 : 210;
+    const radiusMap = { high: 130, medium: 200, low: 270 };
+    const radius = radiusMap[cluster.category];
     const radian = (cluster.angle * Math.PI) / 180;
-    return {
-      x: Math.cos(radian) * radius,
-      y: Math.sin(radian) * radius,
-    };
+    return { x: Math.cos(radian) * radius, y: Math.sin(radian) * radius };
   };
 
   const selectedClusterData = MAIDINHK_CLUSTERS.find((c) => c.id === selectedCluster);
@@ -646,7 +588,7 @@ export default function TopicClusterVisualization() {
           </div>
           <div>
             <h3 className="font-serif text-xl font-bold text-[#1a1a1a]">内容集群可视化</h3>
-            <p className="text-xs text-[#999]">maidinhk.com · Topic Cluster · 7支柱+8集群</p>
+            <p className="text-xs text-[#999]">maidinhk.com · GSC Excel 数据 · Top 15 页面</p>
           </div>
         </div>
       </div>
@@ -655,16 +597,20 @@ export default function TopicClusterVisualization() {
       <div className="mb-4 flex gap-4">
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-[#27c3da]" />
-          <span className="text-xs text-[#666]">支柱页面 (7个)</span>
+          <span className="text-xs text-[#666]">高点击 &gt;100 (5个)</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-[#8e24aa]" />
-          <span className="text-xs text-[#666]">集群内容 (8个)</span>
+          <span className="text-xs text-[#666]">中点击 50-100 (5个)</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-full bg-[#ab47bc]" />
+          <span className="text-xs text-[#666]">低点击 &lt;50 (5个)</span>
         </div>
       </div>
 
       {/* Visualization */}
-      <div className="relative mx-auto mb-6 h-[450px] w-full max-w-[600px]">
+      <div className="relative mx-auto mb-6 h-[480px] w-full max-w-[600px]">
         {/* Connection lines */}
         {MAIDINHK_CLUSTERS.map((cluster, index) => {
           const pos = getClusterPosition(cluster);
@@ -713,8 +659,8 @@ export default function TopicClusterVisualization() {
       {/* Stats */}
       <div className="mb-6 grid grid-cols-5 gap-3 border-t border-[#f0f0f0] pt-6">
         <div className="text-center">
-          <p className="text-xl font-bold text-[#1a1a1a]">{stats.clusterCount}</p>
-          <p className="text-[10px] text-[#999]">主题集群</p>
+          <p className="text-xl font-bold text-[#1a1a1a]">{stats.totalCount}</p>
+          <p className="text-[10px] text-[#999]">Top 页面</p>
         </div>
         <div className="text-center">
           <p className="text-xl font-bold text-[#27c3da]">{stats.totalClicks}</p>
@@ -730,7 +676,7 @@ export default function TopicClusterVisualization() {
         </div>
         <div className="text-center">
           <p className="text-xl font-bold text-green-600">{stats.top5Count}</p>
-          <p className="text-[10px] text-[#999]">首页内容</p>
+          <p className="text-[10px] text-[#999]">Top 5 排名</p>
         </div>
       </div>
 

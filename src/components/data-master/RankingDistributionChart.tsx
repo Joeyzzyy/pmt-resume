@@ -79,37 +79,38 @@ const GSC_COLORS = {
   },
 };
 
-// 默认数据（用于演示）
+// 真实数据 - 来自 maidinhk.com GSC Excel (2026-03-22)
+// 总计 236 个页面
 const DEFAULT_DATA: RankingData[] = [
   {
     range: "top3",
     label: "Top 3",
-    count: 12,
-    percentage: 15.0,
+    count: 0,
+    percentage: 0,
     color: GSC_COLORS.ranking.top3,
     description: "黄金位置，流量主力",
   },
   {
     range: "top4-10",
     label: "Top 4-10",
-    count: 28,
-    percentage: 35.0,
+    count: 182,
+    percentage: 77.1,
     color: GSC_COLORS.ranking.top10,
     description: "首页中部，稳定曝光",
   },
   {
     range: "top11-30",
     label: "Top 11-30",
-    count: 24,
-    percentage: 30.0,
+    count: 33,
+    percentage: 14.0,
     color: GSC_COLORS.ranking.top30,
     description: "第2-3页，潜力区域",
   },
   {
     range: "beyond30",
     label: "31+",
-    count: 16,
-    percentage: 20.0,
+    count: 21,
+    percentage: 8.9,
     color: GSC_COLORS.ranking.beyond30,
     description: "第4页后，需优化",
   },
