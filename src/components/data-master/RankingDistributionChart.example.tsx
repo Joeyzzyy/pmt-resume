@@ -63,7 +63,7 @@ export function WithGSCDataProcessor() {
   useEffect(() => {
     // 模拟 API 加载
     setTimeout(() => {
-      const result = processGSCData(mockGSCData);
+      const result = processGSCData(mockGSCData) as any;
       
       // 转换 rankingBuckets 为图表所需格式
       const buckets = result.rawStats.rankingBuckets;
