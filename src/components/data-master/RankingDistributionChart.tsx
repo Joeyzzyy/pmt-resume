@@ -84,8 +84,8 @@ const GSC_COLORS = {
 // 注：目前最好排名 #3.6，暂无 Top 3，重点优化接近首页顶部的页面
 const DEFAULT_DATA: RankingData[] = [
   {
-    range: "top3-5",
-    label: "Top 3-5",
+    range: "top1-5",
+    label: "Top 1-5",
     count: 8,
     percentage: 3.4,
     color: GSC_COLORS.ranking.top3,
@@ -123,7 +123,7 @@ const DEFAULT_DATA: RankingData[] = [
 
 function calculateHomepageRate(data: RankingData[]): number {
   const homepageCount = data
-    .filter((d) => d.range === "top3-5" || d.range === "top6-10")
+    .filter((d) => d.range === "top1-5" || d.range === "top6-10")
     .reduce((sum, d) => sum + d.count, 0);
   const total = data.reduce((sum, d) => sum + d.count, 0);
   return total > 0 ? Math.round((homepageCount / total) * 100) : 0;
@@ -265,17 +265,17 @@ export default function RankingDistributionChart({
     const homepageCount =
       propHomepage ??
       data
-        .filter((d) => d.range === "top3-5" || d.range === "top6-10")
+        .filter((d) => d.range === "top1-5" || d.range === "top6-10")
         .reduce((sum, d) => sum + d.count, 0);
     const homepageRate = total > 0 ? Math.round((homepageCount / total) * 100) : 0;
-    // Top 3-5 区间数量（冲刺 Top 3 的潜力页面）
-    const top3to5Count = data.find((d) => d.range === "top3-5")?.count ?? 0;
+    // Top 1-5 区间数量（冲刺 Top 3 的潜力页面）
+    const top1to5Count = data.find((d) => d.range === "top1-5")?.count ?? 0;
 
     return {
       total,
       homepageCount,
       homepageRate,
-      top3to5Count,
+      top1to5Count,
       top10Count: homepageCount,
     };
   }, [data, propTotal, propHomepage]);
@@ -391,8 +391,8 @@ export default function RankingDistributionChart({
         className="grid grid-cols-2 gap-4 border-b border-[#f0f0f0] p-6 sm:grid-cols-4"
       >
         <StatCard
-          label="Top 3-5 页面"
-          value={stats.top3to5Count}
+          label="Top 1-5 页面"
+          value={stats.top1to5Count}
           subtext="冲刺 Top 3"
           color={GSC_COLORS.ranking.top3}
           delay={0.1}
