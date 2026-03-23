@@ -49,8 +49,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${inter.variable} ${playfair.variable} ${notoSerifSC.variable}`}>
-      <body className="antialiased">
+    <html lang="zh-CN" className={`${inter.variable} ${playfair.variable} ${notoSerifSC.variable}`} suppressHydrationWarning data-infinisynapse-extension="true">
+      <body className="antialiased" suppressHydrationWarning>
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
