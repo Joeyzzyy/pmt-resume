@@ -81,22 +81,23 @@ const GSC_COLORS = {
 
 // 真实数据 - 来自 maidinhk.com GSC Excel (2026-03-22)
 // 总计 236 个页面
+// 注：目前最好排名 #3.6，暂无 Top 3，重点优化接近首页顶部的页面
 const DEFAULT_DATA: RankingData[] = [
   {
-    range: "top3",
-    label: "Top 3",
-    count: 0,
-    percentage: 0,
+    range: "top3-5",
+    label: "Top 3-5",
+    count: 8,
+    percentage: 3.4,
     color: GSC_COLORS.ranking.top3,
-    description: "黄金位置，流量主力",
+    description: "首页顶部，冲刺 Top 3",
   },
   {
-    range: "top4-10",
-    label: "Top 4-10",
-    count: 182,
-    percentage: 77.1,
+    range: "top6-10",
+    label: "Top 6-10",
+    count: 174,
+    percentage: 73.7,
     color: GSC_COLORS.ranking.top10,
-    description: "首页中部，稳定曝光",
+    description: "首页中部，稳定流量",
   },
   {
     range: "top11-30",
@@ -104,7 +105,7 @@ const DEFAULT_DATA: RankingData[] = [
     count: 33,
     percentage: 14.0,
     color: GSC_COLORS.ranking.top30,
-    description: "第2-3页，潜力区域",
+    description: "第2-3页，潜力待挖",
   },
   {
     range: "beyond30",
@@ -112,7 +113,7 @@ const DEFAULT_DATA: RankingData[] = [
     count: 21,
     percentage: 8.9,
     color: GSC_COLORS.ranking.beyond30,
-    description: "第4页后，需优化",
+    description: "第4页后，需重点优化",
   },
 ];
 
@@ -122,7 +123,7 @@ const DEFAULT_DATA: RankingData[] = [
 
 function calculateHomepageRate(data: RankingData[]): number {
   const homepageCount = data
-    .filter((d) => d.range === "top3" || d.range === "top4-10")
+    .filter((d) => d.range === "top3-5" || d.range === "top6-10")
     .reduce((sum, d) => sum + d.count, 0);
   const total = data.reduce((sum, d) => sum + d.count, 0);
   return total > 0 ? Math.round((homepageCount / total) * 100) : 0;
@@ -264,15 +265,17 @@ export default function RankingDistributionChart({
     const homepageCount =
       propHomepage ??
       data
-        .filter((d) => d.range === "top3" || d.range === "top4-10")
+        .filter((d) => d.range === "top3-5" || d.range === "top6-10")
         .reduce((sum, d) => sum + d.count, 0);
     const homepageRate = total > 0 ? Math.round((homepageCount / total) * 100) : 0;
+    // Top 3-5 区间数量（冲刺 Top 3 的潜力页面）
+    const top3to5Count = data.find((d) => d.range === "top3-5")?.count ?? 0;
 
     return {
       total,
       homepageCount,
       homepageRate,
-      top3Count: data.find((d) => d.range === "top3")?.count ?? 0,
+      top3to5Count,
       top10Count: homepageCount,
     };
   }, [data, propTotal, propHomepage]);
@@ -388,9 +391,9 @@ export default function RankingDistributionChart({
         className="grid grid-cols-2 gap-4 border-b border-[#f0f0f0] p-6 sm:grid-cols-4"
       >
         <StatCard
-          label="Top 3 关键词"
-          value={stats.top3Count}
-          subtext="黄金位置"
+          label="Top 3-5 页面"
+          value={stats.top3to5Count}
+          subtext="冲刺 Top 3"
           color={GSC_COLORS.ranking.top3}
           delay={0.1}
         />

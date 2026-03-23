@@ -211,6 +211,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
   },
 
   // 低点击页面 (<50 clicks) - 外圈
+  // 角度错开，避免与高/中点击页面重叠
   {
     id: "digital-payment",
     title: "数字支付",
@@ -220,7 +221,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     impressions: 1037,
     ctr: 5.6,
     color: "#ab47bc",
-    angle: 282.8,
+    angle: 300,  // 右下
     category: "low",
     topQueries: [
       { query: "外傭薪金轉數快", clicks: 4, position: 6.8 },
@@ -236,7 +237,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     impressions: 1047,
     ctr: 5.4,
     color: "#ab47bc",
-    angle: 334.2,
+    angle: 350,  // 右侧偏上
     category: "low",
     topQueries: [
       { query: "id407合約", clicks: 5, position: 6.5 },
@@ -252,7 +253,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     impressions: 1250,
     ctr: 4.1,
     color: "#ab47bc",
-    angle: 51.4,
+    angle: 40,   // 右上（与中圈 25.7° 错开）
     category: "low",
     topQueries: [
       { query: "照顧老人面試問題", clicks: 4, position: 9.8 },
@@ -268,7 +269,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     impressions: 954,
     ctr: 5.1,
     color: "#ab47bc",
-    angle: 102.8,
+    angle: 120,  // 左下偏上（与中圈 128.5° 错开）
     category: "low",
     topQueries: [
       { query: "外傭失蹤點算", clicks: 5, position: 6.1 },
@@ -284,7 +285,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     impressions: 1382,
     ctr: 3.3,
     color: "#ab47bc",
-    angle: 154.2,
+    angle: 200,  // 左侧（与中圈 180°、231.4° 错开）
     category: "low",
     topQueries: [
       { query: "外傭偷嘢報警", clicks: 6, position: 4.5 },
@@ -348,10 +349,10 @@ function ClusterCard({
 
   return (
     <motion.div
-      className={`absolute z-30 w-36 cursor-pointer rounded-lg border bg-white p-2.5 shadow-md transition-all ${
+      className={`absolute z-30 w-28 cursor-pointer rounded-lg border bg-white p-2 shadow-md transition-all ${
         isSelected ? "border-[#27c3da] shadow-lg shadow-[#27c3da]/20" : "border-[#e5e5e5] hover:border-[#27c3da]/50"
       }`}
-      style={{ left: `calc(50% + ${x}px - 72px)`, top: `calc(50% + ${y}px - 35px)` }}
+      style={{ left: `calc(50% + ${x}px - 56px)`, top: `calc(50% + ${y}px - 30px)` }}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       whileHover={{ scale: 1.08, zIndex: 40 }}
@@ -359,7 +360,7 @@ function ClusterCard({
     >
       {/* 排名徽章 */}
       <div
-        className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold text-white"
+        className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full text-[8px] font-bold text-white"
         style={{ backgroundColor: cluster.position <= 5 ? "#27c3da" : config.color }}
       >
         {cluster.position <= 5 ? "★" : cluster.position.toFixed(0)}
@@ -367,17 +368,17 @@ function ClusterCard({
 
       {/* 分类标签 */}
       <div
-        className="mb-1 inline-block rounded px-1 py-0.5 text-[7px] font-medium"
+        className="mb-0.5 inline-block rounded px-1 py-0 text-[6px] font-medium"
         style={{ backgroundColor: config.bg, color: config.color }}
       >
         {config.label}
       </div>
 
       {/* 标题 */}
-      <h4 className="truncate text-[11px] font-semibold leading-tight text-[#1a1a1a]">{cluster.title}</h4>
+      <h4 className="truncate text-[10px] font-semibold leading-tight text-[#1a1a1a]">{cluster.title}</h4>
 
       {/* 指标 */}
-      <div className="mt-1.5 flex items-center justify-between border-t border-[#f0f0f0] pt-1 text-[9px]">
+      <div className="mt-1 flex items-center justify-between border-t border-[#f0f0f0] pt-0.5 text-[8px]">
         <span className="text-[#27c3da]">{cluster.clicks} 点击</span>
         <span style={{ color: config.color }}>#{cluster.position}</span>
       </div>
@@ -554,8 +555,9 @@ export default function TopicClusterVisualization() {
   }, []);
 
   // 计算位置 - 三层环形布局
+  // 增大半径避免卡片重叠，同时减小卡片尺寸
   const getClusterPosition = (cluster: ContentCluster) => {
-    const radiusMap = { high: 130, medium: 200, low: 270 };
+    const radiusMap = { high: 110, medium: 175, low: 240 };
     const radius = radiusMap[cluster.category];
     const radian = (cluster.angle * Math.PI) / 180;
     return { x: Math.cos(radian) * radius, y: Math.sin(radian) * radius };
@@ -610,7 +612,7 @@ export default function TopicClusterVisualization() {
       </div>
 
       {/* Visualization */}
-      <div className="relative mx-auto mb-6 h-[480px] w-full max-w-[600px]">
+      <div className="relative mx-auto mb-6 h-[540px] w-full max-w-[640px]">
         {/* Connection lines */}
         {MAIDINHK_CLUSTERS.map((cluster, index) => {
           const pos = getClusterPosition(cluster);

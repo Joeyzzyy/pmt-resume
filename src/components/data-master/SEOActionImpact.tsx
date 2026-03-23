@@ -71,16 +71,14 @@ const DEFAULT_TASKS: OptimizationTask[] = [
     issue: {
       type: "high_impression_low_click",
       severity: "high",
-      description: "展示量 10,367 (全站第1) 但 CTR 仅 0.3%，Title 未突出'2024最新工资标准'",
+      description: "展示量 10,367 (全站第1) 但 CTR 仅 0.3%，Title 未突出最新工资标准",
     },
     suggestion: {
       title: "Title 重构 + 数字强化",
       description: "用户搜'最低工资''人工计算'，当前 Title 缺乏吸引力和时效性",
       steps: [
-        "Title 改为：外佣最低工资2024｜印傭菲傭人工計算+僱主預算全攻略",
-        "Meta Description 加入'HK$4,870'具体数字和'僱主支出總覽'",
-        "首段直接给出'2024年最低工資：HK$4,870/月'",
-        "添加工资计算器或对比表格",
+        "Title 加入最新年份和具体数字，突出'人工計算''僱主預算'关键词",
+        "首段直接给出数字，添加工资对比表格增强可信度",
       ],
       expectedImpact: "CTR 预计从 0.3% → 3%+，点击量提升 10 倍",
     },
@@ -109,10 +107,8 @@ const DEFAULT_TASKS: OptimizationTask[] = [
       title: "SERP 摘要优化 + 对比可视化",
       description: "高商业意图搜索词，但 SERP 缺乏具体对比数据吸引点击",
       steps: [
-        "Title 加入具体数字：'菲傭印傭人工對比 2024｜月薪/假期/保險差異'",
-        "Meta Description 强调'一表看清'、'全成本比較'",
-        "添加对比表格：菲傭月薪、印傭月薪、假期差異、保險成本",
-        "增加 FAQ Schema：'菲傭印傭哪個好？'",
+        "Title 加入具体数字和对比维度（月薪/假期/保險）",
+        "添加对比表格和 FAQ Schema，强化'一表看清'的摘要吸引力",
       ],
       expectedImpact: "CTR 预计从 0.6% → 4%+，排名进入首页",
     },
@@ -141,10 +137,8 @@ const DEFAULT_TASKS: OptimizationTask[] = [
       title: "内容深度 + 内链权重",
       description: "内容质量良好但缺乏权威性引用和内部链接支持",
       steps: [
-        "引用入境處最新 ID990A 表格链接 (immd.gov.hk)",
-        "添加'常見拒簽原因'章节（高搜索量关键词）",
-        "从'外佣雇佣指南'支柱页添加内链指向此页",
-        "增加办理时间线图表",
+        "引用入境處官方文件增强权威性，补充高搜索量关键词章节",
+        "从支柱页添加内链传递权重，增加可视化时间线提升用户体验",
       ],
       expectedImpact: "排名预计从 #9 → #5，点击量提升 50%",
     },
@@ -173,10 +167,8 @@ const DEFAULT_TASKS: OptimizationTask[] = [
       title: "关键词重构 + 内容重组",
       description: "用户搜'續約'相关词占比高，但页面未突出此意图",
       steps: [
-        "Title 改为：外傭續約完整流程｜合約到期前3個月準備事項",
-        "首段增加'續約 vs 重新聘請'决策对比",
-        "添加續約时间线：到期前3月、1月、到期日",
-        "从'合约法规'支柱页增加内链",
+        "Title 和首段强化'續約'核心关键词，突出时效性和准备周期",
+        "增加續約 vs 重新聘請的决策对比，从支柱页导入内链",
       ],
       expectedImpact: "排名预计从 #19 → #10，进入首页",
     },
@@ -205,10 +197,8 @@ const DEFAULT_TASKS: OptimizationTask[] = [
       title: "添加计算示例 + 案例说明",
       description: "YMYL 内容需要更清晰的解释和官方引用",
       steps: [
-        "Title 加入'計算方法'：長期服務金計算方法 2024｜外傭 LSP 完整指南",
-        "添加计算示例：'假設工人姐姐工作5年，月薪$5,000...'",
-        "引用勞工處官方计算器链接",
-        "增加 FAQ：'解約要付長期服務金嗎？'",
+        "Title 突出'計算方法'和实用工具属性，添加具体计算案例",
+        "引用勞工處官方文件增强权威性，补充常见解约场景 FAQ",
       ],
       expectedImpact: "CTR 预计从 0.9% → 3%，排名提升至 Top 10",
     },
@@ -654,6 +644,52 @@ export default function SEOActionImpact() {
         <p className="mt-2 text-xs text-[#999]">
           数据源: maidinhk.com-Performance-on-Search-2026-03-22.xlsx · 
           Top 5 待优化页面总展示量: {stats.totalImpressions.toLocaleString()}
+        </p>
+      </div>
+
+      {/* Sprint to Top 3 - 冲刺目标 */}
+      <div className="mb-6 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-4">
+        <div className="mb-3 flex items-center gap-2">
+          <span className="text-lg">🎯</span>
+          <h4 className="font-semibold text-amber-900">冲刺 Top 3 优先目标</h4>
+          <span className="rounded-full bg-amber-200 px-2 py-0.5 text-[10px] font-medium text-amber-800">
+            当前最好排名 #3.6
+          </span>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <a 
+            href="https://maidinhk.com/blog/baby-playpen-safety"
+            target="_blank"
+            rel="noopener noreferrer" 
+            className="flex items-center gap-3 rounded-lg bg-white/70 p-3 transition-colors hover:bg-white"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700">
+              #3.6
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="truncate text-sm font-medium text-[#1a1a1a]">婴儿围栏安全指南</p>
+              <p className="text-xs text-[#666]">239 点击 · 冲刺 #3</p>
+            </div>
+            <span className="text-xs text-amber-600">→</span>
+          </a>
+          <a 
+            href="https://maidinhk.com/blog/helper-caregiver-burnout"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 rounded-lg bg-white/70 p-3 transition-colors hover:bg-white"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700">
+              #4.0
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="truncate text-sm font-medium text-[#1a1a1a]">外佣职业倦怠识别</p>
+              <p className="text-xs text-[#666]">89 点击 · 冲刺 #3</p>
+            </div>
+            <span className="text-xs text-amber-600">→</span>
+          </a>
+        </div>
+        <p className="mt-3 text-[10px] text-amber-700">
+          💡 建议：优化这两页的 Title 和 Description，增加内链支持，有望短期内进入首页前 3
         </p>
       </div>
 
