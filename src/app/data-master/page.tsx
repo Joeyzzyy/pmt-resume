@@ -131,37 +131,42 @@ export default function DataMasterPage() {
           <GSCImport />
         </ScrollReveal>
 
-        {/* Stats Overview */}
+        {/* Stats Overview - 基于 GSC Excel 真实数据 */}
         <ScrollReveal>
-          <div className="mb-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-              <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
-                搜索词记录
-              </p>
-              <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
-                {stats.queryCount.toLocaleString()}
-              </p>
-              <p className="mt-2 text-xs text-[#888]">截至 03/20</p>
+          <div className="mb-16">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-xs text-[#999]">数据来源: GSC Excel (2025-12-21 至 2026-03-20)</p>
             </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+                <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
+                  搜索词记录
+                </p>
+                <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
+                  1,000
+                </p>
+                <p className="mt-2 text-xs text-[#888]">Queries 工作表</p>
+              </div>
 
-            <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-              <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
-                页面记录
-              </p>
-              <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
-                {stats.pageCount.toLocaleString()}
-              </p>
-              <p className="mt-2 text-xs text-[#888]">截至 03/20</p>
-            </div>
+              <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+                <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
+                  页面记录
+                </p>
+                <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
+                  236
+                </p>
+                <p className="mt-2 text-xs text-[#888]">Pages 工作表</p>
+              </div>
 
-            <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-              <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
-                总数据量
-              </p>
-              <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
-                {stats.totalCount.toLocaleString()}
-              </p>
-              <p className="mt-2 text-xs text-[#888]">查询 + 页面</p>
+              <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+                <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
+                  总数据量
+                </p>
+                <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
+                  1,236
+                </p>
+                <p className="mt-2 text-xs text-[#888]">查询 + 页面</p>
+              </div>
             </div>
           </div>
         </ScrollReveal>
