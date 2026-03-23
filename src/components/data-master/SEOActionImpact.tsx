@@ -324,8 +324,16 @@ function TaskCard({
                 : "待优化"}
             </span>
           </div>
-          <h4 className="mt-1 truncate text-sm font-semibold text-[#1a1a1a]">{task.page.title}</h4>
-          <p className="truncate text-xs text-[#666]">{task.page.url}</p>
+          <a 
+            href={task.page.url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="mt-1 block truncate text-sm font-semibold text-[#1a1a1a] hover:text-[#27c3da] transition-colors"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {task.page.title}
+          </a>
+          <p className="truncate text-xs text-[#999]">{task.page.url}</p>
         </div>
 
         {/* Metrics Preview */}
