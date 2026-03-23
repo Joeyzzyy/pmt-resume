@@ -71,7 +71,7 @@ const DEFAULT_TASKS: OptimizationTask[] = [
     issue: {
       type: "high_impression_low_click",
       severity: "high",
-      description: "展示量 10,367 (全站第1) 但 CTR 仅 0.3%，Title 未突出"2024最新工资标准"",
+      description: "展示量 10,367 (全站第1) 但 CTR 仅 0.3%，Title 未突出'2024最新工资标准'",
     },
     suggestion: {
       title: "Title 重构 + 数字强化",
