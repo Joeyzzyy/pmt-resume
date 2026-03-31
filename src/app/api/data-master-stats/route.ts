@@ -37,7 +37,56 @@ const mockData = {
     { page: "https://maidinhk.com/blog/apply-for-helper", impressions: 504, clicks: 1, ctr: 0.0020, position: 15.0 },
     { page: "https://maidinhk.com/blog/baby-burping-techniques", impressions: 288, clicks: 3, ctr: 0.0104, position: 7.8 },
   ],
+  rankingDistribution: [
+    { range: "top1-5", label: "Top 1-5", count: 8, percentage: 3.4, color: "#27c3da", description: "首页顶部，冲刺 Top 3" },
+    { range: "top6-10", label: "Top 6-10", count: 174, percentage: 73.7, color: "#5fd4e6", description: "首页中部，稳定流量" },
+    { range: "top11-30", label: "Top 11-30", count: 33, percentage: 14.0, color: "#8e24aa", description: "第2-3页，潜力待挖" },
+    { range: "beyond30", label: "31+", count: 21, percentage: 8.9, color: "#e0e0e0", description: "第4页后，需重点优化" },
+  ],
+  searchIntent: [
+    { dimension: "信息价值", siteAverage: 72, highClickPages: 85, topKeywords: ["外傭黑名單", "工人姐姐工作清單", "外傭每日工作程序表"], description: "用户主动搜索外佣相关政策、流程类信息 (占比 93%)", weight: 0.9 },
+    { dimension: "交易转化", siteAverage: 45, highClickPages: 92, topKeywords: ["工人姐姐返大陸簽證收費", "請工人心得", "外傭欠債如何處理"], description: "用户有明确问题需要解决 (占比 6%)", weight: 1.2 },
+    { dimension: "商业潜力", siteAverage: 58, highClickPages: 78, topKeywords: ["工人姐姐規矩", "請工人注意", "外傭管理方法"], description: "用户处于学习和评估阶段 (占比 1%)", weight: 1.0 },
+    { dimension: "品牌知名度", siteAverage: 38, highClickPages: 65, topKeywords: ["maidinhk", "maidinhk.com", "外傭僱傭中心"], description: "用户主动搜索品牌 (占比 <1%)", weight: 0.8 },
+    { dimension: "长尾覆盖", siteAverage: 65, highClickPages: 70, topKeywords: ["工人姐姐斷約處理", "外傭偷懶點算", "菲傭情緒問題"], description: "覆盖细分痛点问题，体现内容深度", weight: 0.85 },
+  ],
 };
+
+// 意图检测函数
+function detectIntent(query: string): string {
+  const lowerQuery = query.toLowerCase();
+
+  const informationalPatterns = [
+    '流程', '点样', '指南', '手续', '如何', '怎样', '教程',
+    '攻略', '方法', '步骤', '介绍', '解释', '是什么', '为什么',
+    '怎么', '何如', '求', '問', '问题', 'FAQ', 'what', 'how to',
+    'guide', 'tutorial', 'step', 'process', 'procedure'
+  ];
+
+  const commercialPatterns = [
+    '中介', '比较', '边间好', '推荐', '评测', '对比', '哪个好',
+    '最好', '排名', '排行榜', '前十', '评价', '口碑', 'vs',
+    'versus', 'compare', 'best', 'top', 'review', 'recommend'
+  ];
+
+  const transactionalPatterns = [
+    '预约', '价格', '收费', '地址', '电话', '联系', '购买',
+    '订购', '报名', '申请', '下载', '免费', '优惠', 'discount',
+    'price', 'cost', 'buy', 'purchase', 'order', 'book', 'download'
+  ];
+
+  const navigationalPatterns = [
+    'maidinhk', 'maidin', '美迪', '官网', '首页', '网站',
+    'official', 'homepage', 'login', 'sign in'
+  ];
+
+  if (transactionalPatterns.some(p => lowerQuery.includes(p.toLowerCase()))) return 'Transactional';
+  if (commercialPatterns.some(p => lowerQuery.includes(p.toLowerCase()))) return 'Commercial';
+  if (informationalPatterns.some(p => lowerQuery.includes(p.toLowerCase()))) return 'Informational';
+  if (navigationalPatterns.some(p => lowerQuery.includes(p.toLowerCase()))) return 'Navigational';
+
+  return 'Informational';
+}
 
 export async function GET() {
   try {
@@ -60,6 +109,10 @@ export async function GET() {
       topQueriesResult,
       topPagesResult,
       optimizationTargetsResult,
+      // 获取所有页面数据用于排名分布计算
+      allPagesResult,
+      // 获取所有查询数据用于意图分析
+      allQueriesResult,
     ] = await Promise.all([
       // 搜索词总数
       supabase
@@ -78,25 +131,115 @@ export async function GET() {
         .order("impressions", { ascending: false })
         .limit(10),
 
-      // 热门页面 Top 10
+      // 热门页面 Top 15（用于内容集群）
       supabase
         .from("maidinhk_gsc_pages")
         .select("page, impressions, clicks, ctr, position")
+        .neq("page", "_SUMMARY_")
         .order("impressions", { ascending: false })
-        .limit(10),
+        .limit(15),
 
       // 需要优化的页面
       supabase
         .from("maidinhk_gsc_pages")
         .select("page, impressions, clicks, ctr, position")
+        .neq("page", "_SUMMARY_")
         .gte("impressions", 100)
         .lte("ctr", 0.03)
         .order("impressions", { ascending: false })
         .limit(5),
+
+      // 所有页面数据（用于排名分布）
+      supabase
+        .from("maidinhk_gsc_pages")
+        .select("page, position")
+        .neq("page", "_SUMMARY_"),
+
+      // 所有查询数据（用于意图分析）
+      supabase
+        .from("maidinhk_gsc_data")
+        .select("query, clicks, impressions, ctr, position")
+        .order("clicks", { ascending: false })
+        .limit(100),
     ]);
 
     const queryCount = queryCountResult.count || mockData.queryCount;
     const pageCount = pageCountResult.count || mockData.pageCount;
+
+    // 计算排名分布
+    let rankingDistribution = mockData.rankingDistribution;
+    if (allPagesResult.data && allPagesResult.data.length > 0) {
+      // 按页面计算平均排名
+      const pageRankings: Record<string, number[]> = {};
+      allPagesResult.data.forEach((row: { page: string; position: number }) => {
+        if (!pageRankings[row.page]) pageRankings[row.page] = [];
+        pageRankings[row.page].push(row.position);
+      });
+
+      const avgPositions = Object.values(pageRankings).map(positions => 
+        positions.reduce((a, b) => a + b, 0) / positions.length
+      );
+
+      const top1to5 = avgPositions.filter(p => p <= 5).length;
+      const top6to10 = avgPositions.filter(p => p > 5 && p <= 10).length;
+      const top11to30 = avgPositions.filter(p => p > 10 && p <= 30).length;
+      const beyond30 = avgPositions.filter(p => p > 30).length;
+      const total = avgPositions.length;
+
+      rankingDistribution = [
+        { range: "top1-5", label: "Top 1-5", count: top1to5, percentage: total > 0 ? Math.round((top1to5 / total) * 100 * 10) / 10 : 0, color: "#27c3da", description: "首页顶部，冲刺 Top 3" },
+        { range: "top6-10", label: "Top 6-10", count: top6to10, percentage: total > 0 ? Math.round((top6to10 / total) * 100 * 10) / 10 : 0, color: "#5fd4e6", description: "首页中部，稳定流量" },
+        { range: "top11-30", label: "Top 11-30", count: top11to30, percentage: total > 0 ? Math.round((top11to30 / total) * 100 * 10) / 10 : 0, color: "#8e24aa", description: "第2-3页，潜力待挖" },
+        { range: "beyond30", label: "31+", count: beyond30, percentage: total > 0 ? Math.round((beyond30 / total) * 100 * 10) / 10 : 0, color: "#e0e0e0", description: "第4页后，需重点优化" },
+      ];
+    }
+
+    // 计算搜索意图分布
+    let searchIntent = mockData.searchIntent;
+    if (allQueriesResult.data && allQueriesResult.data.length > 0) {
+      // 按意图分类
+      const intentGroups: Record<string, { query: string; clicks: number; impressions: number; ctr: number; position: number }[]> = {
+        Informational: [],
+        Commercial: [],
+        Transactional: [],
+        Navigational: [],
+      };
+
+      allQueriesResult.data.forEach((row: { query: string; clicks: number; impressions: number; ctr: number; position: number }) => {
+        const intent = detectIntent(row.query);
+        if (intentGroups[intent]) {
+          intentGroups[intent].push(row);
+        }
+      });
+
+      // 计算各维度的分数
+      const calculateScore = (items: { clicks: number; position: number }[]) => {
+        if (items.length === 0) return 0;
+        const avgClicks = items.reduce((sum, item) => sum + item.clicks, 0) / items.length;
+        const avgPosition = items.reduce((sum, item) => sum + item.position, 0) / items.length;
+        // 基于点击量和排名计算分数 (0-100)
+        const clickScore = Math.min(avgClicks * 5, 60);
+        const positionScore = Math.max(0, (30 - avgPosition) * 1.5);
+        return Math.round(Math.min(clickScore + positionScore, 100));
+      };
+
+      const infoScore = calculateScore(intentGroups.Informational);
+      const commercialScore = calculateScore(intentGroups.Commercial);
+      const transScore = calculateScore(intentGroups.Transactional);
+      const navScore = calculateScore(intentGroups.Navigational);
+
+      // 获取每个意图类型的 Top 关键词
+      const getTopKeywords = (items: { query: string }[]) => 
+        items.slice(0, 3).map((item) => item.query);
+
+      searchIntent = [
+        { dimension: "信息价值", siteAverage: Math.round(infoScore * 0.85), highClickPages: infoScore, topKeywords: getTopKeywords(intentGroups.Informational).length > 0 ? getTopKeywords(intentGroups.Informational) : mockData.searchIntent[0].topKeywords, description: "用户主动搜索外佣相关政策、流程类信息", weight: 0.9 },
+        { dimension: "交易转化", siteAverage: Math.round(transScore * 0.6), highClickPages: transScore, topKeywords: getTopKeywords(intentGroups.Transactional).length > 0 ? getTopKeywords(intentGroups.Transactional) : mockData.searchIntent[1].topKeywords, description: "用户有明确问题需要解决", weight: 1.2 },
+        { dimension: "商业潜力", siteAverage: Math.round(commercialScore * 0.75), highClickPages: commercialScore, topKeywords: getTopKeywords(intentGroups.Commercial).length > 0 ? getTopKeywords(intentGroups.Commercial) : mockData.searchIntent[2].topKeywords, description: "用户处于学习和评估阶段", weight: 1.0 },
+        { dimension: "品牌知名度", siteAverage: Math.round(navScore * 0.6), highClickPages: navScore, topKeywords: getTopKeywords(intentGroups.Navigational).length > 0 ? getTopKeywords(intentGroups.Navigational) : mockData.searchIntent[3].topKeywords, description: "用户主动搜索品牌", weight: 0.8 },
+        { dimension: "长尾覆盖", siteAverage: Math.round((infoScore + commercialScore) / 2 * 0.9), highClickPages: Math.round((infoScore + commercialScore) / 2), topKeywords: mockData.searchIntent[4].topKeywords, description: "覆盖细分痛点问题，体现内容深度", weight: 0.85 },
+      ];
+    }
 
     return NextResponse.json({
       queryCount,
@@ -105,6 +248,8 @@ export async function GET() {
       topQueries: topQueriesResult.data || mockData.topQueries,
       topPages: topPagesResult.data || mockData.topPages,
       optimizationTargets: optimizationTargetsResult.data || mockData.optimizationTargets,
+      rankingDistribution,
+      searchIntent,
     });
   } catch (error) {
     console.error("[Data Master Stats] Error:", error);

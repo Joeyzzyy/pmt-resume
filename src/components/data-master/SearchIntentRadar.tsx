@@ -31,6 +31,7 @@ interface SearchIntentRadarProps {
   loading?: boolean;
   className?: string;
   onDimensionClick?: (dimension: string) => void;
+  refreshKey?: number;
 }
 
 interface CustomTooltipProps {
@@ -415,21 +416,51 @@ export default function SearchIntentRadar({
   loading = false,
   className = "",
   onDimensionClick,
+  refreshKey,
 }: SearchIntentRadarProps) {
   const [mounted, setMounted] = useState(false);
   const [selectedDimension, setSelectedDimension] = useState<string | null>(null);
   const [hoveredDimension, setHoveredDimension] = useState<string | null>(null);
+  const [dynamicData, setDynamicData] = useState<IntentDimension[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // 监听 refreshKey 变化，从 API 获取最新搜索意图数据
+  useEffect(() => {
+    if (refreshKey !== undefined && refreshKey > 0) {
+      fetchSearchIntent();
+    }
+  }, [refreshKey]);
+
+  async function fetchSearchIntent() {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/data-master-stats');
+      const result = await response.json();
+      
+      // 如果 API 返回了搜索意图数据，使用它
+      if (result.searchIntent) {
+        setDynamicData(result.searchIntent);
+      }
+    } catch (error) {
+      console.error('获取搜索意图数据失败:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  // 优先使用传入的 data，其次是动态获取的数据，最后是默认数据
+  const displayData = data !== DEFAULT_DIMENSIONS ? data : (dynamicData ?? DEFAULT_DIMENSIONS);
+
   // 计算统计数据
   const stats = useMemo(() => {
-    const avgSite = data.reduce((sum, d) => sum + d.siteAverage, 0) / data.length;
-    const avgHighClick = data.reduce((sum, d) => sum + d.highClickPages, 0) / data.length;
-    const transactionalScore = data.find(d => d.dimension === "交易转化")?.highClickPages || 0;
-    const maxGap = Math.max(...data.map(d => d.highClickPages - d.siteAverage));
+    const avgSite = displayData.reduce((sum, d) => sum + d.siteAverage, 0) / displayData.length;
+    const avgHighClick = displayData.reduce((sum, d) => sum + d.highClickPages, 0) / displayData.length;
+    const transactionalScore = displayData.find(d => d.dimension === "交易转化")?.highClickPages || 0;
+    const maxGap = Math.max(...displayData.map(d => d.highClickPages - d.siteAverage));
 
     return {
       avgSite: Math.round(avgSite),
@@ -437,15 +468,15 @@ export default function SearchIntentRadar({
       transactionalScore,
       maxGap: Math.round(maxGap),
     };
-  }, [data]);
+  }, [displayData]);
 
   // 生成评价文案
-  const assessment = useMemo(() => generateProfessionalAssessment(data), [data]);
+  const assessment = useMemo(() => generateProfessionalAssessment(displayData), [displayData]);
 
   // 选中的维度数据
   const selectedData = useMemo(() => {
-    return data.find(d => d.dimension === selectedDimension) || null;
-  }, [data, selectedDimension]);
+    return displayData.find(d => d.dimension === selectedDimension) || null;
+  }, [displayData, selectedDimension]);
 
   // 动画变体
   const containerVariants = {
@@ -466,7 +497,7 @@ export default function SearchIntentRadar({
     onDimensionClick?.(dimension);
   };
 
-  if (loading || !mounted) {
+  if (loading || isLoading || !mounted) {
     return (
       <div className={`rounded-xl border border-[#e5e5e5] bg-white p-6 ${className}`}>
         <div className="h-6 w-2/3 animate-pulse rounded bg-gray-200" />
@@ -581,7 +612,7 @@ export default function SearchIntentRadar({
 
           <div className="h-80 w-full sm:h-96">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={data} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+              <RadarChart data={displayData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
                 <PolarGrid stroke={COLORS.grid} />
                 <PolarAngleAxis
                   dataKey="dimension"
@@ -623,7 +654,7 @@ export default function SearchIntentRadar({
         <motion.div variants={itemVariants} className="space-y-3">
           <h4 className="text-sm font-semibold text-[#1a1a1a]">维度详情</h4>
           <div className="space-y-2">
-            {data.map((dimension, index) => (
+            {displayData.map((dimension, index) => (
               <motion.div
                 key={dimension.dimension}
                 initial={{ opacity: 0, x: 20 }}

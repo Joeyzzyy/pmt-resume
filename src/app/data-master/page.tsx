@@ -10,7 +10,7 @@ import TopicClusterVisualization from "@/components/data-master/TopicClusterVisu
 import RankingDistributionChart from "@/components/data-master/RankingDistributionChart";
 import SearchIntentRadar from "@/components/data-master/SearchIntentRadar";
 import SEOActionImpact from "@/components/data-master/SEOActionImpact";
-import LoadingSpinner, { TableSkeleton, CardSkeleton, ChartSkeleton } from "@/components/ui/LoadingSpinner";
+import { TableSkeleton, CardSkeleton, ChartSkeleton } from "@/components/ui/LoadingSpinner";
 
 interface QueryData {
   query: string;
@@ -41,10 +41,11 @@ export default function DataMasterPage() {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     fetchStats();
-  }, []);
+  }, [refreshKey]);
 
   async function fetchStats() {
     try {
@@ -128,14 +129,14 @@ export default function DataMasterPage() {
 
         {/* 数据导入 */}
         <ScrollReveal>
-          <GSCImport />
+          <GSCImport onImportSuccess={() => setRefreshKey((k) => k + 1)} />
         </ScrollReveal>
 
         {/* Stats Overview - 基于 GSC Excel 真实数据 */}
         <ScrollReveal>
           <div className="mb-16">
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-xs text-[#999]">数据来源: GSC Excel (2025-12-21 至 2026-03-20)</p>
+              <p className="text-xs text-[#999]">数据来源: GSC 导入数据</p>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
@@ -143,7 +144,7 @@ export default function DataMasterPage() {
                   搜索词记录
                 </p>
                 <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
-                  1,000
+                  {stats?.queryCount?.toLocaleString() ?? "—"}
                 </p>
                 <p className="mt-2 text-xs text-[#888]">Queries 工作表</p>
               </div>
@@ -153,7 +154,7 @@ export default function DataMasterPage() {
                   页面记录
                 </p>
                 <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
-                  236
+                  {stats?.pageCount?.toLocaleString() ?? "—"}
                 </p>
                 <p className="mt-2 text-xs text-[#888]">Pages 工作表</p>
               </div>
@@ -163,7 +164,7 @@ export default function DataMasterPage() {
                   总数据量
                 </p>
                 <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
-                  1,236
+                  {stats?.totalCount?.toLocaleString() ?? "—"}
                 </p>
                 <p className="mt-2 text-xs text-[#888]">查询 + 页面</p>
               </div>
@@ -174,35 +175,35 @@ export default function DataMasterPage() {
         {/* Performance Chart */}
         <ScrollReveal>
           <section className="mb-16">
-            <GSCPerformanceChart />
+            <GSCPerformanceChart refreshKey={refreshKey} />
           </section>
         </ScrollReveal>
 
         {/* Ranking Distribution */}
         <ScrollReveal>
           <section className="mb-16">
-            <RankingDistributionChart />
+            <RankingDistributionChart refreshKey={refreshKey} />
           </section>
         </ScrollReveal>
 
         {/* Search Intent Radar */}
         <ScrollReveal>
           <section className="mb-16">
-            <SearchIntentRadar />
+            <SearchIntentRadar refreshKey={refreshKey} />
           </section>
         </ScrollReveal>
 
         {/* SEO Action Impact */}
         <ScrollReveal>
           <section className="mb-16">
-            <SEOActionImpact />
+            <SEOActionImpact refreshKey={refreshKey} optimizationTargets={stats?.optimizationTargets} />
           </section>
         </ScrollReveal>
 
         {/* Topic Cluster Visualization */}
         <ScrollReveal>
           <section className="mb-16">
-            <TopicClusterVisualization />
+            <TopicClusterVisualization refreshKey={refreshKey} topPages={stats?.topPages} />
           </section>
         </ScrollReveal>
 

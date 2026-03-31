@@ -15,7 +15,11 @@ interface ImportResult {
   errors?: string[];
 }
 
-export default function GSCImport() {
+interface GSCImportProps {
+  onImportSuccess?: () => void;
+}
+
+export default function GSCImport({ onImportSuccess }: GSCImportProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [clearExisting, setClearExisting] = useState(false);
@@ -61,11 +65,9 @@ export default function GSCImport() {
 
       setResult(data);
       
-      // 导入成功后刷新页面数据
+      // 导入成功后通知父组件刷新数据
       if (data.success) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        onImportSuccess?.();
       }
     } catch (err) {
       setError((err as Error).message);
@@ -115,7 +117,7 @@ export default function GSCImport() {
               <li>从 GSC 导出 Excel 文件（.xlsx 或 .xls）</li>
               <li>系统会自动识别重复数据并覆盖</li>
               <li>支持按日期自动去重，同一天的数据会被新上传的覆盖</li>
-              <li>如需清空所有历史数据，请勾选"清空现有数据"</li>
+              <li>如需清空所有历史数据，请勾选&quot;清空现有数据&quot;</li>
             </ul>
           </div>
 

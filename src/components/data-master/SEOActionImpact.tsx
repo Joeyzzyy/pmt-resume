@@ -552,10 +552,88 @@ function UploadDataModal({
 // Main Component
 // ============================================
 
-export default function SEOActionImpact() {
+interface PageData {
+  page: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  position: number;
+}
+
+interface SEOActionImpactProps {
+  refreshKey?: number;
+  optimizationTargets?: PageData[];
+}
+
+export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEOActionImpactProps) {
   const [tasks, setTasks] = useState<OptimizationTask[]>(DEFAULT_TASKS);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [uploadingTaskId, setUploadingTaskId] = useState<string | null>(null);
+
+  // 监听 refreshKey 和 optimizationTargets 变化，动态生成任务
+  useEffect(() => {
+    if (optimizationTargets && optimizationTargets.length > 0) {
+      // 将 optimizationTargets 转换为 OptimizationTask 格式
+      const dynamicTasks: OptimizationTask[] = optimizationTargets.map((target, index) => {
+        let pathname = target.page;
+        try {
+          pathname = new URL(target.page).pathname;
+        } catch {
+          pathname = target.page.replace(/^https?:\/\/[^/]+/, '');
+        }
+        const slug = pathname.split('/').pop() || '';
+        
+        // 根据 CTR 和 impressions 判断问题类型
+        let issueType: OptimizationTask["issue"]["type"] = "content_gap";
+        let severity: OptimizationTask["issue"]["severity"] = "medium";
+        
+        if (target.ctr < 0.01 && target.impressions > 1000) {
+          issueType = "high_impression_low_click";
+          severity = "high";
+        } else if (target.ctr < 0.02) {
+          issueType = "low_ctr";
+          severity = "medium";
+        } else if (target.position > 15) {
+          issueType = "ranking_stuck";
+          severity = "high";
+        }
+        
+        return {
+          id: `task-${String(index + 1).padStart(3, '0')}`,
+          page: {
+            url: target.page,
+            title: slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+            slug,
+            currentMetrics: {
+              clicks: target.clicks,
+              impressions: target.impressions,
+              ctr: Math.round(target.ctr * 100 * 10) / 10,
+              position: target.position,
+            },
+          },
+          issue: {
+            type: issueType,
+            severity,
+            description: `展示量 ${target.impressions.toLocaleString()}，CTR ${(target.ctr * 100).toFixed(1)}%，排名 #${target.position.toFixed(1)}`,
+          },
+          suggestion: {
+            title: "优化 Title 和 Meta Description",
+            description: "当前 CTR 偏低，建议优化标题和描述以提高点击率",
+            steps: [
+              "在 Title 中加入更具吸引力的关键词",
+              "优化 Meta Description 突出页面价值",
+              "添加结构化数据以丰富 SERP 展示",
+            ],
+            expectedImpact: "CTR 预计提升 50-100%",
+          },
+          status: "pending",
+          createdAt: new Date().toISOString().split('T')[0],
+        };
+      });
+      
+      setTasks(dynamicTasks);
+    }
+  }, [refreshKey, optimizationTargets]);
 
   // 统计
   const stats = useMemo(() => {

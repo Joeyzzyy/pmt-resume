@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ============================================
@@ -535,24 +535,91 @@ function TechnicalNote() {
 // Main Component
 // ============================================
 
-export default function TopicClusterVisualization() {
-  const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
+interface TopicClusterVisualizationProps {
+  refreshKey?: number;
+  topPages?: PageData[];
+}
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+interface PageData {
+  page: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  position: number;
+}
+
+export default function TopicClusterVisualization({ refreshKey, topPages }: TopicClusterVisualizationProps) {
+  const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+
+  // 根据 topPages 动态生成集群数据
+  const displayClusters = useMemo(() => {
+    if (!topPages || topPages.length === 0) {
+      return MAIDINHK_CLUSTERS;
+    }
+    const validPages = topPages.filter((p) => p.page && p.page !== "_SUMMARY_");
+    return validPages.slice(0, 15).map((page, index) => {
+      let pathname = page.page;
+      try {
+        pathname = new URL(page.page).pathname;
+      } catch {
+        pathname = page.page.replace(/^https?:\/\/[^/]+/, '');
+      }
+      // 从 URL 路径提取标题
+      const slug = pathname.split('/').pop() || '';
+      const title = slug
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase())
+        .substring(0, 20);
+      
+      // 根据点击量确定分类
+      let category: "high" | "medium" | "low" = "low";
+      if (page.clicks >= 100) category = "high";
+      else if (page.clicks >= 50) category = "medium";
+      
+      // 分配颜色
+      const colorMap = {
+        high: "#27c3da",
+        medium: "#8e24aa",
+        low: "#ab47bc",
+      };
+      
+      // 计算角度（均匀分布）
+      const angle = (index * 360) / Math.min(topPages.length, 15);
+      
+      return {
+        id: `cluster-${index}`,
+        title: title || 'Untitled',
+        url: page.page,
+        clicks: page.clicks,
+        position: page.position,
+        impressions: page.impressions,
+        ctr: page.ctr * 100,
+        color: colorMap[category],
+        angle,
+        category,
+        topQueries: [
+          { query: `query-${index}-1`, clicks: Math.round(page.clicks * 0.4), position: page.position },
+          { query: `query-${index}-2`, clicks: Math.round(page.clicks * 0.3), position: page.position + 1 },
+        ],
+      };
+    });
+  }, [refreshKey, topPages]);
 
   // 统计
   const stats = useMemo(() => {
-    const totalClicks = MAIDINHK_CLUSTERS.reduce((sum, c) => sum + c.clicks, 0);
-    const totalImpressions = MAIDINHK_CLUSTERS.reduce((sum, c) => sum + c.impressions, 0);
-    const avgPosition = MAIDINHK_CLUSTERS.reduce((sum, c) => sum + c.position, 0) / MAIDINHK_CLUSTERS.length;
-    const highCount = MAIDINHK_CLUSTERS.filter((c) => c.category === "high").length;
-    const top5Count = MAIDINHK_CLUSTERS.filter((c) => c.position <= 5).length;
+    const totalClicks = displayClusters.reduce((sum, c) => sum + c.clicks, 0);
+    const totalImpressions = displayClusters.reduce((sum, c) => sum + c.impressions, 0);
+    const avgPosition = displayClusters.reduce((sum, c) => sum + c.position, 0) / displayClusters.length;
+    const highCount = displayClusters.filter((c) => c.category === "high").length;
+    const top5Count = displayClusters.filter((c) => c.position <= 5).length;
 
-    return { totalClicks, totalImpressions, avgPosition: avgPosition.toFixed(1), highCount, top5Count, totalCount: MAIDINHK_CLUSTERS.length };
-  }, []);
+    return { totalClicks, totalImpressions, avgPosition: avgPosition.toFixed(1), highCount, top5Count, totalCount: displayClusters.length };
+  }, [displayClusters]);
 
   // 计算位置 - 三层环形布局
   // 增大半径避免卡片重叠，同时减小卡片尺寸
@@ -563,7 +630,7 @@ export default function TopicClusterVisualization() {
     return { x: Math.cos(radian) * radius, y: Math.sin(radian) * radius };
   };
 
-  const selectedClusterData = MAIDINHK_CLUSTERS.find((c) => c.id === selectedCluster);
+  const selectedClusterData = displayClusters.find((c) => c.id === selectedCluster);
 
   if (!mounted) {
     return (
@@ -614,7 +681,7 @@ export default function TopicClusterVisualization() {
       {/* Visualization */}
       <div className="relative mx-auto mb-6 h-[540px] w-full max-w-[640px]">
         {/* Connection lines */}
-        {MAIDINHK_CLUSTERS.map((cluster, index) => {
+        {displayClusters.map((cluster, index) => {
           const pos = getClusterPosition(cluster);
           const angle = Math.atan2(pos.y, pos.x) * (180 / Math.PI);
           const distance = Math.sqrt(pos.x * pos.x + pos.y * pos.y);
@@ -636,7 +703,7 @@ export default function TopicClusterVisualization() {
         </div>
 
         {/* Cluster cards */}
-        {MAIDINHK_CLUSTERS.map((cluster) => {
+        {displayClusters.map((cluster) => {
           const pos = getClusterPosition(cluster);
           return (
             <ClusterCard

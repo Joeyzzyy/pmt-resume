@@ -39,6 +39,10 @@ type TimeRange = "7d" | "28d" | "3m";
 type ViewMode = "single" | "all";
 type MetricType = "clicks" | "impressions" | "ctr" | "position";
 
+interface GSCPerformanceChartProps {
+  refreshKey?: number;
+}
+
 const timeRangeLabels: Record<TimeRange, string> = {
   "7d": "7 天",
   "28d": "28 天",
@@ -104,7 +108,7 @@ function normalizeData(data: ChartData[]): ChartData[] {
   }));
 }
 
-export default function GSCPerformanceChart() {
+export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartProps) {
   const [timeRange, setTimeRange] = useState<TimeRange>("7d");
   const [viewMode, setViewMode] = useState<ViewMode>("all");
   const [activeMetric, setActiveMetric] = useState<MetricType>("clicks");
@@ -114,7 +118,7 @@ export default function GSCPerformanceChart() {
 
   useEffect(() => {
     fetchData();
-  }, [timeRange]);
+  }, [timeRange, refreshKey]);
 
   async function fetchData() {
     try {

@@ -33,6 +33,7 @@ interface RankingDistributionChartProps {
   homepageKeywords?: number;
   loading?: boolean;
   className?: string;
+  refreshKey?: number;
 }
 
 // ============================================
@@ -252,12 +253,42 @@ export default function RankingDistributionChart({
   homepageKeywords: propHomepage,
   loading = false,
   className = "",
+  refreshKey,
 }: RankingDistributionChartProps) {
   const [mounted, setMounted] = useState(false);
+  const [dynamicData, setDynamicData] = useState<RankingData[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // 监听 refreshKey 变化，从 API 获取最新排名分布数据
+  useEffect(() => {
+    if (refreshKey !== undefined && refreshKey > 0) {
+      fetchRankingDistribution();
+    }
+  }, [refreshKey]);
+
+  async function fetchRankingDistribution() {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/data-master-stats');
+      const result = await response.json();
+      
+      // 如果 API 返回了排名分布数据，使用它
+      if (result.rankingDistribution) {
+        setDynamicData(result.rankingDistribution);
+      }
+    } catch (error) {
+      console.error('获取排名分布数据失败:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  // 优先使用传入的 data，其次是动态获取的数据，最后是默认数据
+  const displayData = data !== DEFAULT_DATA ? data : (dynamicData ?? DEFAULT_DATA);
 
   // 计算统计数据
   const stats = useMemo(() => {
@@ -304,7 +335,7 @@ export default function RankingDistributionChart({
     },
   };
 
-  if (loading || !mounted) {
+  if (loading || isLoading || !mounted) {
     return (
       <div className={`rounded-xl border border-[#e5e5e5] bg-white p-6 ${className}`}>
         <div className="h-6 w-2/3 animate-pulse rounded bg-gray-200" />
