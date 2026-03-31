@@ -485,7 +485,7 @@ function ClusterDetailPanel({ cluster, onClose }: { cluster: ContentCluster; onC
   );
 }
 
-function TechnicalNote() {
+function TechnicalNote({ hasDynamicData }: { hasDynamicData: boolean }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -509,19 +509,15 @@ function TechnicalNote() {
             <div className="mt-4 space-y-3 border-t border-[#f0f0f0] pt-4 text-sm text-[#666]">
               <p>
                 <strong className="text-[#1a1a1a]">数据来源：</strong>
-                maidinhk.com-Performance-on-Search-2026-03-22.xlsx
-              </p>
-              <p>
-                <strong className="text-[#1a1a1a]">数据范围：</strong>
-                2025-12-21 至 2026-03-20（90天）
+                {hasDynamicData ? "最新导入的 GSC Excel 数据" : "maidinhk.com 示例数据"}
               </p>
               <p>
                 <strong className="text-[#1a1a1a]">展示内容：</strong>
-                Top 15 页面按点击量分层（高点击{'>'}100、中点击50-100、低点击{'<'}50）
+                Top 15 页面按点击量分层（高点击 &gt;100、中点击 50-100、低点击 &lt;50）
               </p>
               <p>
-                <strong className="text-[#1a1a1a]">总览：</strong>
-                236 个页面，2,990 总点击，111,897 展示，平均 CTR 2.67%
+                <strong className="text-[#1a1a1a]">说明：</strong>
+                导入新数据后，集群卡片会自动更新为当前表现最佳的页面
               </p>
             </div>
           </motion.div>
@@ -593,7 +589,7 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
       
       return {
         id: `cluster-${index}`,
-        title: title || 'Untitled',
+        title: title || '未命名',
         url: page.page,
         clicks: page.clicks,
         position: page.position,
@@ -603,11 +599,12 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
         angle,
         category,
         topQueries: [
-          { query: `query-${index}-1`, clicks: Math.round(page.clicks * 0.4), position: page.position },
-          { query: `query-${index}-2`, clicks: Math.round(page.clicks * 0.3), position: page.position + 1 },
+          { query: `相关搜索词 ①`, clicks: Math.round(page.clicks * 0.4), position: page.position },
+          { query: `相关搜索词 ②`, clicks: Math.round(page.clicks * 0.3), position: page.position + 1 },
         ],
       };
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshKey, topPages]);
 
   // 统计
@@ -657,7 +654,7 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
           </div>
           <div>
             <h3 className="font-serif text-xl font-bold text-[#1a1a1a]">内容集群可视化</h3>
-            <p className="text-xs text-[#999]">maidinhk.com · GSC Excel 数据 · Top 15 页面</p>
+            <p className="text-xs text-[#999]">{topPages && topPages.length > 0 ? "基于最新导入的 GSC 数据 · Top 15 页面" : "基于示例数据 · Top 15 页面"}</p>
           </div>
         </div>
       </div>
@@ -749,7 +746,7 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
         </div>
       </div>
 
-      <TechnicalNote />
+      <TechnicalNote hasDynamicData={!!(topPages && topPages.length > 0)} />
     </div>
   );
 }

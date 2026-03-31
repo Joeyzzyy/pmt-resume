@@ -570,10 +570,93 @@ export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEO
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [uploadingTaskId, setUploadingTaskId] = useState<string | null>(null);
 
+  // Slug 到中文标题的映射
+  const getChineseTitle = (slug: string): string => {
+    const map: Record<string, string> = {
+      'minimum-wage-and-budget': '外佣最低工资与预算',
+      'filipino-vs-indonesian-salary-cost': '菲佣 vs 印佣薪资成本对比',
+      'visa-application-process': '签证申请流程',
+      'contract-renewal-procedures': '合约续约流程',
+      'long-service-payment-rules': '长期服务金规定',
+      'helper-blacklist': '外佣黑名单',
+      'work-schedule': '工作时间表',
+      'work-schedule-download': '工作时间表下载',
+      'accommodation-standards': '住宿标准',
+      'local-vs-overseas-helper-timeline-comparison': '本地 vs 海外工人时间对比',
+      'local-vs-overseas-helper-contract-differences': '本地 vs 海外工人合约差异',
+      'hiring-break-contract-helper': '聘请断约工人',
+      'loan-problems-solutions': '外佣借贷问题',
+      'digital-payment': '数字支付',
+      'id407-contract-guide': 'ID407 合约指南',
+      'elderly-interview': '照顾老人面试',
+      'missing-helper-procedures': '外佣失踪处理',
+      'helper-theft-police': '外佣盗窃报警',
+      'baby-playpen-safety': '婴儿围栏安全指南',
+      'helper-caregiver-burnout': '外佣职业倦怠识别',
+      'apply-for-helper': '申请外佣',
+      'baby-burping-techniques': '婴儿拍嗝技巧',
+      'break-contract-procedures': '断约处理流程',
+      'helper-rules': '外佣规矩指南',
+      'interview-questions': '面试问题清单',
+      'rest-day-arrangement': '休息日安排',
+      'food-allowance': '膳食津贴',
+    };
+    return map[slug] || slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
+  // 根据问题类型生成针对性建议
+  const getSuggestion = (issueType: OptimizationTask["issue"]["type"], ctr: number, position: number) => {
+    if (issueType === "high_impression_low_click") {
+      return {
+        title: "优化标题与摘要，提升 CTR",
+        description: `当前展示量高但 CTR 仅 ${(ctr * 100).toFixed(1)}%，说明 SERP 中的标题和描述未能有效吸引点击`,
+        steps: [
+          "在 Title 中加入数字、年份或痛点词，增强吸引力",
+          "优化 Meta Description，突出用户能获得的实际价值",
+          "添加 FAQ 或 HowTo 结构化数据，丰富搜索结果展示",
+        ],
+        expectedImpact: "CTR 预计提升 50%–150%",
+      };
+    }
+    if (issueType === "low_ctr") {
+      return {
+        title: "改进内容匹配度与搜索摘要",
+        description: `CTR 低于平均水平，需检查标题是否与搜索意图高度匹配`,
+        steps: [
+          "分析该页面的 Top 查询词，确保 Title 覆盖核心关键词",
+          "在首段直接回答用户问题，提升内容相关性",
+          "补充视觉元素（表格、清单）以增强摘要吸引力",
+        ],
+        expectedImpact: "CTR 预计提升 30%–80%",
+      };
+    }
+    if (issueType === "ranking_stuck") {
+      return {
+        title: "内容深度 + 内链权重提升",
+        description: `排名停滞在 #${position.toFixed(1)}，需通过内容深度和权威性引用突破瓶颈`,
+        steps: [
+          "补充官方文件引用、数据或案例，增强内容权威性",
+          "从站内高权重页面添加内链，传递链接权重",
+          "扩展长尾关键词覆盖，增加内容厚度与更新频率",
+        ],
+        expectedImpact: `排名预计从 #${position.toFixed(1)} 提升至前 10`,
+      };
+    }
+    return {
+      title: "补充内容缺口，覆盖更多搜索意图",
+      description: "页面内容与用户搜索意图存在差距，需补充相关主题",
+      steps: [
+        "调研竞品内容结构，补充缺失的子话题",
+        "增加 FAQ 模块，覆盖常见长尾查询",
+        "优化页面加载速度与移动端体验",
+      ],
+      expectedImpact: "流量预计提升 20%–50%",
+    };
+  };
+
   // 监听 refreshKey 和 optimizationTargets 变化，动态生成任务
   useEffect(() => {
     if (optimizationTargets && optimizationTargets.length > 0) {
-      // 将 optimizationTargets 转换为 OptimizationTask 格式
       const dynamicTasks: OptimizationTask[] = optimizationTargets.map((target, index) => {
         let pathname = target.page;
         try {
@@ -583,7 +666,6 @@ export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEO
         }
         const slug = pathname.split('/').pop() || '';
         
-        // 根据 CTR 和 impressions 判断问题类型
         let issueType: OptimizationTask["issue"]["type"] = "content_gap";
         let severity: OptimizationTask["issue"]["severity"] = "medium";
         
@@ -602,7 +684,7 @@ export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEO
           id: `task-${String(index + 1).padStart(3, '0')}`,
           page: {
             url: target.page,
-            title: slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+            title: getChineseTitle(slug),
             slug,
             currentMetrics: {
               clicks: target.clicks,
@@ -616,22 +698,15 @@ export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEO
             severity,
             description: `展示量 ${target.impressions.toLocaleString()}，CTR ${(target.ctr * 100).toFixed(1)}%，排名 #${target.position.toFixed(1)}`,
           },
-          suggestion: {
-            title: "优化 Title 和 Meta Description",
-            description: "当前 CTR 偏低，建议优化标题和描述以提高点击率",
-            steps: [
-              "在 Title 中加入更具吸引力的关键词",
-              "优化 Meta Description 突出页面价值",
-              "添加结构化数据以丰富 SERP 展示",
-            ],
-            expectedImpact: "CTR 预计提升 50-100%",
-          },
+          suggestion: getSuggestion(issueType, target.ctr, target.position),
           status: "pending",
           createdAt: new Date().toISOString().split('T')[0],
         };
       });
       
-      setTasks(dynamicTasks);
+      // 使用 setTimeout 避免在 effect 中同步调用 setState
+      const timer = setTimeout(() => setTasks(dynamicTasks), 0);
+      return () => clearTimeout(timer);
     }
   }, [refreshKey, optimizationTargets]);
 
@@ -695,7 +770,11 @@ export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEO
           </div>
           <div>
             <h3 className="font-serif text-xl font-bold text-[#1a1a1a]">SEO 动作影响追踪</h3>
-            <p className="text-xs text-[#999]">基于 GSC 数据 · 发现 → 优化 → 验证 → 追踪</p>
+            <p className="text-xs text-[#999]">
+              {optimizationTargets && optimizationTargets.length > 0
+                ? "基于最新导入的 GSC 数据 · 发现 → 优化 → 验证 → 追踪"
+                : "基于示例数据 · 发现 → 优化 → 验证 → 追踪"}
+            </p>
           </div>
         </div>
 
@@ -720,7 +799,7 @@ export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEO
         </div>
         
         <p className="mt-2 text-xs text-[#999]">
-          数据源: maidinhk.com-Performance-on-Search-2026-03-22.xlsx · 
+          {optimizationTargets && optimizationTargets.length > 0 ? "数据源: 最新导入的 GSC 数据 · " : "数据源: 示例数据 · "}
           Top 5 待优化页面总展示量: {stats.totalImpressions.toLocaleString()}
         </p>
       </div>
@@ -795,7 +874,7 @@ export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEO
       {/* Footer */}
       <div className="mt-6 border-t border-[#f0f0f0] pt-4">
         <p className="text-xs text-[#999]">
-          💡 提示：完成优化后点击"标记为已优化"，上传新的 GSC Excel 数据查看效果对比
+          💡 提示：完成优化后点击&quot;标记为已优化&quot;，导入新的 GSC Excel 数据即可自动刷新效果对比
         </p>
       </div>
     </div>
