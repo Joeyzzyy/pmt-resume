@@ -110,6 +110,7 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
   const [selectedMetrics, setSelectedMetrics] = useState<MetricType[]>(["clicks", "impressions"]);
   const [data, setData] = useState<ChartData[]>([]);
   const [summary, setSummary] = useState<SummaryData | null>(null);
+  const [meta, setMeta] = useState<{ startDate: string; endDate: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -127,6 +128,7 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
         const normalized = normalizeData(result.data);
         setData(normalized);
         setSummary(result.summary);
+        setMeta(result.meta || null);
       }
     } catch (error) {
       console.error("获取数据失败:", error);
@@ -163,7 +165,11 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="font-serif text-xl font-semibold text-[#1a1a1a]">Performance</h3>
-            <p className="mt-1 text-sm text-[#888]">搜索表现趋势 - {timeRangeLabels[timeRange]}</p>
+            <p className="mt-1 text-sm text-[#888]">
+              {meta 
+                ? `搜索表现趋势 · ${meta.startDate.replace(/-/g, "/")} - ${meta.endDate.replace(/-/g, "/")} · ${timeRangeLabels[timeRange]}`
+                : `搜索表现趋势 - ${timeRangeLabels[timeRange]}`}
+            </p>
           </div>
 
           {/* Time Range Selector */}

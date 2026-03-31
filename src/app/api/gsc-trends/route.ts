@@ -25,10 +25,18 @@ export async function GET(request: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // 使用今天的日期（2026-03-22），截止日期往前推2天（即3月20日）
-    const today = new Date("2026-03-22");
-    const endDate = new Date(today);
-    endDate.setDate(today.getDate() - 2); // 往前推2天
+    // 查询数据库中最新导入的日期作为截止日期
+    const { data: maxDateResult, error: maxDateError } = await supabase
+      .from("maidinhk_gsc_pages")
+      .select("date")
+      .order("date", { ascending: false })
+      .limit(1)
+      .single();
+
+    const fallbackDate = new Date("2026-03-20");
+    const endDate = maxDateResult && !maxDateError 
+      ? new Date(maxDateResult.date) 
+      : fallbackDate;
     
     // 计算起始日期
     const startDate = new Date(endDate);
@@ -60,7 +68,7 @@ export async function GET(request: Request) {
       totalPositionWeighted: number;
     }> = {};
 
-    (pageData || []).forEach((row: any) => {
+    (pageData || []).forEach((row: { date: string; clicks: number; impressions: number; position: number }) => {
       const date = row.date;
       if (!dailyStats[date]) {
         dailyStats[date] = { clicks: 0, impressions: 0, totalPositionWeighted: 0 };
