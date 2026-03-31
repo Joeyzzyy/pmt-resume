@@ -9,11 +9,9 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
 import { format, parseISO } from "date-fns";
-import { zhCN } from "date-fns/locale";
-import { LoadingOverlay, ChartSkeleton } from "@/components/ui/LoadingSpinner";
+import { ChartSkeleton } from "@/components/ui/LoadingSpinner";
 
 interface ChartData {
   date: string;
@@ -36,7 +34,6 @@ interface SummaryData {
 }
 
 type TimeRange = "7d" | "28d" | "3m";
-type ViewMode = "single" | "all";
 type MetricType = "clicks" | "impressions" | "ctr" | "position";
 
 interface GSCPerformanceChartProps {
@@ -110,14 +107,14 @@ function normalizeData(data: ChartData[]): ChartData[] {
 
 export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartProps) {
   const [timeRange, setTimeRange] = useState<TimeRange>("7d");
-  const [viewMode, setViewMode] = useState<ViewMode>("all");
-  const [activeMetric, setActiveMetric] = useState<MetricType>("clicks");
+  const [selectedMetrics, setSelectedMetrics] = useState<MetricType[]>(["clicks", "impressions"]);
   const [data, setData] = useState<ChartData[]>([]);
   const [summary, setSummary] = useState<SummaryData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeRange, refreshKey]);
 
   async function fetchData() {
@@ -244,54 +241,33 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
         )}
       </div>
 
-      {/* View Mode & Metric Controls */}
+      {/* Metric Controls */}
       <div className="border-b border-[#eee] px-6 py-4">
-        {/* View Mode Toggle */}
-        <div className="mb-4 flex items-center gap-4">
-          <span className="text-xs font-medium text-[#888]">展示模式:</span>
-          <div className="flex rounded-sm border border-[#eee] bg-[#fafafa] p-1">
-            <button
-              onClick={() => setViewMode("single")}
-              className={`px-3 py-1.5 text-xs font-medium transition-all ${
-                viewMode === "single"
-                  ? "bg-white text-[#1a1a1a] shadow-sm"
-                  : "text-[#888] hover:text-[#1a1a1a]"
-              }`}
-            >
-              单指标
-            </button>
-            <button
-              onClick={() => setViewMode("all")}
-              className={`px-3 py-1.5 text-xs font-medium transition-all ${
-                viewMode === "all"
-                  ? "bg-white text-[#1a1a1a] shadow-sm"
-                  : "text-[#888] hover:text-[#1a1a1a]"
-              }`}
-            >
-              四线同屏
-            </button>
-          </div>
+        <div className="mb-2 flex items-center gap-2">
+          <span className="text-xs font-medium text-[#888]">指标选择:</span>
+          <span className="text-xs text-[#aaa]">点击切换显示/隐藏</span>
         </div>
-
-        {/* Metric Selection */}
         <div className="flex flex-wrap gap-2">
           {(Object.keys(metricConfig) as MetricType[]).map((metric) => {
             const config = metricConfig[metric];
-            const isActive = viewMode === "single" ? activeMetric === metric : true;
+            const isActive = selectedMetrics.includes(metric);
             return (
               <button
                 key={metric}
                 onClick={() => {
-                  if (viewMode === "single") {
-                    setActiveMetric(metric);
-                  }
+                  setSelectedMetrics((prev) =>
+                    prev.includes(metric)
+                      ? prev.length > 1
+                        ? prev.filter((m) => m !== metric)
+                        : prev
+                      : [...prev, metric]
+                  );
                 }}
-                disabled={viewMode === "all"}
                 className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                   isActive
                     ? "text-white shadow-sm"
                     : "bg-[#f0f0f0] text-[#888] hover:bg-[#e0e0e0]"
-                } ${viewMode === "all" ? "cursor-default" : "cursor-pointer"}`}
+                } cursor-pointer`}
                 style={{
                   backgroundColor: isActive ? config.color : undefined,
                 }}
@@ -302,27 +278,25 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
             );
           })}
         </div>
-
-
       </div>
 
-      {/* 数据说明 - 放在表格上方，与表格保持距离 */}
+      {/* 数据说明 */}
       <div className="border-b border-[#f0f0f0] bg-[#fafafa] px-6 py-4">
-        {viewMode === "all" ? (
+        {selectedMetrics.length > 1 ? (
           <div className="flex items-start gap-2 text-xs text-[#666]">
             <span className="mt-0.5 text-[#f59e0b]">💡</span>
-            <span>四线同屏展示时，数据已归一化处理（0-100%），悬停图表查看实际数值</span>
+            <span>多指标同屏展示时，数据已归一化处理（0-100%），悬停图表查看实际数值</span>
           </div>
         ) : (
           <div className="flex items-center gap-6 text-xs">
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: metricConfig[activeMetric].color }} />
-              <span className="text-[#666]">{metricConfig[activeMetric].label}</span>
+              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: metricConfig[selectedMetrics[0]].color }} />
+              <span className="text-[#666]">{metricConfig[selectedMetrics[0]].label}</span>
             </div>
             {stats && (
               <span className="text-[#999]">
-                峰值: {metricConfig[activeMetric].format(stats[activeMetric].max)} | 
-                最低: {metricConfig[activeMetric].format(stats[activeMetric].min)}
+                峰值: {metricConfig[selectedMetrics[0]].format(stats[selectedMetrics[0]].max)} | 
+                最低: {metricConfig[selectedMetrics[0]].format(stats[selectedMetrics[0]].min)}
               </span>
             )}
           </div>
@@ -345,22 +319,22 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                 tick={{ fill: "#888" }}
               />
 
-              {viewMode === "single" ? (
+              {selectedMetrics.length === 1 ? (
                 // 单指标模式 - 使用实际数值
                 <>
                   <YAxis
-                    stroke={metricConfig[activeMetric].color}
+                    stroke={metricConfig[selectedMetrics[0]].color}
                     fontSize={11}
                     tickLine={false}
-                    axisLine={{ stroke: metricConfig[activeMetric].color }}
-                    tick={{ fill: metricConfig[activeMetric].color }}
-                    tickFormatter={(value) => metricConfig[activeMetric].format(value as number)}
-                    domain={activeMetric === "position" ? [0, 30] : [0, "auto"]}
+                    axisLine={{ stroke: metricConfig[selectedMetrics[0]].color }}
+                    tick={{ fill: metricConfig[selectedMetrics[0]].color }}
+                    tickFormatter={(value) => metricConfig[selectedMetrics[0]].format(value as number)}
+                    domain={selectedMetrics[0] === "position" ? [0, 30] : [0, "auto"]}
                   />
                   <Line
                     type="monotone"
-                    dataKey={activeMetric}
-                    stroke={metricConfig[activeMetric].color}
+                    dataKey={selectedMetrics[0]}
+                    stroke={metricConfig[selectedMetrics[0]].color}
                     strokeWidth={3}
                     dot={{ r: 4, strokeWidth: 2, fill: "#fff" }}
                     activeDot={{ r: 6, strokeWidth: 2 }}
@@ -368,7 +342,7 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                   />
                 </>
               ) : (
-                // 四线同屏模式 - 使用归一化数据
+                // 多指标模式 - 使用归一化数据
                 <>
                   <YAxis
                     stroke="#888"
@@ -379,46 +353,50 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                     domain={[0, 100]}
                     tickFormatter={(value) => `${value}%`}
                   />
-                  {/* Clicks - 蓝色 */}
-                  <Line
-                    type="monotone"
-                    dataKey="clicksNormalized"
-                    name="clicks"
-                    stroke={metricConfig.clicks.color}
-                    strokeWidth={2}
-                    dot={false}
-                    animationDuration={1000}
-                  />
-                  {/* Impressions - 绿色 */}
-                  <Line
-                    type="monotone"
-                    dataKey="impressionsNormalized"
-                    name="impressions"
-                    stroke={metricConfig.impressions.color}
-                    strokeWidth={2}
-                    dot={false}
-                    animationDuration={1000}
-                  />
-                  {/* CTR - 橙色 */}
-                  <Line
-                    type="monotone"
-                    dataKey="ctrNormalized"
-                    name="ctr"
-                    stroke={metricConfig.ctr.color}
-                    strokeWidth={2}
-                    dot={false}
-                    animationDuration={1000}
-                  />
-                  {/* Position - 红色 */}
-                  <Line
-                    type="monotone"
-                    dataKey="positionNormalized"
-                    name="position"
-                    stroke={metricConfig.position.color}
-                    strokeWidth={2}
-                    dot={false}
-                    animationDuration={1000}
-                  />
+                  {selectedMetrics.includes("clicks") && (
+                    <Line
+                      type="monotone"
+                      dataKey="clicksNormalized"
+                      name="clicks"
+                      stroke={metricConfig.clicks.color}
+                      strokeWidth={2}
+                      dot={false}
+                      animationDuration={1000}
+                    />
+                  )}
+                  {selectedMetrics.includes("impressions") && (
+                    <Line
+                      type="monotone"
+                      dataKey="impressionsNormalized"
+                      name="impressions"
+                      stroke={metricConfig.impressions.color}
+                      strokeWidth={2}
+                      dot={false}
+                      animationDuration={1000}
+                    />
+                  )}
+                  {selectedMetrics.includes("ctr") && (
+                    <Line
+                      type="monotone"
+                      dataKey="ctrNormalized"
+                      name="ctr"
+                      stroke={metricConfig.ctr.color}
+                      strokeWidth={2}
+                      dot={false}
+                      animationDuration={1000}
+                    />
+                  )}
+                  {selectedMetrics.includes("position") && (
+                    <Line
+                      type="monotone"
+                      dataKey="positionNormalized"
+                      name="position"
+                      stroke={metricConfig.position.color}
+                      strokeWidth={2}
+                      dot={false}
+                      animationDuration={1000}
+                    />
+                  )}
                 </>
               )}
 
@@ -431,15 +409,12 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                           {format(parseISO(label as string), "yyyy年MM月dd日")}
                         </p>
                         <div className="space-y-2">
-                          {(viewMode === "single"
-                            ? [{ dataKey: activeMetric, value: payload[0].value }]
-                            : [
-                                { dataKey: "clicks", value: data.find((d) => d.date === label)?.clicks },
-                                { dataKey: "impressions", value: data.find((d) => d.date === label)?.impressions },
-                                { dataKey: "ctr", value: data.find((d) => d.date === label)?.ctr },
-                                { dataKey: "position", value: data.find((d) => d.date === label)?.position },
-                              ]
-                          ).map((entry: any, index: number) => {
+                          {selectedMetrics
+                            .map((metric) => ({
+                              dataKey: metric,
+                              value: data.find((d) => d.date === label)?.[metric],
+                            }))
+                            .map((entry, index) => {
                             const metric = entry.dataKey as MetricType;
                             const config = metricConfig[metric];
                             return (
