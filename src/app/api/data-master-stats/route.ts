@@ -70,9 +70,19 @@ function detectIntent(query: string): string {
   ];
 
   const transactionalPatterns = [
+    // 简体
     '预约', '价格', '收费', '地址', '电话', '联系', '购买',
-    '订购', '报名', '申请', '下载', '免费', '优惠', 'discount',
-    'price', 'cost', 'buy', 'purchase', 'order', 'book', 'download'
+    '订购', '报名', '申请', '下载', '免费', '优惠', '报价',
+    '试用', '咨询', '服务', '付款', '费用', '多少钱', '怎么收费',
+    // 繁体/香港常用
+    '預約', '價格', '收費', '電話', '聯繫', '聯絡', '購買',
+    '訂購', '報名', '申請', '下載', '免費', '優惠', '報價',
+    '試用', '諮詢', '服務', '付款', '費用', '多少錢', '點收費',
+    '幾錢', '價錢', '月費', '年費', '手續費', '代辦費', '中介費',
+    '續約', '解約', '賠償', '保險', '合約', '簽證費', '機票',
+    // 英文
+    'discount', 'price', 'cost', 'buy', 'purchase', 'order', 'book',
+    'download', 'fee', 'charge', 'payment', 'pay', 'quote', 'service'
   ];
 
   const navigationalPatterns = [
