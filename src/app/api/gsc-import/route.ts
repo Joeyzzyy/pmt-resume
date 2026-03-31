@@ -49,14 +49,24 @@ export async function POST(request: NextRequest) {
 
     // 查找表头行
     let headerRowIndex = -1;
-    for (let i = 0; i < Math.min(10, jsonData.length); i++) {
+    for (let i = 0; i < Math.min(20, jsonData.length); i++) {
       const row = jsonData[i];
-      if (row && row.some((cell: any) => 
-        String(cell).toLowerCase().includes('date') || 
-        String(cell).toLowerCase().includes('日期') ||
-        String(cell).toLowerCase().includes('page') ||
-        String(cell).toLowerCase().includes('url')
-      )) {
+      if (row && row.some((cell: any) => {
+        const cellStr = String(cell).toLowerCase().trim();
+        return (
+          cellStr.includes('date') ||
+          cellStr.includes('日期') ||
+          cellStr.includes('page') ||
+          cellStr.includes('url') ||
+          cellStr.includes('网址') ||
+          cellStr.includes('query') ||
+          cellStr.includes('查询') ||
+          cellStr.includes('clicks') ||
+          cellStr.includes('点击') ||
+          cellStr.includes('impressions') ||
+          cellStr.includes('展示')
+        );
+      })) {
         headerRowIndex = i;
         break;
       }
