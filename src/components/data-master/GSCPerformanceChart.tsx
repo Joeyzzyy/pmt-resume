@@ -106,7 +106,7 @@ function normalizeData(data: ChartData[]): ChartData[] {
 }
 
 export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartProps) {
-  const [timeRange, setTimeRange] = useState<TimeRange>("7d");
+  const [timeRange, setTimeRange] = useState<TimeRange>("3m");
   const [selectedMetrics, setSelectedMetrics] = useState<MetricType[]>(["clicks", "impressions"]);
   const [data, setData] = useState<ChartData[]>([]);
   const [summary, setSummary] = useState<SummaryData | null>(null);
