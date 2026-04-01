@@ -362,6 +362,22 @@ export default function HomePage() {
         </ScrollReveal>
       </section>
 
+      {/* ===== Landing Page Demo ===== */}
+      <ScrollReveal>
+        <section className={styles.section} style={{ paddingBottom: 80 }}>
+          <p className={styles.sectionLabel}>Demo</p>
+          <h2 className={styles.sectionHeading}>Landing Page 還原 Demo</h2>
+          <p className={styles.aboutText}>
+            用 Next.js + Tailwind CSS + Framer Motion 還原了 YouMind 官方落地頁，包含 Hero Section、Feature Cards、Use Cases 等核心模塊。這個 Demo 展示了我在前端開發和 UI 還原方面的能力。
+          </p>
+          <div className={styles.ctaButtons} style={{ marginTop: 24 }}>
+            <Link href="/lp/showroom" className={styles.ctaButton}>
+              查看 Landing Page Demo →
+            </Link>
+          </div>
+        </section>
+      </ScrollReveal>
+
       {/* ===== CTA ===== */}
       <ScrollReveal>
         <section className={styles.cta}>
