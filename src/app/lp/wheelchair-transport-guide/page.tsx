@@ -183,7 +183,7 @@ export default function MaidinhkLandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
           >
-            不再浪費時間翻閱數百份簡歷。Maidinhk AI 系統根據您的照護需求，
+            不再浪費時間翻閱數百份簡歷。Maidinhk AI 系統根據您的照護需求（如：<strong className="font-semibold">推輪椅</strong>技巧、無障礙照護經驗），
             <br className="hidden md:block" />
             秒速篩選具備專業 SOP 意識的優質工人。
           </motion.p>
@@ -255,7 +255,7 @@ export default function MaidinhkLandingPage() {
               具備真實照護背景的候選人
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm text-[#666] md:text-base">
-              深度檢索工人過往真實執業紀錄，精準識別「照顧長者」與「護理傷殘人士」核心標籤。自動過濾無效信息，節省 90% 閱讀時間。
+              深度檢索工人過往真實執業紀錄，精準識別「<strong className="font-semibold">推輪椅</strong>技巧」與「護理傷殘人士」核心標籤。自動過濾無效信息，節省 90% 閱讀時間。
             </p>
           </motion.div>
 
@@ -391,20 +391,20 @@ export default function MaidinhkLandingPage() {
                 {[
                   { 
                     step: "01", 
-                    title: "輸入需求",
-                    desc: "勾選長者狀況與照護需求，系統智能解析健康狀況、行動能力、特殊護理需求等具體要求。",
+                    title: "输入需求",
+                    desc: "勾選長者狀況與照護需求（如：推輪椅技巧），系統智能解析健康狀況、行動能力、特殊護理需求等具體要求。",
                     icon: Icons.clipboard,
                   },
                   { 
                     step: "02", 
-                    title: "AI 運算",
-                    desc: "AI 深度對比 3,000 名工人紀錄，從經驗、技能、態度三個維度分析匹配度與專業適配性。",
+                    title: "AI 运算",
+                    desc: "AI 深度对比 3,000 名工人记录，从经验、技能、态度三个维度分析匹配度与专业适配性。",
                     icon: Icons.lightning,
                   },
                   { 
                     step: "03", 
-                    title: "即時查看",
-                    desc: "獲取 95% 以上符合需求的精準簡歷列表，附詳細匹配報告與工人背景、經驗證明。",
+                    title: "即时查看",
+                    desc: "获取 95% 以上符合需求的精准简历列表，附详细匹配报告与工人背景、经验证明。",
                     icon: Icons.target,
                   },
                 ].map((item, i) => (
@@ -498,7 +498,7 @@ export default function MaidinhkLandingPage() {
             </div>
             <blockquote className="mb-8 text-center">
               <p className="font-serif text-lg leading-relaxed text-[#1a1a1a] md:text-xl">
-                「以前找人要一個月，在 Maidinhk 用 AI 匹配，下午就約到了合適的姐姐，節省了 80% 的篩選時間！」
+                「我媽媽中風後需要坐輪椅，之前在其他平台請的姐姐，簡歷上寫會<strong className="font-semibold">推輪椅</strong>，結果上門才發現根本不會，過個門檻都手忙腳亂。在 Maidinhk 用 AI 匹配，系統幫我篩選出具備<strong className="font-semibold">照顧老人技能</strong>的姐姐，下午就約到了！姐姐一來就熟練地幫媽媽繫好安全帶，<strong className="font-semibold">推輪椅</strong>過斜坡、轉彎都很穩，簡歷和實際技能完全對得上。終於找到真正會照護的人，不用再試錯了！」
               </p>
             </blockquote>
             <div className="flex items-center justify-center gap-4">

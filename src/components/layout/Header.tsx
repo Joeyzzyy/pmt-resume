@@ -28,6 +28,7 @@ export default function Header() {
   const landingPages = [
     { name: "LP 组件库", href: "/lp/showroom" },
     { name: "Maidinhk LP1", href: "/lp/wheelchair-transport-guide" },
+    { name: "Maidinhk LP2", href: "/lp/baby-sun-protection" },
   ];
 
   const isLandingPageActive = isActive("/lp");
