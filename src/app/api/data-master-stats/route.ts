@@ -119,40 +119,45 @@ export async function GET() {
       topQueriesResult,
       topPagesResult,
       optimizationTargetsResult,
-      // 获取所有页面数据用于排名分布计算
       allPagesResult,
-      // 获取所有查询数据用于意图分析
       allQueriesResult,
+      latestUploadResult,
     ] = await Promise.all([
-      // 搜索词总数
+      // 搜索词总数 - 从 current 表获取 query 类型数据
       supabase
-        .from("maidinhk_gsc_data")
-        .select("*", { count: "exact", head: true }),
+        .from("maidinhk_gsc_current")
+        .select("*", { count: "exact", head: true })
+        .eq("data_type", "query"),
 
-      // 页面总数
+      // 页面总数 - 从 current 表获取 page 类型数据
       supabase
-        .from("maidinhk_gsc_pages")
-        .select("*", { count: "exact", head: true }),
+        .from("maidinhk_gsc_current")
+        .select("*", { count: "exact", head: true })
+        .eq("data_type", "page")
+        .neq("page", "_SUMMARY_"),
 
       // 热门搜索词 Top 10
       supabase
-        .from("maidinhk_gsc_data")
-        .select("query, impressions, clicks, ctr, position")
+        .from("maidinhk_gsc_current")
+        .select("page, impressions, clicks, ctr, position")
+        .eq("data_type", "query")
         .order("impressions", { ascending: false })
         .limit(10),
 
-      // 热门页面 Top 15（用于内容集群）
+      // 热门页面 Top 15
       supabase
-        .from("maidinhk_gsc_pages")
+        .from("maidinhk_gsc_current")
         .select("page, impressions, clicks, ctr, position")
+        .eq("data_type", "page")
         .neq("page", "_SUMMARY_")
         .order("impressions", { ascending: false })
         .limit(15),
 
       // 需要优化的页面
       supabase
-        .from("maidinhk_gsc_pages")
+        .from("maidinhk_gsc_current")
         .select("page, impressions, clicks, ctr, position")
+        .eq("data_type", "page")
         .neq("page", "_SUMMARY_")
         .gte("impressions", 100)
         .lte("ctr", 0.03)
@@ -161,25 +166,43 @@ export async function GET() {
 
       // 所有页面数据（用于排名分布）
       supabase
-        .from("maidinhk_gsc_pages")
+        .from("maidinhk_gsc_current")
         .select("page, position")
+        .eq("data_type", "page")
         .neq("page", "_SUMMARY_"),
 
       // 所有查询数据（用于意图分析）
       supabase
-        .from("maidinhk_gsc_data")
-        .select("query, clicks, impressions, ctr, position")
+        .from("maidinhk_gsc_current")
+        .select("page, clicks, impressions, ctr, position")
+        .eq("data_type", "query")
         .order("clicks", { ascending: false })
         .limit(100),
+      
+      // 最新上传批次信息
+      supabase
+        .from("maidinhk_gsc_upload_log")
+        .select("upload_batch, upload_date, notes")
+        .order("upload_date", { ascending: false })
+        .limit(1)
+        .single(),
     ]);
 
     const queryCount = queryCountResult.count || mockData.queryCount;
     const pageCount = pageCountResult.count || mockData.pageCount;
 
+    // 转换 topQueries 数据格式
+    const topQueries = topQueriesResult.data?.map((row: { page: string; impressions: number; clicks: number; ctr: number; position: number }) => ({
+      query: row.page,
+      impressions: row.impressions,
+      clicks: row.clicks,
+      ctr: row.ctr,
+      position: row.position,
+    })) || mockData.topQueries;
+
     // 计算排名分布
     let rankingDistribution = mockData.rankingDistribution;
     if (allPagesResult.data && allPagesResult.data.length > 0) {
-      // 按页面计算平均排名
       const pageRankings: Record<string, number[]> = {};
       allPagesResult.data.forEach((row: { page: string; position: number }) => {
         if (!pageRankings[row.page]) pageRankings[row.page] = [];
@@ -207,27 +230,24 @@ export async function GET() {
     // 计算搜索意图分布
     let searchIntent = mockData.searchIntent;
     if (allQueriesResult.data && allQueriesResult.data.length > 0) {
-      // 按意图分类
-      const intentGroups: Record<string, { query: string; clicks: number; impressions: number; ctr: number; position: number }[]> = {
+      const intentGroups: Record<string, { page: string; clicks: number; impressions: number; ctr: number; position: number }[]> = {
         Informational: [],
         Commercial: [],
         Transactional: [],
         Navigational: [],
       };
 
-      allQueriesResult.data.forEach((row: { query: string; clicks: number; impressions: number; ctr: number; position: number }) => {
-        const intent = detectIntent(row.query);
+      allQueriesResult.data.forEach((row: { page: string; clicks: number; impressions: number; ctr: number; position: number }) => {
+        const intent = detectIntent(row.page);
         if (intentGroups[intent]) {
           intentGroups[intent].push(row);
         }
       });
 
-      // 计算各维度的分数
       const calculateScore = (items: { clicks: number; position: number }[]) => {
         if (items.length === 0) return 0;
         const avgClicks = items.reduce((sum, item) => sum + item.clicks, 0) / items.length;
         const avgPosition = items.reduce((sum, item) => sum + item.position, 0) / items.length;
-        // 基于点击量和排名计算分数 (0-100)
         const clickScore = Math.min(avgClicks * 5, 60);
         const positionScore = Math.max(0, (30 - avgPosition) * 1.5);
         return Math.round(Math.min(clickScore + positionScore, 100));
@@ -238,9 +258,8 @@ export async function GET() {
       const transScore = calculateScore(intentGroups.Transactional);
       const navScore = calculateScore(intentGroups.Navigational);
 
-      // 获取每个意图类型的 Top 关键词
-      const getTopKeywords = (items: { query: string }[]) => 
-        items.slice(0, 3).map((item) => item.query);
+      const getTopKeywords = (items: { page: string }[]) => 
+        items.slice(0, 3).map((item) => item.page);
 
       searchIntent = [
         { dimension: "信息价值", siteAverage: Math.round(infoScore * 0.85), highClickPages: infoScore, topKeywords: getTopKeywords(intentGroups.Informational).length > 0 ? getTopKeywords(intentGroups.Informational) : mockData.searchIntent[0].topKeywords, description: "用户主动搜索外佣相关政策、流程类信息", weight: 0.9 },
@@ -255,15 +274,15 @@ export async function GET() {
       queryCount,
       pageCount,
       totalCount: queryCount + pageCount,
-      topQueries: topQueriesResult.data || mockData.topQueries,
+      topQueries,
       topPages: topPagesResult.data || mockData.topPages,
       optimizationTargets: optimizationTargetsResult.data || mockData.optimizationTargets,
       rankingDistribution,
       searchIntent,
+      latestUpload: latestUploadResult.data || null,
     });
   } catch (error) {
     console.error("[Data Master Stats] Error:", error);
-    // 出错时返回模拟数据而不是 500 错误
     console.log("[Data Master Stats] Returning mock data due to error");
     return NextResponse.json(mockData);
   }

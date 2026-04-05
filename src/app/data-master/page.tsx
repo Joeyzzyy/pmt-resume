@@ -6,6 +6,7 @@ import ScrollReveal from "@/components/resume/ScrollReveal";
 import ScrollToTop from "@/components/blog/ScrollToTop";
 import GSCPerformanceChart from "@/components/data-master/GSCPerformanceChart";
 import GSCImport from "@/components/data-master/GSCImport";
+import SEOTracker from "@/components/data-master/SEOTracker";
 import TopicClusterVisualization from "@/components/data-master/TopicClusterVisualization";
 import RankingDistributionChart from "@/components/data-master/RankingDistributionChart";
 import SearchIntentRadar from "@/components/data-master/SearchIntentRadar";
@@ -35,9 +36,17 @@ interface StatsData {
   topQueries: QueryData[];
   topPages: PageData[];
   optimizationTargets: PageData[];
+  latestUpload?: {
+    upload_batch: string;
+    upload_date: string;
+    notes: string;
+  } | null;
 }
 
+type ActiveTab = 'performance' | 'seo-tracking';
+
 export default function DataMasterPage() {
+  const [activeTab, setActiveTab] = useState<ActiveTab>('performance');
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,12 +87,6 @@ export default function DataMasterPage() {
         </div>
         <div className="mb-16"><CardSkeleton count={3} /></div>
         <div className="mb-16"><ChartSkeleton /></div>
-        <div className="mb-16">
-          <div className="mb-6 h-6 w-32 rounded bg-[#e0e0e0]" />
-          <div className="rounded-sm border border-[#eee] bg-white">
-            <TableSkeleton rows={5} cols={5} />
-          </div>
-        </div>
       </div>
     );
   }
@@ -124,6 +127,12 @@ export default function DataMasterPage() {
             <p className="mt-4 text-base leading-relaxed text-[#666]">
               实时监控 maidinhk.com 的 Google Search Console 数据，智能分析搜索表现与页面流量，提供 Title/Description 优化建议。
             </p>
+            {stats.latestUpload && (
+              <p className="mt-2 text-xs text-[#999]">
+                最新数据：{stats.latestUpload.upload_date}
+                {stats.latestUpload.notes ? ` · ${stats.latestUpload.notes}` : ''}
+              </p>
+            )}
           </div>
         </ScrollReveal>
 
@@ -132,80 +141,128 @@ export default function DataMasterPage() {
           <GSCImport onImportSuccess={() => setRefreshKey((k) => k + 1)} />
         </ScrollReveal>
 
-        {/* Stats Overview - 基于 GSC Excel 真实数据 */}
+        {/* Tab 导航 */}
         <ScrollReveal>
-          <div className="mb-16">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="text-xs text-[#999]">数据来源: GSC 导入数据</p>
-            </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-                <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
-                  搜索词记录
-                </p>
-                <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
-                  {stats?.queryCount?.toLocaleString() ?? "—"}
-                </p>
-                <p className="mt-2 text-xs text-[#888]">Queries 工作表</p>
-              </div>
-
-              <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-                <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
-                  页面记录
-                </p>
-                <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
-                  {stats?.pageCount?.toLocaleString() ?? "—"}
-                </p>
-                <p className="mt-2 text-xs text-[#888]">Pages 工作表</p>
-              </div>
-
-              <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-                <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
-                  总数据量
-                </p>
-                <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
-                  {stats?.totalCount?.toLocaleString() ?? "—"}
-                </p>
-                <p className="mt-2 text-xs text-[#888]">查询 + 页面</p>
-              </div>
+          <div className="mb-8 border-b border-[#eee]">
+            <div className="flex gap-1">
+              <button
+                onClick={() => setActiveTab('performance')}
+                className={`relative px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === 'performance'
+                    ? 'text-[#1a1a1a]'
+                    : 'text-[#999] hover:text-[#666]'
+                }`}
+              >
+                Performance
+                {activeTab === 'performance' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1a1a1a]" />
+                )}
+              </button>
+              <button
+                onClick={() => setActiveTab('seo-tracking')}
+                className={`relative px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === 'seo-tracking'
+                    ? 'text-[#1a1a1a]'
+                    : 'text-[#999] hover:text-[#666]'
+                }`}
+              >
+                SEO 动作影响追踪
+                {activeTab === 'seo-tracking' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1a1a1a]" />
+                )}
+              </button>
             </div>
           </div>
         </ScrollReveal>
 
-        {/* Performance Chart */}
-        <ScrollReveal>
-          <section className="mb-16">
-            <GSCPerformanceChart refreshKey={refreshKey} />
-          </section>
-        </ScrollReveal>
+        {/* Performance Tab */}
+        {activeTab === 'performance' && (
+          <>
+            {/* Stats Overview */}
+            <ScrollReveal>
+              <div className="mb-16">
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="text-xs text-[#999]">数据来源: GSC 导入数据</p>
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+                    <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
+                      搜索词记录
+                    </p>
+                    <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
+                      {stats?.queryCount?.toLocaleString() ?? "—"}
+                    </p>
+                    <p className="mt-2 text-xs text-[#888]">Queries 工作表</p>
+                  </div>
 
-        {/* Ranking Distribution */}
-        <ScrollReveal>
-          <section className="mb-16">
-            <RankingDistributionChart refreshKey={refreshKey} />
-          </section>
-        </ScrollReveal>
+                  <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+                    <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
+                      页面记录
+                    </p>
+                    <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
+                      {stats?.pageCount?.toLocaleString() ?? "—"}
+                    </p>
+                    <p className="mt-2 text-xs text-[#888]">Pages 工作表</p>
+                  </div>
 
-        {/* Search Intent Radar */}
-        <ScrollReveal>
-          <section className="mb-16">
-            <SearchIntentRadar refreshKey={refreshKey} />
-          </section>
-        </ScrollReveal>
+                  <div className="rounded-sm border border-[#eee] bg-[#fafafa] p-6 transition-all duration-300 hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+                    <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
+                      总数据量
+                    </p>
+                    <p className="font-serif text-3xl font-bold text-[#1a1a1a]">
+                      {stats?.totalCount?.toLocaleString() ?? "—"}
+                    </p>
+                    <p className="mt-2 text-xs text-[#888]">查询 + 页面</p>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
 
-        {/* SEO Action Impact */}
-        <ScrollReveal>
-          <section className="mb-16">
-            <SEOActionImpact refreshKey={refreshKey} optimizationTargets={stats?.optimizationTargets} />
-          </section>
-        </ScrollReveal>
+            {/* Performance Chart */}
+            <ScrollReveal>
+              <section className="mb-16">
+                <GSCPerformanceChart refreshKey={refreshKey} />
+              </section>
+            </ScrollReveal>
 
-        {/* Topic Cluster Visualization */}
-        <ScrollReveal>
-          <section className="mb-16">
-            <TopicClusterVisualization refreshKey={refreshKey} topPages={stats?.topPages} />
-          </section>
-        </ScrollReveal>
+            {/* Ranking Distribution */}
+            <ScrollReveal>
+              <section className="mb-16">
+                <RankingDistributionChart refreshKey={refreshKey} />
+              </section>
+            </ScrollReveal>
+
+            {/* Search Intent Radar */}
+            <ScrollReveal>
+              <section className="mb-16">
+                <SearchIntentRadar refreshKey={refreshKey} />
+              </section>
+            </ScrollReveal>
+
+            {/* SEO Action Impact */}
+            <ScrollReveal>
+              <section className="mb-16">
+                <SEOActionImpact refreshKey={refreshKey} optimizationTargets={stats?.optimizationTargets} />
+              </section>
+            </ScrollReveal>
+
+            {/* Topic Cluster Visualization */}
+            <ScrollReveal>
+              <section className="mb-16">
+                <TopicClusterVisualization refreshKey={refreshKey} topPages={stats?.topPages} />
+              </section>
+            </ScrollReveal>
+          </>
+        )}
+
+        {/* SEO Tracking Tab */}
+        {activeTab === 'seo-tracking' && (
+          <ScrollReveal>
+            <section className="mb-16">
+              <SEOTracker refreshKey={refreshKey} />
+            </section>
+          </ScrollReveal>
+        )}
 
         {/* CTA */}
         <ScrollReveal>
