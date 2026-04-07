@@ -321,7 +321,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
               SEO 动作影响追踪
             </h3>
             <p className="mt-1 text-sm text-[#888]">
-              共 {pages.length} 个页面 · 点击页面查看历史趋势和优化建议
+              共 {pages.length} 个页面 · 点击下方"查看趋势"查看详细优化建议
             </p>
           </div>
 
@@ -347,14 +347,13 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-[#fafafa]">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-[#666]">文章标题（点击访问）</th>
+              <th className="px-4 py-3 text-left font-medium text-[#666] w-[45%]">文章标题（点击访问页面）</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">点击</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">展示</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">CTR</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">排名</th>
               <th className="px-4 py-3 text-center font-medium text-[#666]">优先级</th>
-              <th className="px-4 py-3 text-left font-medium text-[#666]">优化建议</th>
-              <th className="px-4 py-3 text-center font-medium text-[#666]">操作</th>
+              <th className="px-4 py-3 text-center font-medium text-[#666]">查看趋势</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#eee]">
@@ -379,7 +378,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                       href={page.page}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block max-w-[280px] truncate text-sm font-medium text-[#2563eb] hover:underline"
+                      className="block max-w-[350px] truncate text-sm font-medium text-[#2563eb] hover:underline"
                       title={`访问: ${page.page}`}
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -406,23 +405,6 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                     <span className={`rounded-full px-2 py-0.5 text-xs ${priorityLabel.color}`}>
                       {priorityLabel.text}
                     </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    {(() => {
-                      const tips = getOptimizationAdvice(page, []);
-                      return (
-                        <div className="max-w-[300px] space-y-1">
-                          {tips.slice(0, 2).map((tip, idx) => (
-                            <div key={idx} className="truncate text-xs text-[#666]" title={tip}>
-                              {idx === 0 ? tip.substring(0, 3) === '【' ? tip : `• ${tip}` : `• ${tip}`}
-                            </div>
-                          ))}
-                          {tips.length > 2 && (
-                            <div className="text-xs text-[#999]">+{tips.length - 2} 条建议...</div>
-                          )}
-                        </div>
-                      );
-                    })()}
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
@@ -496,12 +478,18 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
               </div>
               
               {/* 优化建议 */}
-              <div className="max-w-[500px] max-h-[120px] overflow-y-auto rounded-sm bg-blue-50 p-3 text-xs text-blue-700">
-                <strong className="mb-2 block">优化建议：</strong>
-                <ul className="space-y-1.5">
+              <div className="flex-1 max-h-[200px] overflow-y-auto rounded-sm border border-blue-200 bg-blue-50 p-4 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <strong className="text-sm text-blue-800">SEO 优化建议</strong>
+                  <span className="text-xs text-blue-600">({getOptimizationAdvice(selectedPageData, pageHistory).length} 条)</span>
+                </div>
+                <ul className="space-y-2">
                   {getOptimizationAdvice(selectedPageData, pageHistory).map((tip, idx) => (
-                    <li key={idx} className="flex gap-2">
-                      <span className="flex-shrink-0">•</span>
+                    <li key={idx} className="flex gap-2 text-xs text-blue-700">
+                      <span className="flex-shrink-0 font-bold">{idx + 1}.</span>
                       <span>{tip}</span>
                     </li>
                   ))}
@@ -667,17 +655,16 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
         <h4 className="mb-3 text-sm font-semibold text-[#1a1a1a]">💡 使用说明</h4>
         <ul className="list-disc space-y-1 pl-4 text-xs text-[#666]">
           <li>
-            <strong>页面列表：</strong>上方展示所有有数据的页面，按优化优先级排序（红标=高优，黄标=中优，绿标=正常）
+            <strong>上方页面列表：</strong>展示所有页面的核心数据，按优化优先级排序（🔴高优/🟡中优/🟢正常），点击标题可直接访问页面
           </li>
           <li>
-            <strong>优化建议：</strong>根据 CTR、排名、点击量等指标自动生成优化建议
+            <strong>下方优化建议：</strong>点击"查看趋势"后，在此查看基于 CTR、排名、点击量等多维度的详细优化建议
           </li>
           <li>
-            <strong>趋势图：</strong>点击下方页面，查看该页面的历史数据变化
+            <strong>趋势图分析：</strong>展示页面历史数据变化，可切换不同指标进行对比分析
           </li>
           <li>
-            <strong>多指标对比：</strong>可同时显示点击量、排名等多个指标的变化趋势
-          </li>
+            <strong>数据更新：</strong>多次上传 GSC 数据后，可观察优化措施的实际效果</li>
         </ul>
       </div>
     </div>
