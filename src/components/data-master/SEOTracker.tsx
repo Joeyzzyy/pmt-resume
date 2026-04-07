@@ -538,6 +538,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                     <YAxis
                       stroke={metricsConfig[selectedMetrics[0] as keyof typeof metricsConfig].color}
                       fontSize={11}
+                      domain={selectedMetrics[0] === 'position' ? [0, 'auto'] : [0, 'auto']}
                       tickFormatter={(value) => {
                         const metric = selectedMetrics[0];
                         if (metric === 'ctr') return `${value.toFixed(1)}%`;
@@ -585,7 +586,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                                     </div>
                                     <span className="font-medium" style={{ color: config.color }}>
                                       {metric === 'ctr'
-                                        ? `${(value as number).toFixed(2)}%`
+                                        ? `${(value as number).toFixed(2)}`
                                         : metric === 'position'
                                         ? (value as number).toFixed(1)
                                         : (value as number).toLocaleString()}
