@@ -69,9 +69,9 @@ export async function GET(request: NextRequest) {
       history = Object.entries(historyByBatch).map(([batch, info]) => {
         const totalClicks = info.data.reduce((sum, d) => sum + d.clicks, 0);
         const totalImpressions = info.data.reduce((sum, d) => sum + d.impressions, 0);
-        const avgPosition = info.data.length > 0
-          ? info.data.reduce((sum, d) => sum + d.position * d.impressions, 0) / totalImpressions
-          : 0;
+        // 计算加权平均排名（使用展示量作为权重）
+        const totalWeightedPosition = info.data.reduce((sum, d) => sum + (d.position || 0) * (d.impressions || 0), 0);
+        const avgPosition = totalImpressions > 0 ? totalWeightedPosition / totalImpressions : 0;
 
         return {
           batch,
@@ -111,9 +111,9 @@ export async function GET(request: NextRequest) {
         history = Object.entries(groupedByDate).map(([date, rows]) => {
           const totalClicks = rows.reduce((sum, r) => sum + (r.clicks || 0), 0);
           const totalImpressions = rows.reduce((sum, r) => sum + (r.impressions || 0), 0);
-          const avgPosition = rows.length > 0
-            ? rows.reduce((sum, r) => sum + (r.position || 0) * (r.impressions || 0), 0) / totalImpressions
-            : 0;
+          // 计算加权平均排名
+          const totalWeightedPosition = rows.reduce((sum, r) => sum + (r.position || 0) * (r.impressions || 0), 0);
+          const avgPosition = totalImpressions > 0 ? totalWeightedPosition / totalImpressions : 0;
 
           return {
             batch: `current-${date}`,
