@@ -167,16 +167,27 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
     }
   }
 
-  // 格式化页面 URL 显示
-  function formatPageUrl(url: string): string {
+  // 从 URL 提取文章标题
+  function extractPageTitle(url: string): string {
     try {
       const urlObj = new URL(url);
       const pathname = urlObj.pathname;
-      const display = pathname.replace('/blog/', '').replace(/-/g, ' ');
-      return display.length > 50 ? display.substring(0, 50) + '...' : display;
+      // 提取最后一部分作为标题
+      const slug = pathname.split('/').pop() || '';
+      // 将 slug 转换为可读标题
+      return slug
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+        .substring(0, 60);
     } catch {
-      return url.length > 60 ? url.substring(0, 60) + '...' : url;
+      return url;
     }
+  }
+
+  // 格式化 URL 显示（用于趋势图区域）
+  function formatPageUrl(url: string): string {
+    const cleanUrl = url.replace(/^https?:\/\//, '');
+    return cleanUrl.length > 70 ? cleanUrl.substring(0, 70) + '...' : cleanUrl;
   }
 
   // 排序页面
@@ -295,13 +306,14 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-[#fafafa]">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-[#666]">页面</th>
+              <th className="px-4 py-3 text-left font-medium text-[#666]">文章标题（点击访问）</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">点击</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">展示</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">CTR</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">排名</th>
               <th className="px-4 py-3 text-center font-medium text-[#666]">优先级</th>
               <th className="px-4 py-3 text-left font-medium text-[#666]">优化建议</th>
+              <th className="px-4 py-3 text-center font-medium text-[#666]">操作</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#eee]">
@@ -313,19 +325,25 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
               return (
                 <tr
                   key={page.page}
-                  onClick={() => setSelectedPage(page.page)}
-                  className={`cursor-pointer transition-colors ${
+                  className={`transition-colors ${
                     isSelected
                       ? 'bg-blue-50'
                       : index % 2 === 0
-                      ? 'bg-white hover:bg-[#fafafa]'
-                      : 'bg-[#fafafa] hover:bg-[#f5f5f5]'
+                      ? 'bg-white'
+                      : 'bg-[#fafafa]'
                   }`}
                 >
                   <td className="px-4 py-3">
-                    <div className="max-w-[200px] truncate font-medium" title={page.page}>
-                      {formatPageUrl(page.page)}
-                    </div>
+                    <a 
+                      href={page.page}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block max-w-[280px] truncate text-sm font-medium text-[#2563eb] hover:underline"
+                      title={`访问: ${page.page}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {extractPageTitle(page.page)}
+                    </a>
                   </td>
                   <td className="px-4 py-3 text-right">{page.clicks.toLocaleString()}</td>
                   <td className="px-4 py-3 text-right">{page.impressions.toLocaleString()}</td>
@@ -349,9 +367,21 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="max-w-[300px] truncate text-xs text-[#666]" title={getOptimizationAdvice(page, [])}>
+                    <div className="max-w-[280px] truncate text-xs text-[#666]" title={getOptimizationAdvice(page, [])}>
                       {getOptimizationAdvice(page, [])}
                     </div>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      onClick={() => setSelectedPage(page.page)}
+                      className={`rounded-sm px-3 py-1 text-xs font-medium transition-colors ${
+                        isSelected
+                          ? 'bg-[#1a1a1a] text-white'
+                          : 'border border-[#ddd] bg-white text-[#666] hover:border-[#1a1a1a] hover:text-[#1a1a1a]'
+                      }`}
+                    >
+                      {isSelected ? '已选中' : '查看趋势'}
+                    </button>
                   </td>
                 </tr>
               );
@@ -369,15 +399,21 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
-            <p className="text-[#666]">点击上方页面查看趋势图</p>
+            <p className="text-[#666]">点击上方"查看趋势"按钮查看数据变化</p>
+            <p className="mt-1 text-xs text-[#999]">或直接点击 URL 访问页面</p>
           </div>
         ) : historyLoading ? (
           <ChartSkeleton />
         ) : pageHistory.length < 2 ? (
           <div className="flex h-[300px] flex-col items-center justify-center text-center">
-            <h4 className="mb-2 font-medium text-[#1a1a1a]">
+            <a
+              href={selectedPageData.page}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mb-2 font-medium text-[#2563eb] hover:underline"
+            >
               {formatPageUrl(selectedPageData.page)}
-            </h4>
+            </a>
             <p className="text-[#666]">数据点不足</p>
             <p className="mt-1 text-xs text-[#999]">
               该页面需要至少两个时间点的数据才能显示趋势
@@ -391,9 +427,14 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
             {/* 页面标题和当前数据 */}
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h4 className="font-medium text-[#1a1a1a]">
+                <a
+                  href={selectedPageData.page}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-[#2563eb] hover:underline"
+                >
                   {formatPageUrl(selectedPageData.page)}
-                </h4>
+                </a>
                 <p className="text-xs text-[#999]">
                   历史数据点：{pageHistory.length} 个 · 
                   当前点击：{selectedPageData.clicks} · 
