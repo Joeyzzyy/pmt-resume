@@ -36,50 +36,82 @@ interface SEOTrackerProps {
   refreshKey?: number;
 }
 
-// 获取优化建议
-function getOptimizationAdvice(page: PageData, history: PageHistory[]): string {
+// 获取详细优化建议
+function getOptimizationAdvice(page: PageData, history: PageHistory[]): string[] {
   const advice: string[] = [];
   
-  // 基于 CTR 的建议
-  if (page.ctr < 0.01) {
-    advice.push('CTR 较低，建议优化标题和描述以提高点击率');
-  } else if (page.ctr > 0.05) {
-    advice.push('CTR 表现优秀，保持当前标题策略');
+  // 基于 CTR 的详细建议
+  const ctrPercent = page.ctr * 100;
+  if (ctrPercent < 1) {
+    advice.push(`【CTR极低 ${ctrPercent.toFixed(2)}%】标题和描述亟需优化。建议：1) 在标题前20字内包含核心关键词；2) 描述中加入数字、问号或强烈动词；3) 添加明确的行动号召如"点击查看"`);
+  } else if (ctrPercent < 2) {
+    advice.push(`【CTR偏低 ${ctrPercent.toFixed(2)}%】有提升空间。建议：分析排名靠前竞品的标题，找出差异点；测试A/B版本标题，突出独特价值主张`);
+  } else if (ctrPercent > 5) {
+    advice.push(`【CTR优秀 ${ctrPercent.toFixed(2)}%】标题策略有效，建议保持并记录成功经验，应用到其他页面`);
   }
   
-  // 基于排名的建议
-  if (page.position > 30) {
-    advice.push('排名在第3页之后，需要加强内容优化和外链建设');
+  // 基于排名的详细建议
+  if (page.position > 50) {
+    advice.push(`【排名靠后 ${page.position.toFixed(1)}】第5页之后，曝光极低。建议：1) 检查内容是否完全匹配搜索意图；2) 增加2000字以上深度内容；3) 建设5-10个高质量外链`);
+  } else if (page.position > 30) {
+    advice.push(`【排名待提升 ${page.position.toFixed(1)}】第3-5页。建议：1) 内容长度扩展至TOP3竞品水平；2) 增加相关主题内链5-8个；3) 优化页面加载速度`);
   } else if (page.position > 10) {
-    advice.push('排名在第2页，有潜力进入首页，建议增加相关内容内链');
+    advice.push(`【冲击首页 ${page.position.toFixed(1)}】第2页位置。建议：1) 分析首页竞品内容缺口，补充独特信息；2) 增加用户互动元素如问答、评论；3) 更新发布时间至近期`);
   } else if (page.position <= 10 && page.position > 3) {
-    advice.push('已在首页，冲击前3名可增加流量');
+    advice.push(`【首页优化 ${page.position.toFixed(1)}】已在首页。建议：1) 争取精选摘要(Featured Snippet)；2) 添加结构化数据标记；3) 优化首屏内容匹配搜索意图`);
+  } else if (page.position <= 3) {
+    advice.push(`【TOP3维持 ${page.position.toFixed(1)}】优秀排名！建议：1) 监控竞品动态；2) 定期更新内容保持新鲜度；3) 考虑增加相关关键词变体`);
   }
   
   // 基于展示量的建议
-  if (page.impressions > 1000 && page.clicks < 20) {
-    advice.push('展示量高但点击少，标题/描述可能不够吸引人');
+  if (page.impressions > 5000 && page.clicks < 50) {
+    advice.push(`【高曝光低转化】展示${page.impressions}次仅点击${page.clicks}次。严重不匹配搜索意图！建议：1) 重新审视关键词定位；2) 标题明确标注内容类型(指南/列表/评测)`);
+  } else if (page.impressions > 1000 && page.ctr < 0.02) {
+    advice.push(`【流量潜力大】展示量${page.impressions}但CTR低。小优化带来大收益！建议：标题前15字必须包含核心痛点词，如"如何"、"最佳"、"完整指南"`);
+  } else if (page.impressions < 100 && page.position < 10) {
+    advice.push(`【关键词拓展】排名好但搜索量小。建议：拓展相关长尾关键词，如添加"2024"、"香港"、"攻略"等地域/时间修饰词`);
   }
   
-  // 基于趋势的建议
+  // 基于点击量的建议
+  if (page.clicks === 0 && page.impressions > 200) {
+    advice.push(`【零点击预警】有曝光无点击！紧急检查：1) 标题是否包含负面词汇；2) 描述是否被截断显示不完整；3) 页面是否被标记为过时`);
+  }
+  
+  // 基于趋势的建议（如果有历史数据）
   if (history.length >= 2) {
     const first = history[0].summary;
     const last = history[history.length - 1].summary;
+    const prev = history.length > 1 ? history[history.length - 2].summary : first;
     
-    if (last.clicks < first.clicks * 0.8) {
-      advice.push('近期点击下降明显，建议检查排名变化');
-    } else if (last.clicks > first.clicks * 1.2) {
-      advice.push('近期点击上升，优化效果明显');
+    // 点击量趋势
+    const clickChange = ((last.clicks - first.clicks) / Math.max(first.clicks, 1)) * 100;
+    const recentChange = ((last.clicks - prev.clicks) / Math.max(prev.clicks, 1)) * 100;
+    
+    if (clickChange < -30) {
+      advice.push(`【趋势警告】点击量下降${Math.abs(clickChange).toFixed(0)}%！可能原因：1) 谷歌算法更新；2) 竞品内容更新；3) 季节性因素。建议立即检查排名变化并更新内容`);
+    } else if (clickChange > 50) {
+      advice.push(`【趋势优秀】点击量上升${clickChange.toFixed(0)}%！分析成功因素：是标题优化、内容更新还是外链增加？复制此策略到其他页面`);
+    } else if (recentChange < -20) {
+      advice.push(`【近期下滑】最近一次更新后点击下降${Math.abs(recentChange).toFixed(0)}%。建议回滚检查，或加速内容迭代频率`);
     }
     
-    if (last.position > first.position + 2) {
-      advice.push('排名下滑，需要关注竞争对手动态');
-    } else if (last.position < first.position - 2) {
-      advice.push('排名上升，继续保持优化策略');
+    // 排名趋势
+    const posChange = last.position - first.position;
+    if (posChange > 3) {
+      advice.push(`【排名下滑】从${first.position.toFixed(1)}降至${last.position.toFixed(1)}。可能竞品发力或内容过时，建议分析TOP3竞品并差异化优化`);
+    } else if (posChange < -3) {
+      advice.push(`【排名上升】从${first.position.toFixed(1)}升至${last.position.toFixed(1)}！优化有效，继续保持更新频率`);
     }
+  } else if (history.length === 1) {
+    advice.push(`【数据积累中】仅有1个时间点数据。建议：1) 7-14天后再次上传GSC数据；2) 期间可进行标题/内容优化以便对比效果`);
   }
   
-  return advice.length > 0 ? advice.join('；') : '数据稳定，继续保持';
+  // 默认建议
+  if (advice.length === 0) {
+    advice.push('数据表现平稳，建议定期监控并小幅优化以保持竞争力');
+  }
+  
+  return advice;
 }
 
 // 获取优化优先级
@@ -167,10 +199,12 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
     }
   }
 
-  // 从 URL 提取文章标题
+  // 从 URL 提取文章标题（支持中文）
   function extractPageTitle(url: string): string {
     try {
-      const urlObj = new URL(url);
+      // 解码 URL 编码的中文字符
+      const decodedUrl = decodeURIComponent(url);
+      const urlObj = new URL(decodedUrl);
       const pathname = urlObj.pathname;
       // 提取最后一部分作为标题
       const slug = pathname.split('/').pop() || '';
@@ -180,7 +214,14 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
         .replace(/\b\w/g, (c) => c.toUpperCase())
         .substring(0, 60);
     } catch {
-      return url;
+      // 如果解码失败，返回原始 URL 的最后一部分
+      try {
+        const parts = url.split('/');
+        const lastPart = parts.pop() || '';
+        return decodeURIComponent(lastPart).replace(/-/g, ' ').substring(0, 60);
+      } catch {
+        return url;
+      }
     }
   }
 
@@ -367,9 +408,21 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="max-w-[280px] truncate text-xs text-[#666]" title={getOptimizationAdvice(page, [])}>
-                      {getOptimizationAdvice(page, [])}
-                    </div>
+                    {(() => {
+                      const tips = getOptimizationAdvice(page, []);
+                      return (
+                        <div className="max-w-[300px] space-y-1">
+                          {tips.slice(0, 2).map((tip, idx) => (
+                            <div key={idx} className="truncate text-xs text-[#666]" title={tip}>
+                              {idx === 0 ? tip.substring(0, 3) === '【' ? tip : `• ${tip}` : `• ${tip}`}
+                            </div>
+                          ))}
+                          {tips.length > 2 && (
+                            <div className="text-xs text-[#999]">+{tips.length - 2} 条建议...</div>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button
@@ -443,9 +496,16 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
               </div>
               
               {/* 优化建议 */}
-              <div className="max-w-[400px] rounded-sm bg-blue-50 p-3 text-xs text-blue-700">
-                <strong>优化建议：</strong>
-                {getOptimizationAdvice(selectedPageData, pageHistory)}
+              <div className="max-w-[500px] max-h-[120px] overflow-y-auto rounded-sm bg-blue-50 p-3 text-xs text-blue-700">
+                <strong className="mb-2 block">优化建议：</strong>
+                <ul className="space-y-1.5">
+                  {getOptimizationAdvice(selectedPageData, pageHistory).map((tip, idx) => (
+                    <li key={idx} className="flex gap-2">
+                      <span className="flex-shrink-0">•</span>
+                      <span>{tip}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
