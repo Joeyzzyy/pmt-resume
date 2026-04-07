@@ -508,8 +508,12 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
               ))}
             </div>
 
-            {/* 多指标提示 */}
-            {selectedMetrics.length > 1 && (
+            {/* 指标模式提示 */}
+            {selectedMetrics.length === 1 ? (
+              <div className="mb-3 rounded-sm bg-[#fafafa] p-2 text-xs text-[#666]">
+                📊 当前显示实际数值，Y轴为 {metricsConfig[selectedMetrics[0] as keyof typeof metricsConfig].label}
+              </div>
+            ) : (
               <div className="mb-3 rounded-sm bg-[#fafafa] p-2 text-xs text-[#666]">
                 💡 多指标同屏时数据已归一化处理（0-100%），悬停查看实际数值
               </div>
@@ -519,7 +523,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
             <div style={{ width: '100%', height: 350 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                  data={normalizedData}
+                  data={selectedMetrics.length === 1 ? chartData : normalizedData}
                   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -529,12 +533,27 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                     stroke="#888"
                     fontSize={11}
                   />
-                  <YAxis
-                    stroke="#888"
-                    fontSize={11}
-                    domain={[0, 100]}
-                    tickFormatter={(value) => `${value}%`}
-                  />
+                  {selectedMetrics.length === 1 ? (
+                    // 单指标模式：使用实际数值
+                    <YAxis
+                      stroke={metricsConfig[selectedMetrics[0] as keyof typeof metricsConfig].color}
+                      fontSize={11}
+                      tickFormatter={(value) => {
+                        const metric = selectedMetrics[0];
+                        if (metric === 'ctr') return `${value.toFixed(1)}%`;
+                        if (metric === 'position') return value.toFixed(0);
+                        return value >= 1000 ? `${(value/1000).toFixed(1)}k` : value.toString();
+                      }}
+                    />
+                  ) : (
+                    // 多指标模式：使用归一化百分比
+                    <YAxis
+                      stroke="#888"
+                      fontSize={11}
+                      domain={[0, 100]}
+                      tickFormatter={(value) => `${value}%`}
+                    />
+                  )}
                   <Tooltip
                     content={({ active, payload, label }) => {
                       if (active && payload && payload.length) {
@@ -590,7 +609,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                     <Line
                       key={metric}
                       type="monotone"
-                      dataKey={`${metric}Normalized`}
+                      dataKey={selectedMetrics.length === 1 ? metric : `${metric}Normalized`}
                       name={metric}
                       stroke={metricsConfig[metric as keyof typeof metricsConfig].color}
                       strokeWidth={2}
