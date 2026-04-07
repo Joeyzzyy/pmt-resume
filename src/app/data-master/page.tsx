@@ -11,6 +11,7 @@ import TopicClusterVisualization from "@/components/data-master/TopicClusterVisu
 import RankingDistributionChart from "@/components/data-master/RankingDistributionChart";
 import SearchIntentRadar from "@/components/data-master/SearchIntentRadar";
 import SEOActionImpact from "@/components/data-master/SEOActionImpact";
+import PageDataExplorer from "@/components/data-master/PageDataExplorer";
 import { TableSkeleton, CardSkeleton, ChartSkeleton } from "@/components/ui/LoadingSpinner";
 
 interface QueryData {
@@ -43,7 +44,7 @@ interface StatsData {
   } | null;
 }
 
-type ActiveTab = 'performance' | 'seo-tracking';
+type ActiveTab = 'performance' | 'seo-tracking' | 'page-explorer';
 
 export default function DataMasterPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('performance');
@@ -171,6 +172,19 @@ export default function DataMasterPage() {
                   <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1a1a1a]" />
                 )}
               </button>
+              <button
+                onClick={() => setActiveTab('page-explorer')}
+                className={`relative px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === 'page-explorer'
+                    ? 'text-[#1a1a1a]'
+                    : 'text-[#999] hover:text-[#666]'
+                }`}
+              >
+                页面数据详情
+                {activeTab === 'page-explorer' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1a1a1a]" />
+                )}
+              </button>
             </div>
           </div>
         </ScrollReveal>
@@ -260,6 +274,15 @@ export default function DataMasterPage() {
           <ScrollReveal>
             <section className="mb-16">
               <SEOTracker refreshKey={refreshKey} />
+            </section>
+          </ScrollReveal>
+        )}
+
+        {/* Page Explorer Tab */}
+        {activeTab === 'page-explorer' && (
+          <ScrollReveal>
+            <section className="mb-16">
+              <PageDataExplorer refreshKey={refreshKey} />
             </section>
           </ScrollReveal>
         )}

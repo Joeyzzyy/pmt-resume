@@ -36,6 +36,10 @@ export async function POST(request: NextRequest) {
 
     console.log(`[GSC Import] 开始导入: ${file.name}, 清空现有数据: ${clearExisting}`);
 
+    // 从文件名提取日期
+    const extractedDate = extractDateFromFilename(file.name);
+    console.log(`[GSC Import] 从文件名提取日期: ${extractedDate || '未识别'}`);
+
     // 读取 Excel 文件
     const bytes = await file.arrayBuffer();
     const workbook = XLSX.read(bytes, { type: 'array' });
@@ -70,8 +74,9 @@ export async function POST(request: NextRequest) {
     // =====================================================
     // 步骤 1: 生成上传批次号
     // =====================================================
-    const uploadBatch = await generateUploadBatch(supabase);
-    const uploadDate = new Date().toISOString().split('T')[0];
+    // 优先使用文件名提取的日期，否则使用当天日期
+    const uploadDate = extractedDate || new Date().toISOString().split('T')[0];
+    const uploadBatch = await generateUploadBatch(supabase, uploadDate);
     
     console.log(`[GSC Import] 上传批次: ${uploadBatch}`);
 
@@ -278,26 +283,56 @@ function parseSheetData(jsonData: any[][], sheetName: string): GSCRow[] {
 }
 
 // =====================================================
+// 从文件名提取日期
+// 支持的格式：
+// - maidinhk.com-Performance-on-Search-2026-03-22.xlsx
+// - data-2026-03-22.xlsx
+// - 2026-03-22-anything.xlsx
+// =====================================================
+function extractDateFromFilename(filename: string): string | null {
+  // 匹配 YYYY-MM-DD 格式
+  const dateRegex = /(\d{4})-(\d{2})-(\d{2})/;
+  const match = filename.match(dateRegex);
+  
+  if (match) {
+    const year = match[1];
+    const month = match[2];
+    const day = match[3];
+    
+    // 验证日期有效性
+    const date = new Date(`${year}-${month}-${day}`);
+    if (!isNaN(date.getTime())) {
+      return `${year}-${month}-${day}`;
+    }
+  }
+  
+  return null;
+}
+
+// =====================================================
 // 生成上传批次号
 // =====================================================
-async function generateUploadBatch(supabase: any): Promise<string> {
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  
+async function generateUploadBatch(supabase: any, dateStr: string): Promise<string> {
   const { data: existingBatches } = await supabase
     .from('maidinhk_gsc_upload_log')
     .select('upload_batch')
-    .like('upload_batch', `${today}-%`)
+    .like('upload_batch', `${dateStr}-%`)
     .order('upload_batch', { ascending: false })
     .limit(1);
 
   let batchNum = 1;
   if (existingBatches && existingBatches.length > 0) {
     const lastBatch = existingBatches[0].upload_batch;
-    const lastNum = parseInt(lastBatch.split('-')[3], 10);
-    batchNum = lastNum + 1;
+    const parts = lastBatch.split('-');
+    if (parts.length >= 4) {
+      const lastNum = parseInt(parts[3], 10);
+      if (!isNaN(lastNum)) {
+        batchNum = lastNum + 1;
+      }
+    }
   }
 
-  return `${today}-${String(batchNum).padStart(3, '0')}`;
+  return `${dateStr}-${String(batchNum).padStart(3, '0')}`;
 }
 
 // =====================================================
