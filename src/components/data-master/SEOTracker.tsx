@@ -365,7 +365,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                 >
                   <td className="px-4 py-3">
                     <a 
-                      href={page.page}
+                      href={encodeURI(page.page)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block max-w-[200px] truncate text-sm font-medium text-[#2563eb] hover:underline"
@@ -432,7 +432,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
         ) : pageHistory.length < 2 ? (
           <div className="flex h-[300px] flex-col items-center justify-center text-center">
             <a
-              href={selectedPageData.page}
+              href={encodeURI(selectedPageData.page)}
               target="_blank"
               rel="noopener noreferrer"
               className="mb-2 font-medium text-[#2563eb] hover:underline"
@@ -453,7 +453,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <a
-                  href={selectedPageData.page}
+                  href={encodeURI(selectedPageData.page)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-[#2563eb] hover:underline"
