@@ -65,26 +65,28 @@ export async function GET(request: NextRequest) {
         });
       });
 
-      // 转换为数组并计算汇总
-      history = Object.entries(historyByBatch).map(([batch, info]) => {
-        const totalClicks = info.data.reduce((sum, d) => sum + d.clicks, 0);
-        const totalImpressions = info.data.reduce((sum, d) => sum + d.impressions, 0);
-        // 计算加权平均排名（使用展示量作为权重）
-        const totalWeightedPosition = info.data.reduce((sum, d) => sum + (d.position || 0) * (d.impressions || 0), 0);
-        const avgPosition = totalImpressions > 0 ? totalWeightedPosition / totalImpressions : 0;
+      // 转换为数组并计算汇总，按上传日期排序
+      history = Object.entries(historyByBatch)
+        .map(([batch, info]) => {
+          const totalClicks = info.data.reduce((sum, d) => sum + d.clicks, 0);
+          const totalImpressions = info.data.reduce((sum, d) => sum + d.impressions, 0);
+          // 计算加权平均排名（使用展示量作为权重）
+          const totalWeightedPosition = info.data.reduce((sum, d) => sum + (d.position || 0) * (d.impressions || 0), 0);
+          const avgPosition = totalImpressions > 0 ? totalWeightedPosition / totalImpressions : 0;
 
-        return {
-          batch,
-          upload_date: info.upload_date,
-          summary: {
-            clicks: totalClicks,
-            impressions: totalImpressions,
-            ctr: totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0,
-            position: avgPosition,
-          },
-          daily: info.data,
-        };
-      });
+          return {
+            batch,
+            upload_date: info.upload_date,
+            summary: {
+              clicks: totalClicks,
+              impressions: totalImpressions,
+              ctr: totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0,
+              position: avgPosition,
+            },
+            daily: info.data,
+          };
+        })
+        .sort((a, b) => new Date(a.upload_date).getTime() - new Date(b.upload_date).getTime());
     }
 
     // 2. 如果 history 表没有数据，从 current 表获取（只获取 page 类型）
@@ -108,31 +110,33 @@ export async function GET(request: NextRequest) {
           groupedByDate[dateKey].push(row);
         });
 
-        history = Object.entries(groupedByDate).map(([date, rows]) => {
-          const totalClicks = rows.reduce((sum, r) => sum + (r.clicks || 0), 0);
-          const totalImpressions = rows.reduce((sum, r) => sum + (r.impressions || 0), 0);
-          // 计算加权平均排名
-          const totalWeightedPosition = rows.reduce((sum, r) => sum + (r.position || 0) * (r.impressions || 0), 0);
-          const avgPosition = totalImpressions > 0 ? totalWeightedPosition / totalImpressions : 0;
+        history = Object.entries(groupedByDate)
+          .map(([date, rows]) => {
+            const totalClicks = rows.reduce((sum, r) => sum + (r.clicks || 0), 0);
+            const totalImpressions = rows.reduce((sum, r) => sum + (r.impressions || 0), 0);
+            // 计算加权平均排名
+            const totalWeightedPosition = rows.reduce((sum, r) => sum + (r.position || 0) * (r.impressions || 0), 0);
+            const avgPosition = totalImpressions > 0 ? totalWeightedPosition / totalImpressions : 0;
 
-          return {
-            batch: `current-${date}`,
-            upload_date: date,
-            summary: {
-              clicks: totalClicks,
-              impressions: totalImpressions,
-              ctr: totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0,
-              position: avgPosition,
-            },
-            daily: rows.map((r: any) => ({
-              date: r.date,
-              clicks: r.clicks || 0,
-              impressions: r.impressions || 0,
-              ctr: r.ctr || 0,
-              position: r.position || 0,
-            })),
-          };
-        });
+            return {
+              batch: `current-${date}`,
+              upload_date: date,
+              summary: {
+                clicks: totalClicks,
+                impressions: totalImpressions,
+                ctr: totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0,
+                position: avgPosition,
+              },
+              daily: rows.map((r: any) => ({
+                date: r.date,
+                clicks: r.clicks || 0,
+                impressions: r.impressions || 0,
+                ctr: r.ctr || 0,
+                position: r.position || 0,
+              })),
+            };
+          })
+          .sort((a, b) => new Date(a.upload_date).getTime() - new Date(b.upload_date).getTime());
       }
     }
 
