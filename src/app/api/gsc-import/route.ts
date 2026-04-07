@@ -54,10 +54,18 @@ export async function POST(request: NextRequest) {
       console.log(`[GSC Import] 处理工作表: ${sheetName}, ${jsonData.length} 行`);
       
       const sheetRecords = parseSheetData(jsonData, sheetName);
+      console.log(`[GSC Import] 工作表 ${sheetName}: 解析到 ${sheetRecords.length} 条记录`);
+      console.log(`[GSC Import] 工作表 ${sheetName} 样本:`, sheetRecords.slice(0, 2));
+      
       allRecords.push(...sheetRecords);
     }
 
     console.log(`[GSC Import] 解析完成: ${allRecords.length} 条有效记录`);
+    console.log(`[GSC Import] 数据类型分布:`, {
+      page: allRecords.filter(r => r.dataType === 'page').length,
+      query: allRecords.filter(r => r.dataType === 'query').length,
+      summary: allRecords.filter(r => r.dataType === 'summary').length,
+    });
 
     if (allRecords.length === 0) {
       return NextResponse.json({ 
@@ -192,14 +200,17 @@ function parseSheetData(jsonData: any[][], sheetName: string): GSCRow[] {
   for (let i = 0; i < Math.min(20, jsonData.length); i++) {
     const row = jsonData[i];
     if (row && row.some((cell: any) => {
+      if (cell === null || cell === undefined) return false;
       const cellStr = String(cell).toLowerCase().trim();
       return (
         cellStr.includes('date') ||
         cellStr.includes('日期') ||
         cellStr.includes('page') ||
+        cellStr.includes('top pages') ||
         cellStr.includes('url') ||
         cellStr.includes('网址') ||
         cellStr.includes('query') ||
+        cellStr.includes('top queries') ||
         cellStr.includes('查询') ||
         cellStr.includes('clicks') ||
         cellStr.includes('点击') ||
@@ -208,6 +219,7 @@ function parseSheetData(jsonData: any[][], sheetName: string): GSCRow[] {
       );
     })) {
       headerRowIndex = i;
+      console.log(`[GSC Import] 工作表 ${sheetName} 找到表头在第 ${i} 行`);
       break;
     }
   }
@@ -219,14 +231,23 @@ function parseSheetData(jsonData: any[][], sheetName: string): GSCRow[] {
 
   const headers = jsonData[headerRowIndex].map((h: any) => String(h).toLowerCase().trim());
   
-  // 查找列索引
+  // 查找列索引（不区分大小写）
   const dateIndex = headers.findIndex((h: string) => h.includes('date') || h.includes('日期'));
-  const pageIndex = headers.findIndex((h: string) => h.includes('page') || h.includes('url') || h.includes('网址') || h.includes('top pages'));
-  const queryIndex = headers.findIndex((h: string) => h.includes('query') || h.includes('查询') || h.includes('top queries'));
-  const clicksIndex = headers.findIndex((h: string) => h.includes('clicks') || h.includes('点击'));
-  const impressionsIndex = headers.findIndex((h: string) => h.includes('impressions') || h.includes('展示'));
-  const ctrIndex = headers.findIndex((h: string) => h.includes('ctr') || h.includes('点击率'));
-  const positionIndex = headers.findIndex((h: string) => h.includes('position') || h.includes('排名'));
+  const pageIndex = headers.findIndex((h: string) => 
+    h.toLowerCase().includes('page') || 
+    h.toLowerCase().includes('url') || 
+    h.includes('网址') || 
+    h.toLowerCase().includes('top pages')
+  );
+  const queryIndex = headers.findIndex((h: string) => 
+    h.toLowerCase().includes('query') || 
+    h.includes('查询') || 
+    h.toLowerCase().includes('top queries')
+  );
+  const clicksIndex = headers.findIndex((h: string) => h.toLowerCase().includes('clicks') || h.includes('点击'));
+  const impressionsIndex = headers.findIndex((h: string) => h.toLowerCase().includes('impressions') || h.includes('展示'));
+  const ctrIndex = headers.findIndex((h: string) => h.toLowerCase().includes('ctr') || h.includes('点击率'));
+  const positionIndex = headers.findIndex((h: string) => h.toLowerCase().includes('position') || h.includes('排名'));
 
   // 判断数据类型
   let dataType: 'page' | 'query' | 'summary' = 'page';
@@ -237,6 +258,7 @@ function parseSheetData(jsonData: any[][], sheetName: string): GSCRow[] {
   }
 
   console.log(`[GSC Import] 工作表 ${sheetName}: date=${dateIndex}, page=${pageIndex}, query=${queryIndex}, dataType=${dataType}`);
+  console.log(`[GSC Import] 工作表 ${sheetName} 表头:`, headers);
 
   // 解析数据行
   for (let i = headerRowIndex + 1; i < jsonData.length; i++) {

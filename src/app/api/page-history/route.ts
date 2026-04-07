@@ -31,12 +31,28 @@ export async function GET(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 获取该页面的所有历史数据
+    // 调试：检查 history 表中的所有不同页面
+    const { data: allDistinctPages } = await supabase
+      .from('maidinhk_gsc_history')
+      .select('page, data_type', { count: 'exact' });
+    
+    console.log('[Page History] Debug - Total rows:', allDistinctPages?.length);
+    console.log('[Page History] Debug - Sample pages:', allDistinctPages?.slice(0, 5));
+    
+    // 查找匹配的页面（模糊匹配，因为 URL 可能有微小差异）
+    const { data: matchedPages } = await supabase
+      .from('maidinhk_gsc_history')
+      .select('page')
+      .ilike('page', `%${page.replace(/https?:\/\//, '').split('/').pop() || ''}%`)
+      .limit(5);
+    
+    console.log('[Page History] Debug - Matched pages:', matchedPages);
+
+    // 获取该页面的所有历史数据（不过滤 data_type）
     const { data, error } = await supabase
       .from('maidinhk_gsc_history')
-      .select('upload_batch, upload_date, date, clicks, impressions, ctr, position')
+      .select('*')
       .eq('page', page)
-      .eq('data_type', 'page')
       .order('upload_date', { ascending: true });
 
     if (error) {
@@ -46,6 +62,12 @@ export async function GET(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    console.log('[Page History] Query result:', { 
+      page, 
+      dataCount: data?.length || 0,
+      firstRow: data?.[0]
+    });
 
     // 按上传批次分组
     const historyByBatch: Record<string, {
@@ -100,6 +122,10 @@ export async function GET(request: NextRequest) {
       page,
       history,
       totalBatches: history.length,
+      debug: {
+        totalRowsInDb: allDistinctPages?.length || 0,
+        matchedPages: matchedPages?.map((p: any) => p.page) || [],
+      }
     });
 
   } catch (error) {
