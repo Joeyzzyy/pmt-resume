@@ -77,10 +77,10 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
 
       // 默认填入最近两个批次
       if (data.batches.length >= 2) {
-        setInputBatch1(data.batches[1]?.upload_batch || '');
-        setInputBatch2(data.batches[0]?.upload_batch || '');
+        setInputBatch1(extractDateFromBatch(data.batches[1]?.upload_batch || ''));
+        setInputBatch2(extractDateFromBatch(data.batches[0]?.upload_batch || ''));
       } else if (data.batches.length === 1) {
-        setInputBatch2(data.batches[0]?.upload_batch || '');
+        setInputBatch2(extractDateFromBatch(data.batches[0]?.upload_batch || ''));
       }
     } catch (err) {
       console.error('Fetch batches error:', err);
@@ -90,18 +90,50 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
     }
   }
 
+  // 从批次号提取日期（支持 2026-03-22 或 2026-03-22-001）
+  function extractDateFromBatch(batch: string): string {
+    // 如果已经是 YYYY-MM-DD 格式（10个字符）
+    if (/^\d{4}-\d{2}-\d{2}$/.test(batch)) {
+      return batch;
+    }
+    // 如果是 YYYY-MM-DD-NNN 格式，提取日期部分
+    const match = batch.match(/^(\d{4}-\d{2}-\d{2})/);
+    return match ? match[1] : batch;
+  }
+
+  // 标准化批次号（确保后端能识别）
+  function normalizeBatch(input: string): string {
+    const trimmed = input.trim();
+    // 如果用户输入的是纯日期，尝试匹配历史批次
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      // 查找该日期对应的完整批次号
+      const matched = batches.find(b => b.upload_batch.startsWith(trimmed));
+      return matched ? matched.upload_batch : trimmed;
+    }
+    return trimmed;
+  }
+
   async function handleCompare() {
     if (!inputBatch1.trim() || !inputBatch2.trim()) {
-      setError('请输入两个批次号');
+      setError('请输入两个日期');
       return;
     }
 
     if (inputBatch1.trim() === inputBatch2.trim()) {
-      setError('两个批次号不能相同');
+      setError('两个日期不能相同');
       return;
     }
 
-    await compareBatches(inputBatch1.trim(), inputBatch2.trim());
+    // 验证日期格式
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(inputBatch1.trim()) || !dateRegex.test(inputBatch2.trim())) {
+      setError('日期格式错误，请使用 YYYY-MM-DD 格式（如 2026-03-22）');
+      return;
+    }
+
+    const batch1 = normalizeBatch(inputBatch1);
+    const batch2 = normalizeBatch(inputBatch2);
+    await compareBatches(batch1, batch2);
   }
 
   async function compareBatches(batch1: string, batch2: string) {
@@ -130,10 +162,11 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
 
   // 点击历史批次快速填入
   function selectBatch(batch: string, position: 'before' | 'after') {
+    const dateStr = extractDateFromBatch(batch);
     if (position === 'before') {
-      setInputBatch1(batch);
+      setInputBatch1(dateStr);
     } else {
-      setInputBatch2(batch);
+      setInputBatch2(dateStr);
     }
   }
 
@@ -164,10 +197,12 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
     return isPositive ? 'text-green-600' : value < 0 ? 'text-red-600' : 'text-gray-500';
   }
 
-  // 格式化批次号显示
+  // 格式化批次标签显示
   function formatBatchLabel(batch: Batch): string {
-    const shortId = batch.upload_batch.split('-').slice(0, 3).join('-');
-    return `${batch.upload_date} #${batch.upload_batch.split('-')[3] || '001'}${batch.notes ? ` · ${batch.notes}` : ''}`;
+    const date = batch.upload_date;
+    const notes = batch.notes ? ` · ${batch.notes}` : '';
+    const records = batch.record_count > 0 ? ` (${batch.record_count}条)` : '';
+    return `${date}${records}${notes}`;
   }
 
   if (loading && batches.length === 0) {
@@ -188,7 +223,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
               SEO 动作影响追踪
             </h3>
             <p className="mt-1 text-sm text-[#888]">
-              输入批次号对比不同时间段的数据变化，评估优化效果
+              输入上传日期对比不同时间段的数据变化，评估优化效果
             </p>
           </div>
         </div>
@@ -197,32 +232,32 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-medium text-[#666]">
-              优化前（对比基准）批次号
+              优化前（对比基准）
             </label>
             <input
               type="text"
               value={inputBatch1}
               onChange={(e) => setInputBatch1(e.target.value)}
-              placeholder="例如：2026-03-15-001"
+              placeholder="2026-03-15"
               className="w-full rounded-sm border border-[#ddd] bg-white px-3 py-2 text-sm placeholder:text-[#aaa] focus:border-[#1a1a1a] focus:outline-none"
             />
             <p className="mt-1 text-xs text-[#999]">
-              格式：YYYY-MM-DD-NNN（如 2026-03-15-001）
+              格式：YYYY-MM-DD（上传数据的日期）
             </p>
           </div>
           <div>
             <label className="mb-2 block text-sm font-medium text-[#666]">
-              优化后（最新数据）批次号
+              优化后（最新数据）
             </label>
             <input
               type="text"
               value={inputBatch2}
               onChange={(e) => setInputBatch2(e.target.value)}
-              placeholder="例如：2026-03-22-001"
+              placeholder="2026-03-22"
               className="w-full rounded-sm border border-[#ddd] bg-white px-3 py-2 text-sm placeholder:text-[#aaa] focus:border-[#1a1a1a] focus:outline-none"
             />
             <p className="mt-1 text-xs text-[#999]">
-              格式：YYYY-MM-DD-NNN（如 2026-03-22-001）
+              格式：YYYY-MM-DD（上传数据的日期）
             </p>
           </div>
         </div>
@@ -251,24 +286,24 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
         {/* 历史批次参考 */}
         {batches.length > 0 && (
           <div className="mt-6 rounded-sm bg-[#fafafa] p-4">
-            <p className="mb-3 text-sm font-medium text-[#666]">📋 历史批次（点击快速填入）</p>
+            <p className="mb-3 text-sm font-medium text-[#666]">📋 上传历史（点击快速填入日期）</p>
             <div className="flex flex-wrap gap-2">
               {batches.slice(0, 10).map((batch) => (
                 <div key={batch.upload_batch} className="flex items-center gap-1">
                   <button
                     onClick={() => selectBatch(batch.upload_batch, 'before')}
                     className="rounded-sm border border-[#ddd] bg-white px-2 py-1 text-xs text-[#666] transition-all hover:border-[#1a1a1a] hover:text-[#1a1a1a]"
-                    title={`填入"优化前"：${batch.upload_batch}`}
+                    title={`设为优化前：${extractDateFromBatch(batch.upload_batch)}`}
                   >
                     ←
                   </button>
-                  <span className="rounded-sm bg-white px-3 py-1 text-xs text-[#888]">
+                  <span className="rounded-sm bg-white px-3 py-1 text-xs text-[#666]">
                     {formatBatchLabel(batch)}
                   </span>
                   <button
                     onClick={() => selectBatch(batch.upload_batch, 'after')}
                     className="rounded-sm border border-[#ddd] bg-white px-2 py-1 text-xs text-[#666] transition-all hover:border-[#1a1a1a] hover:text-[#1a1a1a]"
-                    title={`填入"优化后"：${batch.upload_batch}`}
+                    title={`设为优化后：${extractDateFromBatch(batch.upload_batch)}`}
                   >
                     →
                   </button>
@@ -277,7 +312,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
             </div>
             {batches.length > 10 && (
               <p className="mt-2 text-xs text-[#999]">
-                还有 {batches.length - 10} 个历史批次...
+                还有 {batches.length - 10} 个历史记录...
               </p>
             )}
           </div>
@@ -415,9 +450,9 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
           </div>
-          <p className="text-[#666]">请输入批次号开始对比</p>
+          <p className="text-[#666]">请输入上传日期开始对比</p>
           <p className="mt-1 text-xs text-[#999]">
-            格式：YYYY-MM-DD-NNN（如 2026-03-22-001）
+            格式：YYYY-MM-DD（如 2026-03-22）
           </p>
         </div>
       )}
@@ -427,16 +462,16 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
         <h4 className="mb-3 text-sm font-semibold text-[#1a1a1a]">💡 使用说明</h4>
         <ul className="list-disc space-y-1 pl-4 text-xs text-[#666]">
           <li>
-            <strong>批次号格式：</strong>YYYY-MM-DD-NNN（日期-序号），如 2026-03-22-001
+            <strong>日期格式：</strong>使用上传数据时的日期（YYYY-MM-DD），如 2026-03-22
           </li>
           <li>
-            <strong>快速填入：</strong>点击历史批次旁的 ← → 按钮可快速填入对应输入框
+            <strong>快速填入：</strong>点击历史记录旁的 ← 填入"优化前"，→ 填入"优化后"
           </li>
           <li>
-            <strong>优化前：</strong>建议选择在执行 SEO 优化动作之前上传的数据批次
+            <strong>优化前：</strong>选择执行 SEO 优化动作之前的上传日期作为基准
           </li>
           <li>
-            <strong>优化后：</strong>建议在优化完成后，等待 1-2 周再上传新数据
+            <strong>优化后：</strong>建议在优化完成后 1-2 周再上传新数据，然后使用该日期
           </li>
           <li>
             <strong>排名变化：</strong>↓ 表示排名下降（变好），↑ 表示排名上升（变差）
