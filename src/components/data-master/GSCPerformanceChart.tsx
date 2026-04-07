@@ -94,7 +94,7 @@ function normalizeData(data: ChartData[]): ChartData[] {
   const maxClicks = Math.max(...data.map((d) => d.clicks), 1);
   const maxImpressions = Math.max(...data.map((d) => d.impressions), 1);
   const maxCtr = Math.max(...data.map((d) => d.ctr), 1);
-  const maxPosition = Math.max(...data.map((d) => d.position) || 1);
+  const maxPosition = Math.max(...data.map((d) => d.position), 1);
 
   return data.map((d) => ({
     ...d,
@@ -146,11 +146,15 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
   // 计算统计数据用于tooltip显示
   const stats = useMemo(() => {
     if (data.length === 0) return null;
+    const clicks = data.map((d) => d.clicks ?? 0);
+    const impressions = data.map((d) => d.impressions ?? 0);
+    const ctr = data.map((d) => d.ctr ?? 0);
+    const position = data.map((d) => d.position ?? 0);
     return {
-      clicks: { max: Math.max(...data.map((d) => d.clicks)), min: Math.min(...data.map((d) => d.clicks)) },
-      impressions: { max: Math.max(...data.map((d) => d.impressions)), min: Math.min(...data.map((d) => d.impressions)) },
-      ctr: { max: Math.max(...data.map((d) => d.ctr)), min: Math.min(...data.map((d) => d.ctr)) },
-      position: { max: Math.max(...data.map((d) => d.position)), min: Math.min(...data.map((d) => d.position)) },
+      clicks: { max: Math.max(...clicks), min: Math.min(...clicks) },
+      impressions: { max: Math.max(...impressions), min: Math.min(...impressions) },
+      ctr: { max: Math.max(...ctr), min: Math.min(...ctr) },
+      position: { max: Math.max(...position), min: Math.min(...position) },
     };
   }, [data]);
 

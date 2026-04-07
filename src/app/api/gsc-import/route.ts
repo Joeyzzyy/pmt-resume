@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       
       console.log(`[GSC Import] 处理工作表: ${sheetName}, ${jsonData.length} 行`);
       
-      const sheetRecords = parseSheetData(jsonData, sheetName);
+      const sheetRecords = parseSheetData(jsonData, sheetName, extractedDate);
       console.log(`[GSC Import] 工作表 ${sheetName}: 解析到 ${sheetRecords.length} 条记录`);
       console.log(`[GSC Import] 工作表 ${sheetName} 样本:`, sheetRecords.slice(0, 2));
       
@@ -189,8 +189,9 @@ export async function POST(request: NextRequest) {
 
 // =====================================================
 // 解析单个工作表的数据
+// extractedDate: 从文件名提取的日期，用于 Pages/Queries 工作表
 // =====================================================
-function parseSheetData(jsonData: any[][], sheetName: string): GSCRow[] {
+function parseSheetData(jsonData: any[][], sheetName: string, extractedDate?: string | null): GSCRow[] {
   const records: GSCRow[] = [];
   
   if (jsonData.length === 0) return records;
@@ -266,7 +267,15 @@ function parseSheetData(jsonData: any[][], sheetName: string): GSCRow[] {
     if (!row || row.length === 0) continue;
 
     try {
-      const date = dateIndex >= 0 ? parseDate(row[dateIndex]) : null;
+      // 获取日期：优先使用表格中的日期列，否则使用文件名提取的日期
+      let date: string | null = null;
+      if (dateIndex >= 0 && row[dateIndex]) {
+        date = parseDate(row[dateIndex]);
+      }
+      // 对于 Pages/Queries 工作表，如果没有日期列，使用文件名日期
+      if (!date && extractedDate && (dataType === 'page' || dataType === 'query')) {
+        date = extractedDate;
+      }
       if (!date) continue;
 
       // 处理不同类型的数据

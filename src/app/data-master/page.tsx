@@ -10,7 +10,7 @@ import SEOTracker from "@/components/data-master/SEOTracker";
 import TopicClusterVisualization from "@/components/data-master/TopicClusterVisualization";
 import RankingDistributionChart from "@/components/data-master/RankingDistributionChart";
 import SearchIntentRadar from "@/components/data-master/SearchIntentRadar";
-import SEOActionImpact from "@/components/data-master/SEOActionImpact";
+
 import { TableSkeleton, CardSkeleton, ChartSkeleton } from "@/components/ui/LoadingSpinner";
 
 interface QueryData {
@@ -236,13 +236,6 @@ export default function DataMasterPage() {
             <ScrollReveal>
               <section className="mb-16">
                 <SearchIntentRadar refreshKey={refreshKey} />
-              </section>
-            </ScrollReveal>
-
-            {/* SEO Action Impact */}
-            <ScrollReveal>
-              <section className="mb-16">
-                <SEOActionImpact refreshKey={refreshKey} optimizationTargets={stats?.optimizationTargets} />
               </section>
             </ScrollReveal>
 

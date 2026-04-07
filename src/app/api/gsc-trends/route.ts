@@ -101,18 +101,32 @@ export async function GET(request: Request) {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 查询数据库中最新导入的日期作为截止日期
+    // 查询数据库中 summary 类型数据的最新日期
     const { data: maxDateResult, error: maxDateError } = await supabase
       .from("maidinhk_gsc_current")
       .select("date")
+      .eq("data_type", "summary")
       .order("date", { ascending: false })
       .limit(1)
       .single();
 
     const fallbackDate = new Date("2026-03-20");
-    const endDate = maxDateResult && !maxDateError 
-      ? new Date(maxDateResult.date) 
-      : fallbackDate;
+    const maxDateInDb = maxDateResult && !maxDateError 
+      ? maxDateResult.date 
+      : fallbackDate.toISOString().split("T")[0];
+    
+    // 查询实际有数据的最近日期（排除未来的空数据）
+    const { data: lastDataResult } = await supabase
+      .from("maidinhk_gsc_current")
+      .select("date, clicks")
+      .eq("data_type", "summary")
+      .gt("clicks", 0)
+      .order("date", { ascending: false })
+      .limit(1)
+      .single();
+    
+    const actualLastDate = lastDataResult?.date || maxDateInDb;
+    const endDate = new Date(actualLastDate);
     
     // 计算起始日期
     const startDate = new Date(endDate);
@@ -124,13 +138,22 @@ export async function GET(request: Request) {
 
     console.log(`[GSC Trends] ${config.label}: ${startDateStr} 到 ${endDateStr}`);
 
-    // 从 current 表获取数据（包括所有类型：page, query, summary）
+    // 从 current 表获取 Chart/Summary 数据（用于趋势图）
     const { data: pageData, error } = await supabase
       .from("maidinhk_gsc_current")
       .select("date, clicks, impressions, ctr, position")
+      .eq("data_type", "summary")
       .gte("date", startDateStr)
       .lte("date", endDateStr)
       .order("date", { ascending: true });
+    
+    // 获取所有 Query 数据计算正确的汇总统计（GSC Query 报告包含所有查询的总和）
+    const { data: summaryData } = await supabase
+      .from("maidinhk_gsc_current")
+      .select("date, clicks, impressions, ctr, position")
+      .eq("data_type", "query")
+      .gte("date", startDateStr)
+      .lte("date", endDateStr);
 
     if (error) {
       console.error("[GSC Trends] DB error:", error);
@@ -177,40 +200,91 @@ export async function GET(request: Request) {
       dailyStats[date].totalPositionWeighted += position * impressions;
     });
 
-    // 转换为图表数据
-    const chartData = Object.entries(dailyStats).map(([date, stats]) => ({
-      date,
-      clicks: stats.clicks,
-      impressions: stats.impressions,
-      ctr: stats.impressions > 0 ? (stats.clicks / stats.impressions) * 100 : 0,
-      position: stats.impressions > 0 ? stats.totalPositionWeighted / stats.impressions : 0,
-    }));
+    // 转换为图表数据并按日期排序
+    const chartData = Object.entries(dailyStats)
+      .map(([date, stats]) => ({
+        date,
+        clicks: stats.clicks,
+        impressions: stats.impressions,
+        ctr: stats.impressions > 0 ? (stats.clicks / stats.impressions) * 100 : 0,
+        position: stats.impressions > 0 ? stats.totalPositionWeighted / stats.impressions : 0,
+      }))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    // 填充缺失日期
-    const filledData = fillMissingDates(chartData, startDateStr, endDateStr);
+    // 确定实际的数据日期范围（以Excel中实际有数据的日期为准，不是上传日期）
+    // 过滤掉点击量异常的日期（上传日期的累计数据）
+    const nonZeroData = chartData.filter(d => d.clicks > 0);
+    
+    // 计算平均点击量和标准差，检测异常值
+    const avgClicks = nonZeroData.length > 0 
+      ? nonZeroData.reduce((sum, d) => sum + d.clicks, 0) / nonZeroData.length 
+      : 0;
+    
+    // 找到连续有数据的最后一天（排除异常高的最后一天）
+    let actualEndDate = endDateStr;
+    if (nonZeroData.length > 1) {
+      // 按日期排序
+      const sortedByDate = [...nonZeroData].sort((a, b) => 
+        new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+      
+      // 如果最后一天的点击量超过平均值的5倍，可能是上传日期的累计数据，排除它
+      const lastDay = sortedByDate[sortedByDate.length - 1];
+      const prevDay = sortedByDate[sortedByDate.length - 2];
+      
+      // 如果最后一天点击量是前一天的5倍以上，或超过平均值的3倍，认为是上传日期的累计数据
+      if (lastDay.clicks > prevDay.clicks * 5 || lastDay.clicks > avgClicks * 3) {
+        // 使用前一天作为结束日期
+        actualEndDate = prevDay.date;
+        console.log(`[GSC Trends] 检测到异常最后一天 ${lastDay.date}(${lastDay.clicks}点击，前一天${prevDay.clicks}点击，平均值${Math.round(avgClicks)})，使用 ${actualEndDate} 作为结束日期`);
+      } else {
+        actualEndDate = lastDay.date;
+      }
+    } else if (nonZeroData.length === 1) {
+      actualEndDate = nonZeroData[0].date;
+    }
+    
+    const actualDates = chartData.map(d => d.date).sort();
+    // 使用查询范围的起始日期，而不是数据中的第一个日期
+    // 这样可以确保包含所有日期，即使某些日期没有数据
+    const actualStartDate = startDateStr;
+    
+    console.log(`[GSC Trends] 实际数据范围: ${actualStartDate} 到 ${actualEndDate}`);
 
-    // 计算总计
-    const totals = filledData.reduce(
-      (acc, day) => ({
-        totalClicks: acc.totalClicks + day.clicks,
-        totalImpressions: acc.totalImpressions + day.impressions,
-        totalPositionWeighted: acc.totalPositionWeighted + (day.position * day.impressions),
-      }),
-      { totalClicks: 0, totalImpressions: 0, totalPositionWeighted: 0 }
-    );
+    // 过滤数据，只保留到实际结束日期的数据
+    const filteredChartData = chartData.filter(d => d.date <= actualEndDate);
+
+    // 填充缺失日期（使用实际的数据日期范围）
+    const filledData = fillMissingDates(filteredChartData, actualStartDate, actualEndDate);
+
+    // 计算总计 - 使用所有 Query 数据的总和（GSC Query 报告包含所有查询的总和）
+    const correctTotals = summaryData && summaryData.length > 0
+      ? {
+          totalClicks: summaryData.reduce((sum, r) => sum + (r.clicks || 0), 0),
+          totalImpressions: summaryData.reduce((sum, r) => sum + (r.impressions || 0), 0),
+          totalPositionWeighted: summaryData.reduce((sum, r) => sum + ((r.position || 0) * (r.impressions || 0)), 0),
+        }
+      : filledData.reduce(
+          (acc, day) => ({
+            totalClicks: acc.totalClicks + day.clicks,
+            totalImpressions: acc.totalImpressions + day.impressions,
+            totalPositionWeighted: acc.totalPositionWeighted + (day.position * day.impressions),
+          }),
+          { totalClicks: 0, totalImpressions: 0, totalPositionWeighted: 0 }
+        );
 
     return NextResponse.json({
       data: filledData,
       summary: {
-        totalClicks: totals.totalClicks,
-        totalImpressions: totals.totalImpressions,
-        avgCtr: totals.totalImpressions > 0 ? (totals.totalClicks / totals.totalImpressions) * 100 : 0,
-        avgPosition: totals.totalImpressions > 0 ? totals.totalPositionWeighted / totals.totalImpressions : 0,
+        totalClicks: correctTotals.totalClicks,
+        totalImpressions: correctTotals.totalImpressions,
+        avgCtr: correctTotals.totalImpressions > 0 ? (correctTotals.totalClicks / correctTotals.totalImpressions) * 100 : 0,
+        avgPosition: correctTotals.totalImpressions > 0 ? correctTotals.totalPositionWeighted / correctTotals.totalImpressions : 0,
       },
       range,
       meta: {
-        startDate: startDateStr,
-        endDate: endDateStr,
+        startDate: actualStartDate,
+        endDate: actualEndDate,
         dataPoints: filledData.length,
         isMock: false,
       },

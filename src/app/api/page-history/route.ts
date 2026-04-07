@@ -87,6 +87,25 @@ export async function GET(request: NextRequest) {
           };
         })
         .sort((a, b) => new Date(a.upload_date).getTime() - new Date(b.upload_date).getTime());
+      
+      // 去重：移除数据完全相同的上传记录（基于日期和数据内容判断）
+      history = history.filter((item, index, self) => {
+        // 找到同一日期的其他记录
+        const sameDateItems = self.filter((i, idx) => 
+          idx < index && i.upload_date === item.upload_date
+        );
+        // 如果没有同日期记录，保留
+        if (sameDateItems.length === 0) return true;
+        // 检查数据是否相同
+        const isDuplicate = sameDateItems.some(prev => 
+          prev.summary.clicks === item.summary.clicks &&
+          prev.summary.impressions === item.summary.impressions &&
+          prev.summary.ctr === item.summary.ctr &&
+          prev.summary.position === item.summary.position
+        );
+        // 如果是重复数据，丢弃
+        return !isDuplicate;
+      });
     }
 
     // 2. 如果 history 表没有数据，从 current 表获取（只获取 page 类型）
@@ -137,6 +156,21 @@ export async function GET(request: NextRequest) {
             };
           })
           .sort((a, b) => new Date(a.upload_date).getTime() - new Date(b.upload_date).getTime());
+        
+        // 去重：移除数据完全相同的上传记录
+        history = history.filter((item, index, self) => {
+          const sameDateItems = self.filter((i, idx) => 
+            idx < index && i.upload_date === item.upload_date
+          );
+          if (sameDateItems.length === 0) return true;
+          const isDuplicate = sameDateItems.some(prev => 
+            prev.summary.clicks === item.summary.clicks &&
+            prev.summary.impressions === item.summary.impressions &&
+            prev.summary.ctr === item.summary.ctr &&
+            prev.summary.position === item.summary.position
+          );
+          return !isDuplicate;
+        });
       }
     }
 
