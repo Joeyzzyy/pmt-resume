@@ -31,11 +31,12 @@ export async function GET(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 1. 首先尝试从 history 表获取数据
+    // 1. 首先尝试从 history 表获取数据（只获取 page 类型）
     const { data: historyData, error: historyError } = await supabase
       .from('maidinhk_gsc_history')
       .select('*')
       .eq('page', page)
+      .eq('data_type', 'page')
       .order('upload_date', { ascending: true });
 
     let history: any[] = [];
@@ -86,12 +87,13 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 2. 如果 history 表没有数据，从 current 表获取（作为单点数据）
+    // 2. 如果 history 表没有数据，从 current 表获取（只获取 page 类型）
     if (history.length === 0) {
       const { data: currentData, error: currentError } = await supabase
         .from('maidinhk_gsc_current')
         .select('*')
         .eq('page', page)
+        .eq('data_type', 'page')
         .order('date', { ascending: true });
 
       if (!currentError && currentData && currentData.length > 0) {

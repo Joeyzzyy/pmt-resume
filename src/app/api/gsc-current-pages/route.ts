@@ -20,10 +20,11 @@ export async function GET() {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 获取所有不同的页面
+    // 获取所有不同的页面（只返回 page 类型，排除 query 和 summary）
     const { data: pagesData, error } = await supabase
       .from('maidinhk_gsc_current')
-      .select('page, clicks, impressions, ctr, position')
+      .select('page, clicks, impressions, ctr, position, data_type')
+      .eq('data_type', 'page')
       .neq('page', '_SUMMARY_')
       .order('clicks', { ascending: false });
 
