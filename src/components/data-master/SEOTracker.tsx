@@ -199,29 +199,19 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
     }
   }
 
-  // 从 URL 提取文章标题（支持中文）
-  function extractPageTitle(url: string): string {
+  // 从 URL 提取文章 slug（保持英文原样，不转换）
+  function extractPageSlug(url: string): string {
     try {
-      // 解码 URL 编码的中文字符
-      const decodedUrl = decodeURIComponent(url);
-      const urlObj = new URL(decodedUrl);
+      const urlObj = new URL(url);
       const pathname = urlObj.pathname;
-      // 提取最后一部分作为标题
+      // 提取最后一部分作为 slug
       const slug = pathname.split('/').pop() || '';
-      // 将 slug 转换为可读标题
-      return slug
-        .replace(/-/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase())
-        .substring(0, 60);
+      // 只保留 slug，不做任何转换
+      return slug.substring(0, 50);
     } catch {
-      // 如果解码失败，返回原始 URL 的最后一部分
-      try {
-        const parts = url.split('/');
-        const lastPart = parts.pop() || '';
-        return decodeURIComponent(lastPart).replace(/-/g, ' ').substring(0, 60);
-      } catch {
-        return url;
-      }
+      // 如果解析失败，返回原始 URL 的最后一部分
+      const parts = url.split('/');
+      return (parts.pop() || '').substring(0, 50);
     }
   }
 
@@ -347,7 +337,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-[#fafafa]">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-[#666] w-[45%]">文章标题（点击访问页面）</th>
+              <th className="px-4 py-3 text-left font-medium text-[#666] w-[30%]">Slug（点击访问）</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">点击</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">展示</th>
               <th className="px-4 py-3 text-right font-medium text-[#666]">CTR</th>
@@ -378,11 +368,11 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                       href={page.page}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block max-w-[350px] truncate text-sm font-medium text-[#2563eb] hover:underline"
+                      className="block max-w-[200px] truncate text-sm font-medium text-[#2563eb] hover:underline"
                       title={`访问: ${page.page}`}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      {extractPageTitle(page.page)}
+                      {extractPageSlug(page.page)}
                     </a>
                   </td>
                   <td className="px-4 py-3 text-right">{page.clicks.toLocaleString()}</td>
