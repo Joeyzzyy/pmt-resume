@@ -80,41 +80,41 @@ const GSC_COLORS = {
   },
 };
 
-// 真实数据 - 来自 maidinhk.com GSC Excel (2026-03-22)
-// 总计 236 个页面
-// 注：目前最好排名 #3.6，暂无 Top 3，重点优化接近首页顶部的页面
+// 真实数据 - 来自 maidinhk.com GSC (2026-04-07)
+// 总计 239 个页面，其中 191 个页面 (79.9%) 位于 Google 首页
+// 注：8 个页面进入 Top 5，183 个页面位于首页中部 (6-10)，首页占比近 80%
 const DEFAULT_DATA: RankingData[] = [
   {
     range: "top1-5",
     label: "Top 1-5",
     count: 8,
-    percentage: 3.4,
+    percentage: 3.3,
     color: GSC_COLORS.ranking.top3,
-    description: "首页顶部，冲刺 Top 3",
+    description: "首页顶部，8个页面冲刺 Top 3",
   },
   {
     range: "top6-10",
     label: "Top 6-10",
-    count: 174,
-    percentage: 73.7,
+    count: 183,
+    percentage: 76.6,
     color: GSC_COLORS.ranking.top10,
-    description: "首页中部，稳定流量",
+    description: "首页中部，183个页面稳定获流",
   },
   {
     range: "top11-30",
     label: "Top 11-30",
-    count: 33,
-    percentage: 14.0,
+    count: 46,
+    percentage: 19.2,
     color: GSC_COLORS.ranking.top30,
-    description: "第2-3页，潜力待挖",
+    description: "第2-3页，46个页面潜力待挖",
   },
   {
     range: "beyond30",
     label: "31+",
-    count: 21,
-    percentage: 8.9,
+    count: 2,
+    percentage: 0.8,
     color: GSC_COLORS.ranking.beyond30,
-    description: "第4页后，需重点优化",
+    description: "第4页后，仅2个需重点优化",
   },
 ];
 
@@ -133,13 +133,13 @@ function calculateHomepageRate(data: RankingData[]): number {
 function getSummaryText(total: number, homepageRate: number): string {
   if (total === 0) return "暂无排名数据";
   if (homepageRate >= 70) {
-    return `当前共有 ${total} 个核心关键词，其中 ${homepageRate}% 稳居 Google 首页，SEO 表现优秀！`;
+    return `当前监控 ${total} 个页面，${homepageRate}% 稳居 Google 首页（Top 10），其中 8 个页面进入 Top 5，SEO 表现优秀！`;
   } else if (homepageRate >= 50) {
-    return `当前共有 ${total} 个核心关键词，${homepageRate}% 位于 Google 首页，表现良好。`;
+    return `当前监控 ${total} 个页面，${homepageRate}% 位于 Google 首页，表现良好。`;
   } else if (homepageRate >= 30) {
-    return `当前共有 ${total} 个核心关键词，${homepageRate}% 位于 Google 首页，仍有提升空间。`;
+    return `当前监控 ${total} 个页面，${homepageRate}% 位于 Google 首页，仍有提升空间。`;
   }
-  return `当前共有 ${total} 个核心关键词，仅 ${homepageRate}% 位于首页，建议加强优化。`;
+  return `当前监控 ${total} 个页面，仅 ${homepageRate}% 位于首页，建议加强优化。`;
 }
 
 function getHomepageRateColor(rate: number): string {
@@ -429,14 +429,14 @@ export default function RankingDistributionChart({
           delay={0.1}
         />
         <StatCard
-          label="首页关键词"
+          label="TOP 10"
           value={stats.top10Count}
-          subtext="前 10 位"
+          subtext="首页页面"
           color={GSC_COLORS.ranking.top10}
           delay={0.2}
         />
         <StatCard
-          label="总关键词数"
+          label="总页面数"
           value={stats.total}
           subtext="监控中"
           color={GSC_COLORS.ranking.top30}

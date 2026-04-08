@@ -808,31 +808,16 @@ export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEO
       <div className="mb-6 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-4">
         <div className="mb-3 flex items-center gap-2">
           <span className="text-lg">🎯</span>
-          <h4 className="font-semibold text-amber-900">冲刺 Top 3 优先目标</h4>
+          <h4 className="font-semibold text-amber-900">已有第1名！冲刺更多 Top 3</h4>
           <span className="rounded-full bg-amber-200 px-2 py-0.5 text-[10px] font-medium text-amber-800">
-            当前最好排名 #3.6
+            8个页面进入 Top 5
           </span>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           <a 
-            href="https://maidinhk.com/blog/baby-playpen-safety"
-            target="_blank"
-            rel="noopener noreferrer" 
-            className="flex items-center gap-3 rounded-lg bg-white/70 p-3 transition-colors hover:bg-white"
-          >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700">
-              #3.6
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="truncate text-sm font-medium text-[#1a1a1a]">婴儿围栏安全指南</p>
-              <p className="text-xs text-[#666]">239 点击 · 冲刺 #3</p>
-            </div>
-            <span className="text-xs text-amber-600">→</span>
-          </a>
-          <a 
             href="https://maidinhk.com/blog/helper-caregiver-burnout"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer" 
             className="flex items-center gap-3 rounded-lg bg-white/70 p-3 transition-colors hover:bg-white"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700">
@@ -840,13 +825,28 @@ export default function SEOActionImpact({ refreshKey, optimizationTargets }: SEO
             </div>
             <div className="flex-1 min-w-0">
               <p className="truncate text-sm font-medium text-[#1a1a1a]">外佣职业倦怠识别</p>
-              <p className="text-xs text-[#666]">89 点击 · 冲刺 #3</p>
+              <p className="text-xs text-[#666]">冲刺 Top 3 潜力股</p>
+            </div>
+            <span className="text-xs text-amber-600">→</span>
+          </a>
+          <a 
+            href="https://maidinhk.com/blog/helper-blacklist"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 rounded-lg bg-white/70 p-3 transition-colors hover:bg-white"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700">
+              #4.9
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="truncate text-sm font-medium text-[#1a1a1a]">外佣黑名单</p>
+              <p className="text-xs text-[#666]">564点击 · 冲刺 Top 3</p>
             </div>
             <span className="text-xs text-amber-600">→</span>
           </a>
         </div>
         <p className="mt-3 text-[10px] text-amber-700">
-          💡 建议：优化这两页的 Title 和 Description，增加内链支持，有望短期内进入首页前 3
+          💡 建议：已有页面排名第1和第2！继续优化这两个高流量页面，冲刺更多 Top 3
         </p>
       </div>
 
