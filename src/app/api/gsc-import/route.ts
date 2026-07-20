@@ -8,6 +8,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import * as XLSX from 'xlsx';
 
+// 避免 Serverless / 容器因批量写入耗时过长被强制中断
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
+
 interface GSCRow {
   date: string;
   page: string;
@@ -16,6 +20,10 @@ interface GSCRow {
   ctr: number;
   position: number;
   dataType: 'page' | 'query' | 'summary';
+}
+
+interface ErrorWithCause extends Error {
+  cause?: unknown;
 }
 
 export async function POST(request: NextRequest) {
@@ -104,27 +112,34 @@ export async function POST(request: NextRequest) {
       data_type: r.dataType,
     }));
 
-    const historyInserted = await batchInsert(supabase, 'maidinhk_gsc_history', historyRecords);
+    // 获取导入日期范围
+    const dates = [...new Set(allRecords.map(r => r.date))].sort();
+
+    // =====================================================
+    // 步骤 2/3 并行：写入 History 表 + 清理 Current 表旧数据
+    // =====================================================
+    console.log('[GSC Import] 写入 History 表并清理 Current 表旧数据...');
+    const [historyInserted] = await Promise.all([
+      batchInsert(supabase, 'maidinhk_gsc_history', historyRecords),
+      (async () => {
+        // 如果需要清空现有数据
+        if (clearExisting) {
+          console.log('[GSC Import] 清空 Current 表...');
+          await supabase.from('maidinhk_gsc_current').delete().gte('date', '2000-01-01');
+        }
+
+        // 删除这些日期的旧数据（避免重复）
+        if (dates.length > 0) {
+          await supabase.from('maidinhk_gsc_current').delete().in('date', dates);
+        }
+      })(),
+    ]);
     console.log(`[GSC Import] History 表写入完成: ${historyInserted} 条`);
 
     // =====================================================
     // 步骤 3: 写入 Current 表（自动覆盖，用于 Performance）
     // =====================================================
     console.log('[GSC Import] 写入 Current 表...');
-
-    // 如果需要清空现有数据
-    if (clearExisting) {
-      console.log('[GSC Import] 清空 Current 表...');
-      await supabase.from('maidinhk_gsc_current').delete().gte('date', '2000-01-01');
-    }
-
-    // 获取导入日期范围
-    const dates = [...new Set(allRecords.map(r => r.date))].sort();
-    
-    // 删除这些日期的旧数据（避免重复）
-    for (const date of dates) {
-      await supabase.from('maidinhk_gsc_current').delete().eq('date', date);
-    }
 
     // 插入新数据到 current 表
     const currentRecords = allRecords.map(r => ({
@@ -179,9 +194,16 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('[GSC Import] 导入失败:', error);
+    const err: ErrorWithCause = error instanceof Error ? error : new Error(String(error));
+    console.error('[GSC Import] 导入失败:', err);
+    if (err.cause) {
+      console.error('[GSC Import] 错误 cause:', err.cause);
+    }
+    if (err.stack) {
+      console.error('[GSC Import] 错误堆栈:', err.stack);
+    }
     return NextResponse.json(
-      { error: '导入失败: ' + (error as Error).message },
+      { error: '导入失败: ' + (err.message || String(error)) },
       { status: 500 }
     );
   }
@@ -367,25 +389,76 @@ async function generateUploadBatch(supabase: any, dateStr: string): Promise<stri
 }
 
 // =====================================================
-// 批量插入数据
+// 批量插入数据（小批量 + 重试，降低 fetch 超时/失败概率）
 // =====================================================
 async function batchInsert(supabase: any, table: string, records: any[]): Promise<number> {
-  const batchSize = 1000;
+  const batchSize = 300; // 从 1000 下调，避免单请求过大导致超时
+  const maxRetries = 3;
   let insertedCount = 0;
 
   for (let i = 0; i < records.length; i += batchSize) {
     const batch = records.slice(i, i + batchSize);
-    const { error } = await supabase.from(table).insert(batch);
-    
-    if (error) {
-      console.error(`[GSC Import] 插入 ${table} 失败:`, error);
-      throw new Error(`插入 ${table} 失败: ${error.message}`);
+    let lastError: ErrorWithCause | null = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const { error } = await supabase.from(table).insert(batch);
+
+        if (error) {
+          throw error;
+        }
+
+        lastError = null;
+        break;
+      } catch (err) {
+        const errorObj: ErrorWithCause = err instanceof Error ? err : new Error(String(err));
+        lastError = errorObj;
+        const isRetryable = isRetryableError(errorObj);
+        console.error(
+          `[GSC Import] 插入 ${table} 第 ${i + 1}-${Math.min(i + batchSize, records.length)} 条失败 (attempt ${attempt}/${maxRetries}):`,
+          errorObj.message,
+          errorObj.cause ?? ''
+        );
+
+        if (!isRetryable || attempt === maxRetries) {
+          break;
+        }
+
+        // 指数退避：1s / 2s
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+      }
     }
-    
+
+    if (lastError) {
+      throw new Error(`插入 ${table} 失败: ${lastError.message}`);
+    }
+
     insertedCount += batch.length;
   }
 
   return insertedCount;
+}
+
+// 判断是否为可重试的网络/传输层错误
+function isRetryableError(err: ErrorWithCause): boolean {
+  const msg = err.message.toLowerCase();
+  const cause = err.cause;
+  const causeMsg = typeof cause === 'string' ? cause.toLowerCase() : String(cause ?? '').toLowerCase();
+
+  const retryablePatterns = [
+    'fetch failed',
+    'timeout',
+    'timed out',
+    'abort',
+    'econnreset',
+    'econnrefused',
+    'socket',
+    'network',
+    'und_err',
+    'connection',
+  ];
+
+  return retryablePatterns.some(p => msg.includes(p) || causeMsg.includes(p));
 }
 
 // =====================================================
