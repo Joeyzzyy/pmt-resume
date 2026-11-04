@@ -35,6 +35,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# GSC service account key
+gsc-key.json
+
 # vercel
 .vercel
 
