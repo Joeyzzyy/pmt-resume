@@ -31,7 +31,7 @@ const renderOptions: Options = {
                 {headerRow.content.map((cell, i) => (
                   <th
                     key={i}
-                    className="border border-[#ddd] bg-[#f5f5f5] px-4 py-2.5 text-left font-semibold text-[#1a1a1a]"
+                    className="border border-[#2e2e2e] bg-[#1a1a1a] px-4 py-2.5 text-left font-semibold text-[#ededed]"
                   >
                     {documentToReactComponents(
                       {
@@ -47,11 +47,11 @@ const renderOptions: Options = {
             </thead>
             <tbody>
               {bodyRows.map((row, ri) => (
-                <tr key={ri} className="transition-colors hover:bg-[#fafafa]">
+                <tr key={ri} className="transition-colors hover:bg-[#141414]">
                   {(row as Block).content.map((cell, ci) => (
                     <td
                       key={ci}
-                      className="border border-[#eee] px-4 py-2.5 text-[#333]"
+                      className="border border-[#262626] px-4 py-2.5 text-[#d4d4d4]"
                     >
                       {documentToReactComponents(
                         {
@@ -156,7 +156,7 @@ export default async function ArticlePage({ params }: Props) {
       <div className="mx-auto max-w-[860px] px-5 py-12">
       <Link
         href="/blogs"
-        className="mb-8 inline-block text-sm text-[#999] transition-colors hover:text-[#1a1a1a]"
+        className="mb-8 inline-block text-sm text-[#999] transition-colors hover:text-[#ededed]"
       >
         &larr; SEO 实战笔记
       </Link>
@@ -168,7 +168,7 @@ export default async function ArticlePage({ params }: Props) {
               {post.cluster}
             </p>
           )}
-          <h1 className="font-serif text-3xl font-bold leading-tight tracking-tight text-[#1a1a1a] sm:text-4xl">
+          <h1 className="font-serif text-3xl font-bold leading-tight tracking-tight text-[#ededed] sm:text-4xl">
             {post.title}
           </h1>
           <div className="mt-4 flex items-center gap-3 text-xs text-[#bbb]">
@@ -183,7 +183,7 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         </header>
 
-        <div className="prose prose-neutral max-w-none text-[#333] leading-relaxed [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#1a1a1a] [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#1a1a1a] [&_p]:mb-4 [&_p]:text-[0.95rem] [&_p]:leading-[1.8] [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-1 [&_li]:text-[0.95rem] [&_a]:text-[#FF2D55] [&_a]:underline [&_blockquote]:border-l-2 [&_blockquote]:border-[#ddd] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-[#888]">
+        <div className="prose prose-neutral max-w-none text-[#d4d4d4] leading-relaxed [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#ededed] [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#ededed] [&_p]:mb-4 [&_p]:text-[0.95rem] [&_p]:leading-[1.8] [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-1 [&_li]:text-[0.95rem] [&_a]:text-[#BD0858] [&_a]:font-black [&_a]:underline [&_blockquote]:border-l-2 [&_blockquote]:border-[#2e2e2e] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-[#888]">
           {documentToReactComponents(post.content, renderOptions)}
         </div>
       </article>

@@ -163,12 +163,12 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
   }
 
   return (
-    <div className="rounded-sm border border-[#eee] bg-white">
+    <div className="rounded-sm border border-[#262626] bg-[#111]">
       {/* Header */}
-      <div className="border-b border-[#eee] p-6">
+      <div className="border-b border-[#262626] p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="font-serif text-xl font-semibold text-[#1a1a1a]">Performance</h3>
+            <h3 className="font-serif text-xl font-semibold text-[#ededed]">Performance</h3>
             <p className="mt-1 text-sm text-[#888]">
               {meta 
                 ? `搜索表现趋势 · ${meta.startDate.replace(/-/g, "/")} - ${meta.endDate.replace(/-/g, "/")} · ${timeRangeLabels[timeRange]}`
@@ -177,15 +177,15 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
           </div>
 
           {/* Time Range Selector */}
-          <div className="flex rounded-sm border border-[#eee] bg-[#fafafa] p-1">
+          <div className="flex rounded-sm border border-[#262626] bg-[#141414] p-1">
             {(Object.keys(timeRangeLabels) as TimeRange[]).map((range) => (
               <button
                 key={range}
                 onClick={() => setTimeRange(range)}
                 className={`px-3 py-1.5 text-xs font-medium transition-all ${
                   timeRange === range
-                    ? "bg-white text-[#1a1a1a] shadow-sm"
-                    : "text-[#888] hover:text-[#1a1a1a]"
+                    ? "bg-[#BD0858] text-white shadow-sm"
+                    : "text-[#888] hover:text-[#ededed]"
                 }`}
               >
                 {timeRangeLabels[range]}
@@ -252,7 +252,7 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
       </div>
 
       {/* Metric Controls */}
-      <div className="border-b border-[#eee] px-6 py-4">
+      <div className="border-b border-[#262626] px-6 py-4">
         <div className="mb-2 flex items-center gap-2">
           <span className="text-xs font-medium text-[#888]">指标选择:</span>
           <span className="text-xs text-[#aaa]">点击切换显示/隐藏</span>
@@ -276,7 +276,7 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                 className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                   isActive
                     ? "text-white shadow-sm"
-                    : "bg-[#f0f0f0] text-[#888] hover:bg-[#e0e0e0]"
+                    : "bg-[#262626] text-[#888] hover:bg-[#a3074c]"
                 } cursor-pointer`}
                 style={{
                   backgroundColor: isActive ? config.color : undefined,
@@ -291,9 +291,9 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
       </div>
 
       {/* 数据说明 */}
-      <div className="border-b border-[#f0f0f0] bg-[#fafafa] px-6 py-4">
+      <div className="border-b border-[#262626] bg-[#141414] px-6 py-4">
         {selectedMetrics.length > 1 ? (
-          <div className="flex items-start gap-2 text-xs text-[#666]">
+          <div className="flex items-start gap-2 text-xs text-[#a3a3a3]">
             <span className="mt-0.5 text-[#f59e0b]">💡</span>
             <span>多指标同屏展示时，数据已归一化处理（0-100%），悬停图表查看实际数值</span>
           </div>
@@ -301,7 +301,7 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
           <div className="flex items-center gap-6 text-xs">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full" style={{ backgroundColor: metricConfig[selectedMetrics[0]].color }} />
-              <span className="text-[#666]">{metricConfig[selectedMetrics[0]].label}</span>
+              <span className="text-[#a3a3a3]">{metricConfig[selectedMetrics[0]].label}</span>
             </div>
             {stats && (
               <span className="text-[#999]">
@@ -318,14 +318,14 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
         <div style={{ width: '100%', height: 384 }}>
           <ResponsiveContainer width="100%" height={384}>
             <LineChart data={data} margin={{ top: 30, right: 30, left: 10, bottom: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#262626" />
               <XAxis
                 dataKey="date"
                 tickFormatter={formatDate}
                 stroke="#888"
                 fontSize={11}
                 tickLine={false}
-                axisLine={{ stroke: "#eee" }}
+                axisLine={{ stroke: "#262626" }}
                 tick={{ fill: "#888" }}
               />
 
@@ -346,7 +346,7 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                     dataKey={selectedMetrics[0]}
                     stroke={metricConfig[selectedMetrics[0]].color}
                     strokeWidth={3}
-                    dot={{ r: 4, strokeWidth: 2, fill: "#fff" }}
+                    dot={{ r: 4, strokeWidth: 2, fill: "#111" }}
                     activeDot={{ r: 6, strokeWidth: 2 }}
                     animationDuration={1000}
                   />
@@ -358,7 +358,7 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                     stroke="#888"
                     fontSize={11}
                     tickLine={false}
-                    axisLine={{ stroke: "#eee" }}
+                    axisLine={{ stroke: "#262626" }}
                     tick={{ fill: "#888" }}
                     domain={[0, 100]}
                     tickFormatter={(value) => `${value}%`}
@@ -414,8 +414,8 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                 content={({ active, payload, label }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div className="rounded-sm border border-[#eee] bg-white p-4 shadow-lg">
-                        <p className="mb-3 border-b border-[#f0f0f0] pb-2 text-xs font-medium text-[#888]">
+                      <div className="rounded-sm border border-[#262626] bg-[#111] p-4 shadow-lg">
+                        <p className="mb-3 border-b border-[#262626] pb-2 text-xs font-medium text-[#888]">
                           {format(parseISO(label as string), "yyyy年MM月dd日")}
                         </p>
                         <div className="space-y-2">
@@ -434,9 +434,9 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                                     className="h-3 w-3 rounded-full"
                                     style={{ backgroundColor: config.color }}
                                   />
-                                  <span className="text-xs text-[#666]">{config.label}</span>
+                                  <span className="text-xs text-[#a3a3a3]">{config.label}</span>
                                 </div>
-                                <span className="font-medium text-[#1a1a1a]">
+                                <span className="font-medium text-[#ededed]">
                                   {config.format(entry.value as number)}
                                 </span>
                               </div>
@@ -456,13 +456,13 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
         </div>
 
         {/* 数据解读 */}
-        <div className="border-t border-[#eee] p-6">
-          <h4 className="mb-4 font-serif text-sm font-semibold text-[#1a1a1a]">
+        <div className="border-t border-[#262626] p-6">
+          <h4 className="mb-4 font-serif text-sm font-semibold text-[#ededed]">
             💡 数据解读
           </h4>
-          <div className="space-y-4 text-sm text-[#666]">
-            <div className="rounded-sm border-l-2 border-[#10b981] bg-[#fafafa] p-4">
-              <p className="mb-2 font-medium text-[#1a1a1a]">
+          <div className="space-y-4 text-sm text-[#a3a3a3]">
+            <div className="rounded-sm border-l-2 border-[#10b981] bg-[#141414] p-4">
+              <p className="mb-2 font-medium text-[#ededed]">
                 平均排名 {summary ? summary.avgPosition.toFixed(1) : "8.2"} 意味着什么？
               </p>
               <ul className="list-disc space-y-1 pl-4 text-xs">
@@ -471,8 +471,8 @@ export default function GSCPerformanceChart({ refreshKey }: GSCPerformanceChartP
                 <li>在&quot;外佣雇主&quot;这一垂直细分领域建立了<strong>搜索权威性</strong></li>
               </ul>
             </div>
-            <div className="rounded-sm border-l-2 border-[#2563eb] bg-[#fafafa] p-4">
-              <p className="mb-2 font-medium text-[#1a1a1a]">
+            <div className="rounded-sm border-l-2 border-[#2563eb] bg-[#141414] p-4">
+              <p className="mb-2 font-medium text-[#ededed]">
                 CTR {summary ? summary.avgCtr.toFixed(2) : "2.71"}% 的含金量？
               </p>
               <ul className="list-disc space-y-1 pl-4 text-xs">

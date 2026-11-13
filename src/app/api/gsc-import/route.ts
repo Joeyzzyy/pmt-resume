@@ -194,7 +194,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    const err: ErrorWithCause = error instanceof Error ? error : new Error(String(error));
+    const err = normalizeError(error);
     console.error('[GSC Import] 导入失败:', err);
     if (err.cause) {
       console.error('[GSC Import] 错误 cause:', err.cause);
@@ -202,9 +202,15 @@ export async function POST(request: NextRequest) {
     if (err.stack) {
       console.error('[GSC Import] 错误堆栈:', err.stack);
     }
+
+    const isConnectionError = isRetryableError(err);
     return NextResponse.json(
-      { error: '导入失败: ' + (err.message || String(error)) },
-      { status: 500 }
+      {
+        error: isConnectionError
+          ? `导入失败: 无法连接 Supabase 数据库，请检查 NEXT_PUBLIC_SUPABASE_URL、Supabase 项目状态和网络连接。详情: ${err.message}`
+          : `导入失败: ${err.message}`,
+      },
+      { status: isConnectionError ? 503 : 500 }
     );
   }
 }
@@ -411,7 +417,7 @@ async function batchInsert(supabase: any, table: string, records: any[]): Promis
         lastError = null;
         break;
       } catch (err) {
-        const errorObj: ErrorWithCause = err instanceof Error ? err : new Error(String(err));
+        const errorObj = normalizeError(err);
         lastError = errorObj;
         const isRetryable = isRetryableError(errorObj);
         console.error(
@@ -430,7 +436,7 @@ async function batchInsert(supabase: any, table: string, records: any[]): Promis
     }
 
     if (lastError) {
-      throw new Error(`插入 ${table} 失败: ${lastError.message}`);
+      throw new Error(`插入 ${table} 失败: ${lastError.message}`, { cause: lastError.cause });
     }
 
     insertedCount += batch.length;
@@ -439,11 +445,49 @@ async function batchInsert(supabase: any, table: string, records: any[]): Promis
   return insertedCount;
 }
 
+function normalizeError(error: unknown): ErrorWithCause {
+  if (error instanceof Error) return error;
+
+  if (typeof error === 'object' && error !== null) {
+    const value = error as Record<string, unknown>;
+    const text = (input: unknown) => input == null ? '' : String(input).trim();
+    const message = text(value.message);
+    const details = text(value.details);
+    const hint = text(value.hint);
+    const code = text(value.code);
+    const parts = message ? [message] : [];
+
+    if (details && !parts.some(part => details.includes(part))) {
+      parts.push(details);
+    }
+    if (hint && !parts.some(part => hint.includes(part))) {
+      parts.push(hint);
+    }
+    if (code) {
+      parts.push(`错误码: ${code}`);
+    }
+
+    let fallback = '未知数据库错误';
+    if (parts.length === 0) {
+      try {
+        fallback = JSON.stringify(error) || fallback;
+      } catch {
+        // 保留默认错误信息
+      }
+    }
+
+    const normalized = new Error(parts.join('；') || fallback);
+    normalized.cause = value.cause ?? error;
+    return normalized;
+  }
+
+  return new Error(String(error));
+}
+
 // 判断是否为可重试的网络/传输层错误
 function isRetryableError(err: ErrorWithCause): boolean {
   const msg = err.message.toLowerCase();
-  const cause = err.cause;
-  const causeMsg = typeof cause === 'string' ? cause.toLowerCase() : String(cause ?? '').toLowerCase();
+  const causeMsg = err.cause ? normalizeError(err.cause).message.toLowerCase() : '';
 
   const retryablePatterns = [
     'fetch failed',
@@ -452,6 +496,8 @@ function isRetryableError(err: ErrorWithCause): boolean {
     'abort',
     'econnreset',
     'econnrefused',
+    'enotfound',
+    'dns',
     'socket',
     'network',
     'und_err',

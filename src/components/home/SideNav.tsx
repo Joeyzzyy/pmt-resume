@@ -2,14 +2,22 @@
 
 import { useEffect, useState } from "react";
 import styles from "@/styles/sidenav.module.css";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
-const sections = [
-  { id: "about", label: "经历与项目" },
-  { id: "key-results", label: "SEO 成果" },
-  { id: "toolbox", label: "工具与选型" },
+interface SideNavSection {
+  id: string;
+  label: { zh: string; en: string };
+}
+
+const defaultSections: SideNavSection[] = [
+  { id: "experience", label: { zh: "职业经历", en: "Experience" } },
+  { id: "about", label: { zh: "SEO 实践之路", en: "SEO Journey" } },
+  { id: "works", label: { zh: "沉淀与作品", en: "Works" } },
+  { id: "toolbox", label: { zh: "工具与选型", en: "Toolbox" } },
 ];
 
-export default function SideNav() {
+export default function SideNav({ sections = defaultSections }: { sections?: SideNavSection[] }) {
+  const { locale } = useLanguage();
   const [active, setActive] = useState("hero");
 
   useEffect(() => {
@@ -21,6 +29,8 @@ export default function SideNav() {
           return { id, top: el.getBoundingClientRect().top };
         })
         .filter(Boolean) as { id: string; top: number }[];
+
+      if (offsets.length === 0) return;
 
       const current = offsets.reduce((closest, item) =>
         Math.abs(item.top - 100) < Math.abs(closest.top - 100)
@@ -34,7 +44,7 @@ export default function SideNav() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [sections]);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -46,7 +56,7 @@ export default function SideNav() {
   return (
     <nav
       className={styles.sideNav}
-      aria-label="页面导航"
+      aria-label={locale === "zh" ? "页面导航" : "Page navigation"}
     >
       <ul className={styles.navList}>
         {sections.map(({ id, label }) => (
@@ -57,7 +67,7 @@ export default function SideNav() {
               aria-current={active === id ? "true" : undefined}
             >
               <span className={styles.dot} />
-              <span className={styles.label}>{label}</span>
+              <span className={styles.label}>{label[locale]}</span>
             </button>
           </li>
         ))}

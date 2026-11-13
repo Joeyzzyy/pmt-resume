@@ -12,7 +12,7 @@ export default function PostHeader({ post }: { post: BlogPost }) {
             <Link
               key={cat.id}
               href={`/category/${cat.slug}`}
-              className="text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-[#999] transition-colors hover:text-[#1a1a1a]"
+              className="text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-[#999] transition-colors hover:text-[#ededed]"
             >
               {cat.name}
             </Link>
@@ -20,7 +20,7 @@ export default function PostHeader({ post }: { post: BlogPost }) {
         </div>
       )}
 
-      <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-[#1a1a1a] md:text-5xl">
+      <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-[#ededed] md:text-5xl">
         {post.title}
       </h1>
 
@@ -36,7 +36,7 @@ export default function PostHeader({ post }: { post: BlogPost }) {
             <Link
               key={tag.id}
               href={`/tag/${tag.slug}`}
-              className="rounded-full border border-[#e5e5e5] px-3 py-1 text-xs text-[#999] transition-all duration-300 hover:border-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white"
+              className="rounded-full border border-[#e5e5e5] px-3 py-1 text-xs text-[#999] transition-all duration-300 hover:border-[#ededed] hover:bg-[#ededed] hover:text-white"
             >
               {tag.name}
             </Link>

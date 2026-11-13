@@ -133,7 +133,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 10.2,
     impressions: 2615,
     ctr: 3.9,
-    color: "#8e24aa",
+    color: "#b854c7",
     angle: 25.7,
     category: "medium",
     topQueries: [
@@ -150,7 +150,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 19.2,
     impressions: 5011,
     ctr: 1.7,
-    color: "#8e24aa",
+    color: "#b854c7",
     angle: 77.1,
     category: "medium",
     topQueries: [
@@ -167,7 +167,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 9.1,
     impressions: 2252,
     ctr: 2.9,
-    color: "#8e24aa",
+    color: "#b854c7",
     angle: 128.5,
     category: "medium",
     topQueries: [
@@ -183,7 +183,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 9.4,
     impressions: 1645,
     ctr: 3.8,
-    color: "#8e24aa",
+    color: "#b854c7",
     angle: 180,
     category: "medium",
     topQueries: [
@@ -200,7 +200,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 7.4,
     impressions: 1533,
     ctr: 4.0,
-    color: "#8e24aa",
+    color: "#b854c7",
     angle: 231.4,
     category: "medium",
     topQueries: [
@@ -220,7 +220,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 7.0,
     impressions: 1037,
     ctr: 5.6,
-    color: "#ab47bc",
+    color: "#ca72d7",
     angle: 300,  // 右下
     category: "low",
     topQueries: [
@@ -236,7 +236,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 7.2,
     impressions: 1047,
     ctr: 5.4,
-    color: "#ab47bc",
+    color: "#ca72d7",
     angle: 350,  // 右侧偏上
     category: "low",
     topQueries: [
@@ -252,7 +252,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 10.2,
     impressions: 1250,
     ctr: 4.1,
-    color: "#ab47bc",
+    color: "#ca72d7",
     angle: 40,   // 右上（与中圈 25.7° 错开）
     category: "low",
     topQueries: [
@@ -268,7 +268,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 6.3,
     impressions: 954,
     ctr: 5.1,
-    color: "#ab47bc",
+    color: "#ca72d7",
     angle: 120,  // 左下偏上（与中圈 128.5° 错开）
     category: "low",
     topQueries: [
@@ -284,7 +284,7 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
     position: 4.8,
     impressions: 1382,
     ctr: 3.3,
-    color: "#ab47bc",
+    color: "#ca72d7",
     angle: 200,  // 左侧（与中圈 180°、231.4° 错开）
     category: "low",
     topQueries: [
@@ -299,9 +299,9 @@ const MAIDINHK_CLUSTERS: ContentCluster[] = [
 // ============================================
 
 const CATEGORY_CONFIG = {
-  high: { label: "高点击 (>100)", color: "#27c3da", bg: "#e0f7fa" },
-  medium: { label: "中点击 (50-100)", color: "#8e24aa", bg: "#f3e5f5" },
-  low: { label: "低点击 (<50)", color: "#ab47bc", bg: "#fce4ec" },
+  high: { label: "高点击 (>100)", color: "#27c3da", bg: "#103138" },
+  medium: { label: "中点击 (50-100)", color: "#b854c7", bg: "#2b1533" },
+  low: { label: "低点击 (<50)", color: "#ca72d7", bg: "#321626" },
 };
 
 // ============================================
@@ -349,8 +349,8 @@ function ClusterCard({
 
   return (
     <motion.div
-      className={`absolute z-30 w-28 cursor-pointer rounded-lg border bg-white p-2 shadow-md transition-all ${
-        isSelected ? "border-[#27c3da] shadow-lg shadow-[#27c3da]/20" : "border-[#e5e5e5] hover:border-[#27c3da]/50"
+      className={`absolute z-30 w-28 cursor-pointer rounded-lg border bg-[#111] p-2 shadow-md transition-all ${
+        isSelected ? "border-[#27c3da] shadow-lg shadow-[#27c3da]/20" : "border-[#262626] hover:border-[#27c3da]/50"
       }`}
       style={{ left: `calc(50% + ${x}px - 56px)`, top: `calc(50% + ${y}px - 30px)` }}
       initial={{ scale: 0, opacity: 0 }}
@@ -375,10 +375,10 @@ function ClusterCard({
       </div>
 
       {/* 标题 */}
-      <h4 className="truncate text-[10px] font-semibold leading-tight text-[#1a1a1a]">{cluster.title}</h4>
+      <h4 className="truncate text-[10px] font-semibold leading-tight text-[#ededed]">{cluster.title}</h4>
 
       {/* 指标 */}
-      <div className="mt-1 flex items-center justify-between border-t border-[#f0f0f0] pt-0.5 text-[8px]">
+      <div className="mt-1 flex items-center justify-between border-t border-[#262626] pt-0.5 text-[8px]">
         <span className="text-[#27c3da]">{cluster.clicks} 点击</span>
         <span style={{ color: config.color }}>#{cluster.position}</span>
       </div>
@@ -405,7 +405,7 @@ function ConnectionLine({
       style={{
         width: length,
         transform: `rotate(${angle}deg)`,
-        background: isActive ? `linear-gradient(90deg, #27c3da 0%, ${color} 100%)` : "linear-gradient(90deg, #e5e5e5 0%, #d0d0d0 100%)",
+        background: isActive ? `linear-gradient(90deg, #27c3da 0%, ${color} 100%)` : "linear-gradient(90deg, #333 0%, #262626 100%)",
       }}
     >
       <motion.div
@@ -413,7 +413,7 @@ function ConnectionLine({
         style={{
           background: isActive
             ? `linear-gradient(90deg, transparent 0%, ${color}80 50%, transparent 100%)`
-            : "linear-gradient(90deg, transparent 0%, rgba(200, 200, 200, 0.5) 50%, transparent 100%)",
+            : "linear-gradient(90deg, transparent 0%, rgba(120, 120, 120, 0.35) 50%, transparent 100%)",
           width: "30%",
         }}
         animate={{ left: ["-30%", "100%"] }}
@@ -431,7 +431,7 @@ function ClusterDetailPanel({ cluster, onClose }: { cluster: ContentCluster; onC
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="absolute bottom-4 left-4 right-4 z-50 rounded-xl border border-[#e5e5e5] bg-white p-4 shadow-xl"
+      className="absolute bottom-4 left-4 right-4 z-50 rounded-xl border border-[#262626] bg-[#111] p-4 shadow-xl"
     >
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -439,32 +439,32 @@ function ClusterDetailPanel({ cluster, onClose }: { cluster: ContentCluster; onC
             <span className="text-sm">🔍</span>
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-[#1a1a1a]">{cluster.title}</h4>
+            <h4 className="text-sm font-semibold text-[#ededed]">{cluster.title}</h4>
             <p className="text-[10px] text-[#999]">{config.label} · CTR {(cluster.ctr * 100).toFixed(1)}%</p>
           </div>
         </div>
-        <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f0f0f0] text-[#666]">✕</button>
+        <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-[#262626] text-[#a3a3a3]">✕</button>
       </div>
 
       <div className="mb-3 grid grid-cols-3 gap-2">
-        <div className="rounded-lg bg-[#fafafa] p-2 text-center">
+        <div className="rounded-lg bg-[#141414] p-2 text-center">
           <p className="text-lg font-bold text-[#27c3da]">{cluster.clicks}</p>
           <p className="text-[9px] text-[#999]">点击</p>
         </div>
-        <div className="rounded-lg bg-[#fafafa] p-2 text-center">
-          <p className="text-lg font-bold text-[#8e24aa]">{cluster.impressions.toLocaleString()}</p>
+        <div className="rounded-lg bg-[#141414] p-2 text-center">
+          <p className="text-lg font-bold text-[#b854c7]">{cluster.impressions.toLocaleString()}</p>
           <p className="text-[9px] text-[#999]">展示</p>
         </div>
-        <div className="rounded-lg bg-[#fafafa] p-2 text-center">
-          <p className="text-lg font-bold text-[#1a1a1a]">#{cluster.position}</p>
+        <div className="rounded-lg bg-[#141414] p-2 text-center">
+          <p className="text-lg font-bold text-[#ededed]">#{cluster.position}</p>
           <p className="text-[9px] text-[#999]">排名</p>
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-[10px] font-medium text-[#666]">Top 5 搜索词</p>
+        <p className="text-[10px] font-medium text-[#a3a3a3]">Top 5 搜索词</p>
         {cluster.topQueries.map((query, idx) => (
-          <div key={idx} className="flex items-center justify-between rounded-lg bg-[#fafafa] px-3 py-2">
+          <div key={idx} className="flex items-center justify-between rounded-lg bg-[#141414] px-3 py-2">
             <div className="flex items-center gap-2">
               <span
                 className="flex h-5 w-5 items-center justify-center rounded text-[10px] font-bold text-white"
@@ -472,7 +472,7 @@ function ClusterDetailPanel({ cluster, onClose }: { cluster: ContentCluster; onC
               >
                 {idx + 1}
               </span>
-              <span className="text-xs text-[#1a1a1a]">{query.query}</span>
+              <span className="text-xs text-[#ededed]">{query.query}</span>
             </div>
             <div className="flex items-center gap-3 text-[10px]">
               <span className="text-[#27c3da]">{query.clicks} 点击</span>
@@ -489,13 +489,13 @@ function TechnicalNote({ hasDynamicData }: { hasDynamicData: boolean }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="rounded-xl border border-[#e5e5e5] bg-gradient-to-r from-[#fafafa] to-white p-4">
+    <div className="rounded-xl border border-[#262626] bg-gradient-to-r from-[#141414] to-[#0c0c0c] p-4">
       <button onClick={() => setIsExpanded(!isExpanded)} className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-lg">⚡</span>
-          <span className="text-sm font-semibold text-[#1a1a1a]">数据说明</span>
+          <span className="text-sm font-semibold text-[#ededed]">数据说明</span>
         </div>
-        <motion.span animate={{ rotate: isExpanded ? 180 : 0 }} className="text-[#666]">▼</motion.span>
+        <motion.span animate={{ rotate: isExpanded ? 180 : 0 }} className="text-[#a3a3a3]">▼</motion.span>
       </button>
 
       <AnimatePresence>
@@ -506,17 +506,17 @@ function TechnicalNote({ hasDynamicData }: { hasDynamicData: boolean }) {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="mt-4 space-y-3 border-t border-[#f0f0f0] pt-4 text-sm text-[#666]">
+            <div className="mt-4 space-y-3 border-t border-[#262626] pt-4 text-sm text-[#a3a3a3]">
               <p>
-                <strong className="text-[#1a1a1a]">数据来源：</strong>
+                <strong className="text-[#ededed]">数据来源：</strong>
                 {hasDynamicData ? "最新导入的 GSC Excel 数据" : "maidinhk.com 示例数据"}
               </p>
               <p>
-                <strong className="text-[#1a1a1a]">展示内容：</strong>
+                <strong className="text-[#ededed]">展示内容：</strong>
                 Top 15 页面按点击量分层（高点击 &gt;100、中点击 50-100、低点击 &lt;50）
               </p>
               <p>
-                <strong className="text-[#1a1a1a]">说明：</strong>
+                <strong className="text-[#ededed]">说明：</strong>
                 导入新数据后，集群卡片会自动更新为当前表现最佳的页面
               </p>
             </div>
@@ -580,8 +580,8 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
       // 分配颜色
       const colorMap = {
         high: "#27c3da",
-        medium: "#8e24aa",
-        low: "#ab47bc",
+        medium: "#b854c7",
+        low: "#ca72d7",
       };
       
       // 计算角度（均匀分布）
@@ -631,19 +631,19 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
 
   if (!mounted) {
     return (
-      <div className="rounded-xl border border-[#e5e5e5] bg-white p-6 shadow-sm">
-        <div className="h-6 w-2/3 animate-pulse rounded bg-gray-200" />
-        <div className="mt-6 h-96 animate-pulse rounded bg-gray-100" />
+      <div className="rounded-xl border border-[#262626] bg-[#111] p-6 shadow-sm">
+        <div className="h-6 w-2/3 animate-pulse rounded bg-[#333]" />
+        <div className="mt-6 h-96 animate-pulse rounded bg-[#1f1f1f]" />
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-[#e5e5e5] bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-[#262626] bg-[#111] p-6 shadow-sm">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#27c3da] to-[#8e24aa]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#27c3da] to-[#b854c7]">
             <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path
                 strokeLinecap="round"
@@ -653,7 +653,7 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
             </svg>
           </div>
           <div>
-            <h3 className="font-serif text-xl font-bold text-[#1a1a1a]">内容集群可视化</h3>
+            <h3 className="font-serif text-xl font-bold text-[#ededed]">内容集群可视化</h3>
             <p className="text-xs text-[#999]">{topPages && topPages.length > 0 ? "基于最新导入的 GSC 数据 · Top 15 页面" : "基于示例数据 · Top 15 页面"}</p>
           </div>
         </div>
@@ -663,15 +663,15 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
       <div className="mb-4 flex gap-4">
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-[#27c3da]" />
-          <span className="text-xs text-[#666]">高点击 {'>'}100 (5个)</span>
+          <span className="text-xs text-[#a3a3a3]">高点击 {'>'}100 (5个)</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-full bg-[#8e24aa]" />
-          <span className="text-xs text-[#666]">中点击 50-100 (5个)</span>
+          <div className="h-3 w-3 rounded-full bg-[#b854c7]" />
+          <span className="text-xs text-[#a3a3a3]">中点击 50-100 (5个)</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-full bg-[#ab47bc]" />
-          <span className="text-xs text-[#666]">低点击 {'<'}50 (5个)</span>
+          <div className="h-3 w-3 rounded-full bg-[#ca72d7]" />
+          <span className="text-xs text-[#a3a3a3]">低点击 {'<'}50 (5个)</span>
         </div>
       </div>
 
@@ -723,9 +723,9 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
       </div>
 
       {/* Stats */}
-      <div className="mb-6 grid grid-cols-5 gap-3 border-t border-[#f0f0f0] pt-6">
+      <div className="mb-6 grid grid-cols-5 gap-3 border-t border-[#262626] pt-6">
         <div className="text-center">
-          <p className="text-xl font-bold text-[#1a1a1a]">{stats.totalCount}</p>
+          <p className="text-xl font-bold text-[#ededed]">{stats.totalCount}</p>
           <p className="text-[10px] text-[#999]">Top 页面</p>
         </div>
         <div className="text-center">
@@ -733,15 +733,15 @@ export default function TopicClusterVisualization({ refreshKey, topPages }: Topi
           <p className="text-[10px] text-[#999]">总点击</p>
         </div>
         <div className="text-center">
-          <p className="text-xl font-bold text-[#8e24aa]">{(stats.totalImpressions / 1000).toFixed(1)}k</p>
+          <p className="text-xl font-bold text-[#b854c7]">{(stats.totalImpressions / 1000).toFixed(1)}k</p>
           <p className="text-[10px] text-[#999]">展示量</p>
         </div>
         <div className="text-center">
-          <p className="text-xl font-bold text-[#1a1a1a]">{stats.avgPosition}</p>
+          <p className="text-xl font-bold text-[#ededed]">{stats.avgPosition}</p>
           <p className="text-[10px] text-[#999]">平均排名</p>
         </div>
         <div className="text-center">
-          <p className="text-xl font-bold text-green-600">{stats.top5Count}</p>
+          <p className="text-xl font-bold text-green-400">{stats.top5Count}</p>
           <p className="text-[10px] text-[#999]">Top 5 排名</p>
         </div>
       </div>

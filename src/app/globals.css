@@ -11,9 +11,9 @@
   --color-paper: #fff;
   --color-accent: #1a1a1a;
 
-  --font-serif: var(--font-playfair), var(--font-noto-serif-sc), "Noto Serif SC", Georgia, serif;
-  --font-sans: var(--font-inter), "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-serif-cn: var(--font-noto-serif-sc), "Noto Serif SC", "STSong", "SimSun", serif;
+  --font-serif: "Heiti SC", "SimHei", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-sans: "Heiti SC", "SimHei", "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif-cn: "Heiti SC", "SimHei", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 /* ========== Base Styles ========== */
@@ -21,19 +21,30 @@ html {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  overflow-x: clip;
+}
+
 body {
   font-family: var(--font-sans);
-  background: #fff;
-  color: #444;
+  background: #000;
+  color: #a3a3a3;
   line-height: 1.75;
   letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+.headerNavigation a,
+.headerNavigation button {
+  font-weight: 900;
+  -webkit-text-stroke: 0.2px currentColor;
+}
+
 /* ========== Selection ========== */
 ::selection {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(189, 8, 88, 0.35);
 }
 
 /* ========== Scrollbar ========== */
@@ -46,17 +57,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d5d5d5;
+  background: #333;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #bbb;
+  background: #4d4d4d;
 }
 
 /* ========== Prose (Typography for Rich Text) ========== */
 .prose {
-  color: #555;
+  color: #a3a3a3;
+  font-weight: 500;
   line-height: 1.85;
   font-size: 1rem;
 }
@@ -69,7 +81,7 @@ body {
   font-family: var(--font-serif);
   font-size: 1.5em;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #ededed;
   margin-top: 2em;
   margin-bottom: 0.75em;
   letter-spacing: -0.01em;
@@ -80,7 +92,7 @@ body {
   font-family: var(--font-serif);
   font-size: 1.25em;
   font-weight: 600;
-  color: #333;
+  color: #d4d4d4;
   margin-top: 1.6em;
   margin-bottom: 0.6em;
   line-height: 1.4;
@@ -88,7 +100,7 @@ body {
 
 .prose h4 {
   font-weight: 600;
-  color: #333;
+  color: #d4d4d4;
   margin-top: 1.5em;
   margin-bottom: 0.5em;
 }
@@ -99,25 +111,25 @@ body {
 }
 
 .prose a {
-  color: #1a1a1a;
+  color: #ededed;
   text-decoration: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #444;
   transition: border-color 0.3s ease;
 }
 
 .prose a:hover {
-  border-bottom-color: #1a1a1a;
+  border-bottom-color: #ededed;
 }
 
 .prose strong {
-  color: #1a1a1a;
+  color: #ededed;
   font-weight: 600;
 }
 
 .prose blockquote {
-  border-left: 3px solid #ddd;
+  border-left: 3px solid #333;
   padding-left: 1em;
-  color: #888;
+  color: #777;
   font-style: italic;
   margin: 1.5em 0;
 }
@@ -140,24 +152,24 @@ body {
 }
 
 .prose code {
-  color: #1a1a1a;
+  color: #ededed;
   font-size: 0.875em;
   font-weight: 500;
-  background: #f3f3f3;
+  background: #1a1a1a;
   padding: 0.2em 0.4em;
   border-radius: 3px;
 }
 
 .prose pre {
-  background: #f7f7f7;
-  color: #333;
+  background: #111;
+  color: #d4d4d4;
   padding: 1em 1.5em;
   border-radius: 4px;
   overflow-x: auto;
   margin: 1.5em 0;
   font-size: 0.875em;
   line-height: 1.7;
-  border: 1px solid #eee;
+  border: 1px solid #262626;
 }
 
 .prose pre code {
@@ -170,7 +182,7 @@ body {
 .prose hr {
   border: none;
   height: 1px;
-  background: linear-gradient(90deg, #ddd 0%, transparent 100%);
+  background: linear-gradient(90deg, #333 0%, transparent 100%);
   margin: 2em 0;
 }
 
@@ -185,7 +197,7 @@ body {
 }
 
 .prose figcaption {
-  color: #999;
+  color: #777;
   font-size: 0.875em;
   margin-top: 0.5em;
 }

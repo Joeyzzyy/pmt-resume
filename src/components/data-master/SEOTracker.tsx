@@ -331,16 +331,16 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
   // 获取优先级标签
   function getPriorityLabel(priority: 'high' | 'medium' | 'low') {
     const labels = {
-      high: { text: '高优', color: 'bg-red-100 text-red-700' },
-      medium: { text: '中优', color: 'bg-yellow-100 text-yellow-700' },
-      low: { text: '正常', color: 'bg-green-100 text-green-700' },
+      high: { text: '高优', color: 'bg-[#3a151c] text-red-300' },
+      medium: { text: '中优', color: 'bg-[#352b12] text-yellow-300' },
+      low: { text: '正常', color: 'bg-[#123122] text-green-300' },
     };
     return labels[priority];
   }
 
   if (loading) {
     return (
-      <div className="rounded-sm border border-[#eee] bg-white p-6">
+      <div className="rounded-sm border border-[#262626] bg-[#111] p-6">
         <CardSkeleton count={5} />
       </div>
     );
@@ -349,12 +349,12 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
   const selectedPageData = pages.find((p) => p.page === selectedPage);
 
   return (
-    <div className="rounded-sm border border-[#eee] bg-white">
+    <div className="rounded-sm border border-[#262626] bg-[#111]">
       {/* Header */}
-      <div className="border-b border-[#eee] p-6">
+      <div className="border-b border-[#262626] p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="font-serif text-xl font-semibold text-[#1a1a1a]">
+            <h3 className="font-serif text-xl font-semibold text-[#ededed]">
               SEO 动作影响追踪
             </h3>
             <p className="mt-1 text-sm text-[#888]">
@@ -368,7 +368,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="rounded-sm border border-[#ddd] bg-white px-2 py-1 text-xs"
+              className="rounded-sm border border-[#404040] bg-[#111] px-2 py-1 text-xs text-[#ededed]"
             >
               <option value="priority">优化优先级</option>
               <option value="clicks">点击量</option>
@@ -380,20 +380,20 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
       </div>
 
       {/* 上方：页面详情列表 */}
-      <div className="max-h-[500px] overflow-y-auto border-b border-[#eee]">
+      <div className="max-h-[500px] overflow-y-auto border-b border-[#262626]">
         <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-[#fafafa]">
+          <thead className="sticky top-0 bg-[#141414]">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-[#666] w-[30%]">Slug（点击访问）</th>
-              <th className="px-4 py-3 text-right font-medium text-[#666]">点击</th>
-              <th className="px-4 py-3 text-right font-medium text-[#666]">展示</th>
-              <th className="px-4 py-3 text-right font-medium text-[#666]">CTR</th>
-              <th className="px-4 py-3 text-right font-medium text-[#666]">排名</th>
-              <th className="px-4 py-3 text-center font-medium text-[#666]">优先级</th>
-              <th className="px-4 py-3 text-center font-medium text-[#666]">查看趋势</th>
+              <th className="px-4 py-3 text-left font-medium text-[#a3a3a3] w-[30%]">Slug（点击访问）</th>
+              <th className="px-4 py-3 text-right font-medium text-[#a3a3a3]">点击</th>
+              <th className="px-4 py-3 text-right font-medium text-[#a3a3a3]">展示</th>
+              <th className="px-4 py-3 text-right font-medium text-[#a3a3a3]">CTR</th>
+              <th className="px-4 py-3 text-right font-medium text-[#a3a3a3]">排名</th>
+              <th className="px-4 py-3 text-center font-medium text-[#a3a3a3]">优先级</th>
+              <th className="px-4 py-3 text-center font-medium text-[#a3a3a3]">查看趋势</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#eee]">
+          <tbody className="divide-y divide-[#262626]">
             {sortedPages.map((page, index) => {
               const priority = getPriority(page, []);
               const priorityLabel = getPriorityLabel(priority);
@@ -404,10 +404,10 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                   key={page.page}
                   className={`transition-colors ${
                     isSelected
-                      ? 'bg-blue-50'
+                      ? 'bg-[#10233d]'
                       : index % 2 === 0
-                      ? 'bg-white'
-                      : 'bg-[#fafafa]'
+                      ? 'bg-[#111]'
+                      : 'bg-[#141414]'
                   }`}
                 >
                   <td className="px-4 py-3">
@@ -429,10 +429,10 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                     <span
                       className={
                         page.position <= 10
-                          ? 'text-green-600 font-medium'
+                          ? 'text-green-400 font-medium'
                           : page.position <= 30
-                          ? 'text-yellow-600'
-                          : 'text-red-600'
+                          ? 'text-yellow-400'
+                          : 'text-red-400'
                       }
                     >
                       {page.position.toFixed(1)}
@@ -448,8 +448,8 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                       onClick={() => setSelectedPage(page.page)}
                       className={`rounded-sm px-3 py-1 text-xs font-medium transition-colors ${
                         isSelected
-                          ? 'bg-[#1a1a1a] text-white'
-                          : 'border border-[#ddd] bg-white text-[#666] hover:border-[#1a1a1a] hover:text-[#1a1a1a]'
+                          ? 'bg-[#BD0858] text-white'
+                          : 'border border-[#404040] bg-[#111] text-[#a3a3a3] hover:border-[#BD0858] hover:text-[#ededed]'
                       }`}
                     >
                       {isSelected ? '已选中' : '查看趋势'}
@@ -466,12 +466,12 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
       <div className="p-6">
         {!selectedPageData ? (
           <div className="flex h-[300px] flex-col items-center justify-center text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f0f0f0]">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#262626]">
               <svg className="h-8 w-8 text-[#999]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
-            <p className="text-[#666]">点击上方"查看趋势"按钮查看数据变化</p>
+            <p className="text-[#a3a3a3]">点击上方"查看趋势"按钮查看数据变化</p>
             <p className="mt-1 text-xs text-[#999]">或直接点击 URL 访问页面</p>
           </div>
         ) : historyLoading ? (
@@ -486,7 +486,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
             >
               {formatPageUrl(selectedPageData.page)}
             </a>
-            <p className="text-[#666]">数据点不足</p>
+            <p className="text-[#a3a3a3]">数据点不足</p>
             <p className="mt-1 text-xs text-[#999]">
               该页面需要至少两个时间点的数据才能显示趋势
             </p>
@@ -526,7 +526,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                   className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                     selectedMetrics.includes(key)
                       ? 'text-white shadow-sm'
-                      : 'bg-[#f0f0f0] text-[#666] hover:bg-[#e0e0e0]'
+                      : 'bg-[#262626] text-[#a3a3a3] hover:bg-[#a3074c]'
                   }`}
                   style={{
                     backgroundColor: selectedMetrics.includes(key) ? config.color : undefined,
@@ -540,14 +540,14 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
 
             {/* 指标模式提示 */}
             {selectedMetrics.length === 1 ? (
-              <div className="mb-3 flex items-center gap-1.5 rounded-sm bg-[#fafafa] p-2 text-xs text-[#666]">
+              <div className="mb-3 flex items-center gap-1.5 rounded-sm bg-[#141414] p-2 text-xs text-[#a3a3a3]">
                 <svg className="h-3.5 w-3.5 text-[#888]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
                 当前显示实际数值，Y轴为 {metricsConfig[selectedMetrics[0] as keyof typeof metricsConfig].label}
               </div>
             ) : (
-              <div className="mb-3 flex items-center gap-1.5 rounded-sm bg-[#fafafa] p-2 text-xs text-[#666]">
+              <div className="mb-3 flex items-center gap-1.5 rounded-sm bg-[#141414] p-2 text-xs text-[#a3a3a3]">
                 <svg className="h-3.5 w-3.5 text-[#888]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -562,7 +562,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                   data={selectedMetrics.length === 1 ? chartData : normalizedData}
                   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#262626" />
                   <XAxis
                     dataKey="date"
                     tickFormatter={(value) => format(parseISO(value), 'MM/dd')}
@@ -600,7 +600,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                         const originalData = chartData[dataIndex];
                         
                         return (
-                          <div className="rounded-sm border border-[#eee] bg-white p-3 shadow-lg">
+                          <div className="rounded-sm border border-[#262626] bg-[#111] p-3 shadow-lg">
                             <p className="mb-2 text-xs text-[#888]">
                               {format(parseISO(label as string), 'yyyy年MM月dd日')}
                             </p>
@@ -618,7 +618,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                                         className="h-2 w-2 rounded-full"
                                         style={{ backgroundColor: config.color }}
                                       />
-                                      <span className="text-[#666]">{config.label}</span>
+                                      <span className="text-[#a3a3a3]">{config.label}</span>
                                     </div>
                                     <span className="font-medium" style={{ color: config.color }}>
                                       {metric === 'ctr'
@@ -650,7 +650,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                       name={metric}
                       stroke={metricsConfig[metric as keyof typeof metricsConfig].color}
                       strokeWidth={2}
-                      dot={{ r: 3, strokeWidth: 2, fill: '#fff' }}
+                      dot={{ r: 3, strokeWidth: 2, fill: '#111' }}
                       activeDot={{ r: 5, strokeWidth: 2 }}
                     />
                   ))}
@@ -659,22 +659,22 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
             </div>
 
             {/* 历史数据表格 */}
-            <div className="mt-4 rounded-sm border border-[#eee]">
+            <div className="mt-4 rounded-sm border border-[#262626]">
               <table className="w-full text-xs">
-                <thead className="bg-[#fafafa]">
+                <thead className="bg-[#141414]">
                   <tr>
-                    <th className="px-3 py-2 text-left font-medium text-[#666]">上传日期</th>
-                    <th className="px-3 py-2 text-right font-medium text-[#666]">点击</th>
-                    <th className="px-3 py-2 text-right font-medium text-[#666]">展示</th>
-                    <th className="px-3 py-2 text-right font-medium text-[#666]">CTR</th>
-                    <th className="px-3 py-2 text-right font-medium text-[#666]">排名</th>
+                    <th className="px-3 py-2 text-left font-medium text-[#a3a3a3]">上传日期</th>
+                    <th className="px-3 py-2 text-right font-medium text-[#a3a3a3]">点击</th>
+                    <th className="px-3 py-2 text-right font-medium text-[#a3a3a3]">展示</th>
+                    <th className="px-3 py-2 text-right font-medium text-[#a3a3a3]">CTR</th>
+                    <th className="px-3 py-2 text-right font-medium text-[#a3a3a3]">排名</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#eee]">
+                <tbody className="divide-y divide-[#262626]">
                   {pageHistory.map((h, index) => (
                     <tr
                       key={h.upload_date}
-                      className={index % 2 === 0 ? 'bg-white' : 'bg-[#fafafa]'}
+                      className={index % 2 === 0 ? 'bg-[#111]' : 'bg-[#141414]'}
                     >
                       <td className="px-3 py-2">{h.upload_date}</td>
                       <td className="px-3 py-2 text-right">{h.summary.clicks}</td>
@@ -695,20 +695,20 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
 
             {/* SEO 优化建议 - 放在下方更清晰 */}
             {selectedPageData && (
-              <div className="mt-6 rounded-lg border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-5 shadow-sm">
-                <div className="mb-4 flex items-center justify-between border-b border-blue-100 pb-3">
+              <div className="mt-6 rounded-lg border border-blue-800 bg-gradient-to-br from-[#10233d] to-[#0c0c0c] p-5 shadow-sm">
+                <div className="mb-4 flex items-center justify-between border-b border-blue-900 pb-3">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
-                      <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#142c4c]">
+                      <svg className="h-4 w-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                       </svg>
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-blue-900">SEO 优化建议</h4>
-                      <p className="text-xs text-blue-600">基于当前数据的 8 维度诊断</p>
+                      <h4 className="text-sm font-bold text-blue-100">SEO 优化建议</h4>
+                      <p className="text-xs text-blue-400">基于当前数据的 8 维度诊断</p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                  <span className="rounded-full bg-[#142c4c] px-3 py-1 text-xs font-medium text-blue-300">
                     {getOptimizationAdvice(selectedPageData, pageHistory).length} 条建议
                   </span>
                 </div>
@@ -716,44 +716,44 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                 <div className="grid gap-3 sm:grid-cols-1 lg:grid-cols-2">
                   {getOptimizationAdvice(selectedPageData, pageHistory).map((tip, idx) => {
                     // 根据建议类型设置不同的颜色和图标
-                    let colorClass = "border-blue-200 bg-white";
+                    let colorClass = "border-blue-800 bg-[#111]";
                     let iconSvg = (
-                      <svg className="h-4 w-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-4 w-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     );
                     if (tip.includes("【CTR极低") || tip.includes("【严重下滑") || tip.includes("【零点击") || tip.includes("【高曝光低转化危机")) {
-                      colorClass = "border-red-200 bg-red-50";
+                      colorClass = "border-red-900 bg-[#2a1116]";
                       iconSvg = (
-                        <svg className="h-4 w-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-4 w-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                       );
                     } else if (tip.includes("【CTR优秀") || tip.includes("【趋势优秀") || tip.includes("【爆发式") || tip.includes("【排名大幅上升")) {
-                      colorClass = "border-green-200 bg-green-50";
+                      colorClass = "border-green-900 bg-[#0f241a]";
                       iconSvg = (
-                        <svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-4 w-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       );
                     } else if (tip.includes("【CTR偏低") || tip.includes("【趋势下滑") || tip.includes("【近期异常") || tip.includes("【排名下滑")) {
-                      colorClass = "border-amber-200 bg-amber-50";
+                      colorClass = "border-amber-800 bg-[#2a2110]";
                       iconSvg = (
-                        <svg className="h-4 w-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-4 w-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                       );
                     } else if (tip.includes("【冲刺") || tip.includes("【临门一脚") || tip.includes("【首页突围")) {
-                      colorClass = "border-purple-200 bg-purple-50";
+                      colorClass = "border-purple-800 bg-[#21142e]";
                       iconSvg = (
-                        <svg className="h-4 w-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-4 w-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                       );
                     } else if (tip.includes("【深度优化") || tip.includes("【快速提升")) {
-                      colorClass = "border-indigo-200 bg-indigo-50";
+                      colorClass = "border-indigo-800 bg-[#151a30]";
                       iconSvg = (
-                        <svg className="h-4 w-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="h-4 w-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                         </svg>
                       );
@@ -766,7 +766,7 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
                       >
                         <div className="flex gap-3">
                           <span className="flex-shrink-0 mt-0.5">{iconSvg}</span>
-                          <div className="text-xs leading-relaxed text-gray-700">
+                          <div className="text-xs leading-relaxed text-gray-300">
                             {tip}
                           </div>
                         </div>
@@ -781,14 +781,14 @@ export default function SEOTracker({ refreshKey }: SEOTrackerProps) {
       </div>
 
       {/* 使用说明 */}
-      <div className="border-t border-[#eee] bg-[#fafafa] p-6">
-        <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#1a1a1a]">
-          <svg className="h-4 w-4 text-[#666]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="border-t border-[#262626] bg-[#141414] p-6">
+        <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#ededed]">
+          <svg className="h-4 w-4 text-[#a3a3a3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           使用说明
         </h4>
-        <ul className="list-disc space-y-1 pl-4 text-xs text-[#666]">
+        <ul className="list-disc space-y-1 pl-4 text-xs text-[#a3a3a3]">
           <li>
             <strong>上方页面列表：</strong>展示所有页面的核心数据，按优化优先级排序（高优/中优/正常），点击标题可直接访问页面
           </li>

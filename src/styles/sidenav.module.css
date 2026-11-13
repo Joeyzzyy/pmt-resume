@@ -31,14 +31,15 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #ccc;
+  background: #444;
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
 .label {
   font-size: 0.7rem;
-  color: #bbb;
+  color: #666;
+  font-weight: 600;;
   letter-spacing: 0.04em;
   transition: all 0.25s ease;
   display: -webkit-box;
@@ -49,17 +50,18 @@
 }
 
 .navItem:hover .label {
-  color: #666;
+  color: #a3a3a3;
+  font-weight: 600;;
 }
 
 .navItem.active .dot {
   width: 8px;
   height: 8px;
-  background: #FF2D55;
+  background: #BD0858;
 }
 
 .navItem.active .label {
-  color: #1a1a1a;
+  color: #ededed;
   font-weight: 600;
 }
 
@@ -73,11 +75,11 @@
     top: auto;
     transform: none;
     z-index: 200;
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(10, 10, 10, 0.92);
     backdrop-filter: blur(16px) saturate(1.5);
     -webkit-backdrop-filter: blur(16px) saturate(1.5);
-    border-top: 1px solid #eee;
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+    border-top: 1px solid #262626;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
     padding: 0;
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
@@ -105,8 +107,8 @@
   .navItem.active .dot {
     width: 6px;
     height: 6px;
-    background: #FF2D55;
-    box-shadow: 0 0 0 3px rgba(255, 45, 85, 0.12);
+    background: #BD0858;
+    box-shadow: 0 0 0 3px rgba(189, 8, 88, 0.12);
   }
 
   .label {
@@ -117,7 +119,8 @@
   }
 
   .navItem.active .label {
-    color: #FF2D55;
-    font-weight: 600;
-  }
+    color: #BD0858;
+    font-weight: 900;
+  font-size: 1.333em;
+}
 }

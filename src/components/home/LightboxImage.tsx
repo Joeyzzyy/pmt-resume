@@ -10,9 +10,10 @@ interface LightboxImageProps {
   width: number;
   height: number;
   className?: string;
+  sizes?: string;
 }
 
-export default function LightboxImage({ src, alt, width, height, className }: LightboxImageProps) {
+export default function LightboxImage({ src, alt, width, height, className, sizes = "(max-width: 768px) 100vw, 480px" }: LightboxImageProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -52,7 +53,7 @@ export default function LightboxImage({ src, alt, width, height, className }: Li
         className={className}
         onClick={() => setOpen(true)}
         style={{ cursor: "zoom-in" }}
-        sizes="(max-width: 768px) 100vw, 480px"
+        sizes={sizes}
         quality={90}
       />
       {mounted && createPortal(

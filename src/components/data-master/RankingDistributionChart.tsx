@@ -50,16 +50,16 @@ const GSC_COLORS = {
   },
   // 辅助色 - GSC 紫色
   purple: {
-    DEFAULT: "#8e24aa",
-    light: "#ab47bc",
+    DEFAULT: "#b854c7",
+    light: "#ca72d7",
     dark: "#6a1b9a",
-    gradient: ["#8e24aa", "#ab47bc"],
+    gradient: ["#b854c7", "#ca72d7"],
   },
   // 排名区间配色
   ranking: {
     top3: "#27c3da",      // 青色 - 最优
     top10: "#5fd4e6",     // 浅青
-    top30: "#8e24aa",     // 紫色
+    top30: "#b854c7",     // 紫色
     beyond30: "#e0e0e0",  // 灰色
   },
   // 深色模式配色
@@ -75,7 +75,7 @@ const GSC_COLORS = {
     bg: "#ffffff",
     card: "#fafafa",
     text: "#1a1a1a",
-    muted: "#666666",
+    muted: "#a3a3a3",
     border: "#e5e5e5",
   },
 };
@@ -145,15 +145,15 @@ function getSummaryText(total: number, homepageRate: number): string {
 function getHomepageRateColor(rate: number): string {
   if (rate >= 70) return "text-[#27c3da]";
   if (rate >= 50) return "text-[#5fd4e6]";
-  if (rate >= 30) return "text-[#8e24aa]";
+  if (rate >= 30) return "text-[#b854c7]";
   return "text-gray-400";
 }
 
 function getHomepageRateBg(rate: number): string {
   if (rate >= 70) return "bg-[#27c3da]/10";
   if (rate >= 50) return "bg-[#5fd4e6]/10";
-  if (rate >= 30) return "bg-[#8e24aa]/10";
-  return "bg-gray-100";
+  if (rate >= 30) return "bg-[#b854c7]/10";
+  return "bg-[#1f1f1f]";
 }
 
 // ============================================
@@ -174,16 +174,16 @@ function StatCard({ label, value, subtext, color = "#27c3da", delay = 0 }: StatC
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className="relative overflow-hidden rounded-lg border border-[#e5e5e5] bg-white p-4 shadow-sm"
+      className="relative overflow-hidden rounded-lg border border-[#262626] bg-[#111] p-4 shadow-sm"
     >
       <div
         className="absolute left-0 top-0 h-full w-1"
         style={{ backgroundColor: color }}
       />
-      <p className="text-xs font-medium uppercase tracking-wider text-[#666]">
+      <p className="text-xs font-medium uppercase tracking-wider text-[#a3a3a3]">
         {label}
       </p>
-      <p className="mt-1 text-2xl font-bold text-[#1a1a1a]">{value}</p>
+      <p className="mt-1 text-2xl font-bold text-[#ededed]">{value}</p>
       {subtext && <p className="mt-1 text-xs text-[#999]">{subtext}</p>}
     </motion.div>
   );
@@ -201,13 +201,13 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="rounded-lg border border-[#e5e5e5] bg-white p-3 shadow-lg">
-        <p className="font-semibold text-[#1a1a1a]">{data.label}</p>
+      <div className="rounded-lg border border-[#262626] bg-[#111] p-3 shadow-lg">
+        <p className="font-semibold text-[#ededed]">{data.label}</p>
         <p className="text-2xl font-bold" style={{ color: data.color }}>
           {data.count}
-          <span className="ml-1 text-sm font-normal text-[#666]">个关键词</span>
+          <span className="ml-1 text-sm font-normal text-[#a3a3a3]">个关键词</span>
         </p>
-        <p className="mt-1 text-xs text-[#666]">{data.description}</p>
+        <p className="mt-1 text-xs text-[#a3a3a3]">{data.description}</p>
         <div className="mt-2 flex items-center gap-2">
           <div
             className="h-2 w-2 rounded-full"
@@ -236,7 +236,7 @@ function BarLabel({ x = 0, y = 0, width = 0, value = 0, payload }: BarLabelProps
       x={x + width / 2}
       y={y - 8}
       textAnchor="middle"
-      className="fill-[#1a1a1a] text-xs font-semibold"
+      className="fill-[#ededed] text-xs font-semibold"
     >
       {value}
     </text>
@@ -337,10 +337,10 @@ export default function RankingDistributionChart({
 
   if (loading || isLoading || !mounted) {
     return (
-      <div className={`rounded-xl border border-[#e5e5e5] bg-white p-6 ${className}`}>
-        <div className="h-6 w-2/3 animate-pulse rounded bg-gray-200" />
-        <div className="mt-4 h-4 w-1/2 animate-pulse rounded bg-gray-200" />
-        <div className="mt-8 h-64 animate-pulse rounded bg-gray-100" />
+      <div className={`rounded-xl border border-[#262626] bg-[#111] p-6 ${className}`}>
+        <div className="h-6 w-2/3 animate-pulse rounded bg-[#333]" />
+        <div className="mt-4 h-4 w-1/2 animate-pulse rounded bg-[#333]" />
+        <div className="mt-8 h-64 animate-pulse rounded bg-[#1f1f1f]" />
       </div>
     );
   }
@@ -350,10 +350,10 @@ export default function RankingDistributionChart({
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className={`overflow-hidden rounded-xl border border-[#e5e5e5] bg-white shadow-sm ${className}`}
+      className={`overflow-hidden rounded-xl border border-[#262626] bg-[#111] shadow-sm ${className}`}
     >
       {/* Header */}
-      <motion.div variants={itemVariants} className="border-b border-[#f0f0f0] p-6">
+      <motion.div variants={itemVariants} className="border-b border-[#262626] p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-3">
@@ -373,7 +373,7 @@ export default function RankingDistributionChart({
                 </svg>
               </div>
               <div>
-                <h3 className="font-serif text-xl font-bold text-[#1a1a1a]">
+                <h3 className="font-serif text-xl font-bold text-[#ededed]">
                   排名分布
                 </h3>
                 <p className="text-xs text-[#999]">Ranking Distribution</p>
@@ -389,7 +389,7 @@ export default function RankingDistributionChart({
             className={`flex items-center gap-3 rounded-lg px-4 py-2 ${getHomepageRateBg(stats.homepageRate)}`}
           >
             <div className="text-right">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-[#666]">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-[#a3a3a3]">
                 首页占有率
               </p>
               <p className={`text-2xl font-bold ${getHomepageRateColor(stats.homepageRate)}`}>
@@ -397,7 +397,7 @@ export default function RankingDistributionChart({
               </p>
             </div>
             <div className="h-8 w-px bg-[#e5e5e5]" />
-            <div className="text-xs text-[#666]">
+            <div className="text-xs text-[#a3a3a3]">
               <p>{stats.homepageCount}</p>
               <p>/ {stats.total} 词</p>
             </div>
@@ -407,9 +407,9 @@ export default function RankingDistributionChart({
         {/* 总结文案 */}
         <motion.div
           variants={itemVariants}
-          className="mt-4 rounded-lg bg-[#fafafa] px-4 py-3"
+          className="mt-4 rounded-lg bg-[#141414] px-4 py-3"
         >
-          <p className="text-sm text-[#666]">
+          <p className="text-sm text-[#a3a3a3]">
             <span className="mr-2">💡</span>
             {getSummaryText(stats.total, stats.homepageRate)}
           </p>
@@ -419,7 +419,7 @@ export default function RankingDistributionChart({
       {/* Stats Grid */}
       <motion.div
         variants={itemVariants}
-        className="grid grid-cols-2 gap-4 border-b border-[#f0f0f0] p-6 sm:grid-cols-4"
+        className="grid grid-cols-2 gap-4 border-b border-[#262626] p-6 sm:grid-cols-4"
       >
         <StatCard
           label="Top 1-5 页面"
@@ -454,21 +454,21 @@ export default function RankingDistributionChart({
       {/* Chart */}
       <motion.div variants={itemVariants} className="p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h4 className="text-sm font-semibold text-[#1a1a1a]">排名区间分布</h4>
+          <h4 className="text-sm font-semibold text-[#ededed]">排名区间分布</h4>
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5">
               <div
                 className="h-3 w-3 rounded-sm"
                 style={{ backgroundColor: GSC_COLORS.ranking.top3 }}
               />
-              <span className="text-[#666]">首页顶部</span>
+              <span className="text-[#a3a3a3]">首页顶部</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div
                 className="h-3 w-3 rounded-sm"
                 style={{ backgroundColor: GSC_COLORS.ranking.beyond30 }}
               />
-              <span className="text-[#666]">需优化</span>
+              <span className="text-[#a3a3a3]">需优化</span>
             </div>
           </div>
         </div>
@@ -503,15 +503,15 @@ export default function RankingDistributionChart({
 
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="#f0f0f0"
+                stroke="#262626"
                 vertical={false}
               />
 
               <XAxis
                 dataKey="label"
-                axisLine={{ stroke: "#e5e5e5" }}
+                axisLine={{ stroke: "#333" }}
                 tickLine={false}
-                tick={{ fill: "#666", fontSize: 12 }}
+                tick={{ fill: "#a3a3a3", fontSize: 12 }}
                 dy={10}
               />
 
@@ -522,7 +522,7 @@ export default function RankingDistributionChart({
                 allowDecimals={false}
               />
 
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: "#fafafa" }} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "#1a1a1a" }} />
 
               <Bar
                 dataKey="count"
@@ -563,14 +563,14 @@ export default function RankingDistributionChart({
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 + index * 0.1 }}
-              className="flex items-start gap-2 rounded-lg border border-[#f0f0f0] bg-[#fafafa] p-3"
+              className="flex items-start gap-2 rounded-lg border border-[#262626] bg-[#141414] p-3"
             >
               <div
                 className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
                 style={{ backgroundColor: item.color }}
               />
               <div className="min-w-0">
-                <p className="text-xs font-medium text-[#1a1a1a]">{item.label}</p>
+                <p className="text-xs font-medium text-[#ededed]">{item.label}</p>
                 <p className="text-[10px] text-[#999] truncate">{item.description}</p>
                 <p className="mt-1 text-xs font-semibold" style={{ color: item.color }}>
                   {item.count} 个 ({item.percentage}%)
@@ -584,7 +584,7 @@ export default function RankingDistributionChart({
       {/* Footer */}
       <motion.div
         variants={itemVariants}
-        className="border-t border-[#f0f0f0] bg-[#fafafa] px-6 py-4"
+        className="border-t border-[#262626] bg-[#141414] px-6 py-4"
       >
         <div className="flex flex-col gap-2 text-xs text-[#999] sm:flex-row sm:items-center sm:justify-between">
           <p>数据来源: Google Search Console</p>

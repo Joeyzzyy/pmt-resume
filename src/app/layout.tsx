@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, Noto_Serif_SC } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CustomCursor from "@/components/layout/CustomCursor";
+import { LanguageProvider } from "@/components/layout/LanguageProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -34,6 +35,10 @@ export const metadata: Metadata = {
   },
   description:
     "从特斯拉新媒体运营到独立站 SEO 实践，用 maidinhk.com 验证内容驱动增长的方法论。",
+  icons: {
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
   alternates: {
     canonical: "./",
   },
@@ -51,10 +56,12 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" className={`${inter.variable} ${playfair.variable} ${notoSerifSC.variable}`} suppressHydrationWarning data-infinisynapse-extension="true">
       <body className="antialiased" suppressHydrationWarning>
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <CustomCursor />
+        <LanguageProvider>
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+          <CustomCursor />
+        </LanguageProvider>
       </body>
     </html>
   );

@@ -137,7 +137,7 @@ export default async function ArticlesPage() {
           <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
             Blog
           </p>
-          <h1 className="font-serif text-4xl font-bold tracking-tight text-[#1a1a1a]">
+          <h1 className="font-serif text-4xl font-bold tracking-tight text-[#ededed]">
             SEO 实战笔记
           </h1>
         </div>
@@ -159,7 +159,7 @@ export default async function ArticlesPage() {
                     <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
                       {clusterMeta[cluster].phase}
                     </p>
-                    <h2 className="mb-1 font-serif text-2xl font-bold tracking-tight text-[#1a1a1a]">
+                    <h2 className="mb-1 font-serif text-2xl font-bold tracking-tight text-[#ededed]">
                       {clusterMeta[cluster].title}
                     </h2>
                     <p className="text-sm leading-relaxed text-[#888]">
@@ -167,16 +167,16 @@ export default async function ArticlesPage() {
                     </p>
                   </div>
                 ) : (
-                  <h2 className="mb-8 font-serif text-2xl font-bold tracking-tight text-[#1a1a1a]">
+                  <h2 className="mb-8 font-serif text-2xl font-bold tracking-tight text-[#ededed]">
                     {cluster}
                   </h2>
                 )}
                 <div className="grid grid-cols-1 gap-5">
                   {grouped[cluster]!.map((post) => (
                     <Link key={post.id} href={`/${post.cluster || cluster}/${post.slug}`} className="block">
-                      <article className="group overflow-hidden rounded-sm bg-[#fafafa] border border-[#eee] transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:-translate-y-1 hover:border-[#ddd] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
+                      <article className="group overflow-hidden rounded-sm bg-[#141414] border border-[#262626] transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:-translate-y-1 hover:border-[#2e2e2e] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
                         <div className="p-6">
-                          <h3 className="mb-2 font-serif text-xl font-semibold leading-tight tracking-tight text-[#1a1a1a] transition-colors group-hover:text-[#555]">
+                          <h3 className="mb-2 font-serif text-xl font-semibold leading-tight tracking-tight text-[#ededed] transition-colors group-hover:text-[#a0a0a0]">
                             {post.title}
                           </h3>
                           <p className="mb-4 text-sm leading-relaxed text-[#888]">

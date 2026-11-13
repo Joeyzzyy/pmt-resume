@@ -61,13 +61,13 @@ const COLORS = {
     fill: "#27c3da",
     fillOpacity: 0.25,
   },
-  accent: "#8e24aa",
+  accent: "#b854c7",
   text: {
-    primary: "#1a1a1a",
-    secondary: "#666666",
+    primary: "#ededed",
+    secondary: "#a3a3a3",
     muted: "#999999",
   },
-  grid: "#e5e5e5",
+  grid: "#333",
 };
 
 // 默认数据 - 基于 maidinhk.com GSC Excel 真实搜索意图分析 (2026-03-22)
@@ -224,12 +224,12 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
     const isHighClick = payload[0].name === "高点击页面";
     
     return (
-      <div className="rounded-lg border border-[#e5e5e5] bg-white p-4 shadow-xl">
+      <div className="rounded-lg border border-[#262626] bg-[#111] p-4 shadow-xl">
         {/* Header */}
         <div className="mb-3 flex items-center gap-2">
           <span className="text-xl">{getDimensionIcon(label)}</span>
           <div>
-            <p className="font-semibold text-[#1a1a1a]">{label}</p>
+            <p className="font-semibold text-[#ededed]">{label}</p>
             <p className="text-xs text-[#999]">{INTENT_MAPPING[label]}</p>
           </div>
         </div>
@@ -246,12 +246,12 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
         </div>
 
         {/* Description */}
-        <p className="mb-3 text-xs leading-relaxed text-[#666]">
+        <p className="mb-3 text-xs leading-relaxed text-[#a3a3a3]">
           {dimensionData.description}
         </p>
 
         {/* Top Keywords */}
-        <div className="rounded-md bg-[#fafafa] p-2">
+        <div className="rounded-md bg-[#141414] p-2">
           <p className="mb-1.5 text-[10px] font-medium uppercase tracking-wider text-[#999]">
             热门关键词示例
           </p>
@@ -267,7 +267,7 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
                 >
                   {idx + 1}
                 </span>
-                <span className="text-[#1a1a1a]">{keyword}</span>
+                <span className="text-[#ededed]">{keyword}</span>
               </div>
             ))}
           </div>
@@ -275,14 +275,14 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 
         {/* Comparison */}
         {payload.length > 1 && (
-          <div className="mt-3 border-t border-[#f0f0f0] pt-3">
+          <div className="mt-3 border-t border-[#262626] pt-3">
             <div className="flex items-center justify-between text-xs">
               <span className="text-[#999]">对比全站平均</span>
               <span
                 className={`font-medium ${
                   dimensionData.highClickPages > dimensionData.siteAverage
-                    ? "text-green-600"
-                    : "text-gray-500"
+                    ? "text-green-400"
+                    : "text-gray-400"
                 }`}
               >
                 {dimensionData.highClickPages > dimensionData.siteAverage ? "+" : ""}
@@ -310,9 +310,9 @@ interface StatCardProps {
 
 function StatCard({ label, value, subtext, trend = "neutral", delay = 0 }: StatCardProps) {
   const trendColors = {
-    up: "text-green-600",
-    down: "text-red-500",
-    neutral: "text-[#666]",
+    up: "text-green-400",
+    down: "text-red-400",
+    neutral: "text-[#a3a3a3]",
   };
 
   const trendIcons = {
@@ -326,7 +326,7 @@ function StatCard({ label, value, subtext, trend = "neutral", delay = 0 }: StatC
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className="relative overflow-hidden rounded-lg border border-[#e5e5e5] bg-white p-4"
+      className="relative overflow-hidden rounded-lg border border-[#262626] bg-[#111] p-4"
     >
       <div className="absolute right-0 top-0 h-16 w-16 -translate-y-1/2 translate-x-1/2 rounded-full bg-[#27c3da]/5" />
       
@@ -334,7 +334,7 @@ function StatCard({ label, value, subtext, trend = "neutral", delay = 0 }: StatC
         {label}
       </p>
       <div className="mt-1 flex items-baseline gap-2">
-        <span className="text-2xl font-bold text-[#1a1a1a]">{value}</span>
+        <span className="text-2xl font-bold text-[#ededed]">{value}</span>
         <span className={`text-xs ${trendColors[trend]}`}>{trendIcons[trend]}</span>
       </div>
       <p className="mt-1 text-xs text-[#999]">{subtext}</p>
@@ -363,17 +363,17 @@ function DimensionCard({ dimension, isSelected, onClick }: DimensionCardProps) {
       className={`w-full rounded-lg border p-3 text-left transition-all ${
         isSelected
           ? "border-[#27c3da] bg-[#27c3da]/5"
-          : "border-[#e5e5e5] bg-white hover:border-[#ccc]"
+          : "border-[#262626] bg-[#111] hover:border-[#555]"
       }`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-lg">{getDimensionIcon(dimension.dimension)}</span>
-          <span className="font-medium text-[#1a1a1a]">{dimension.dimension}</span>
+          <span className="font-medium text-[#ededed]">{dimension.dimension}</span>
         </div>
         <span
           className={`text-xs font-medium ${
-            isPositive ? "text-green-600" : "text-gray-500"
+            isPositive ? "text-green-400" : "text-gray-400"
           }`}
         >
           {isPositive ? "+" : ""}{gap}
@@ -389,12 +389,12 @@ function DimensionCard({ dimension, isSelected, onClick }: DimensionCardProps) {
         </div>
         <div className="text-right">
           <p className="text-[10px] text-[#999]">全站平均</p>
-          <p className="text-sm text-[#666]">{dimension.siteAverage}</p>
+          <p className="text-sm text-[#a3a3a3]">{dimension.siteAverage}</p>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div className="mt-2 h-1.5 w-full rounded-full bg-[#f0f0f0] overflow-hidden">
+      <div className="mt-2 h-1.5 w-full rounded-full bg-[#262626] overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${dimension.highClickPages}%` }}
@@ -499,14 +499,14 @@ export default function SearchIntentRadar({
 
   if (loading || isLoading || !mounted) {
     return (
-      <div className={`rounded-xl border border-[#e5e5e5] bg-white p-6 ${className}`}>
-        <div className="h-6 w-2/3 animate-pulse rounded bg-gray-200" />
+      <div className={`rounded-xl border border-[#262626] bg-[#111] p-6 ${className}`}>
+        <div className="h-6 w-2/3 animate-pulse rounded bg-[#333]" />
         <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-20 animate-pulse rounded bg-gray-100" />
+            <div key={i} className="h-20 animate-pulse rounded bg-[#1f1f1f]" />
           ))}
         </div>
-        <div className="mt-6 h-80 animate-pulse rounded bg-gray-100" />
+        <div className="mt-6 h-80 animate-pulse rounded bg-[#1f1f1f]" />
       </div>
     );
   }
@@ -516,13 +516,13 @@ export default function SearchIntentRadar({
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className={`overflow-hidden rounded-xl border border-[#e5e5e5] bg-white shadow-sm ${className}`}
+      className={`overflow-hidden rounded-xl border border-[#262626] bg-[#111] shadow-sm ${className}`}
     >
       {/* Header */}
-      <motion.div variants={itemVariants} className="border-b border-[#f0f0f0] p-6">
+      <motion.div variants={itemVariants} className="border-b border-[#262626] p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#8e24aa] to-[#ab47bc]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#b854c7] to-[#ca72d7]">
               <svg
                 className="h-5 w-5 text-white"
                 fill="none"
@@ -538,7 +538,7 @@ export default function SearchIntentRadar({
               </svg>
             </div>
             <div>
-              <h3 className="font-serif text-xl font-bold text-[#1a1a1a]">
+              <h3 className="font-serif text-xl font-bold text-[#ededed]">
                 搜索意图雷达
               </h3>
               <p className="text-xs text-[#999]">Search Intent Radar</p>
@@ -546,9 +546,9 @@ export default function SearchIntentRadar({
           </div>
 
           {/* Transactional Badge */}
-          <div className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#27c3da]/10 to-[#8e24aa]/10 px-4 py-2">
+          <div className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#27c3da]/10 to-[#b854c7]/10 px-4 py-2">
             <span className="text-sm">🎯</span>
-            <span className="text-sm font-medium text-[#1a1a1a]">
+            <span className="text-sm font-medium text-[#ededed]">
               Transactional 得分
             </span>
             <span className="text-lg font-bold text-[#27c3da]">
@@ -561,7 +561,7 @@ export default function SearchIntentRadar({
       {/* Stats Grid */}
       <motion.div
         variants={itemVariants}
-        className="grid grid-cols-2 gap-4 border-b border-[#f0f0f0] p-6 sm:grid-cols-4"
+        className="grid grid-cols-2 gap-4 border-b border-[#262626] p-6 sm:grid-cols-4"
       >
         <StatCard
           label="高点击页面均分"
@@ -597,15 +597,15 @@ export default function SearchIntentRadar({
         {/* Radar Chart */}
         <motion.div variants={itemVariants} className="lg:col-span-2">
           <div className="mb-4 flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-[#1a1a1a]">意图覆盖对比</h4>
+            <h4 className="text-sm font-semibold text-[#ededed]">意图覆盖对比</h4>
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1.5">
                 <div className="h-3 w-3 rounded-full bg-[#94a3b8]" />
-                <span className="text-[#666]">全站平均</span>
+                <span className="text-[#a3a3a3]">全站平均</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="h-3 w-3 rounded-full bg-[#27c3da]" />
-                <span className="text-[#666]">高点击页面</span>
+                <span className="text-[#a3a3a3]">高点击页面</span>
               </div>
             </div>
           </div>
@@ -652,7 +652,7 @@ export default function SearchIntentRadar({
 
         {/* Dimension List */}
         <motion.div variants={itemVariants} className="space-y-3">
-          <h4 className="text-sm font-semibold text-[#1a1a1a]">维度详情</h4>
+          <h4 className="text-sm font-semibold text-[#ededed]">维度详情</h4>
           <div className="space-y-2">
             {displayData.map((dimension, index) => (
               <motion.div
@@ -679,7 +679,7 @@ export default function SearchIntentRadar({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="border-t border-[#f0f0f0] bg-[#fafafa] overflow-hidden"
+            className="border-t border-[#262626] bg-[#141414] overflow-hidden"
           >
             <div className="p-6">
               <div className="flex items-start gap-4">
@@ -691,20 +691,20 @@ export default function SearchIntentRadar({
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h4 className="font-semibold text-[#1a1a1a]">
+                    <h4 className="font-semibold text-[#ededed]">
                       {selectedData.dimension}
                     </h4>
                     <span className="rounded-full bg-[#27c3da]/10 px-2 py-0.5 text-xs font-medium text-[#27c3da]">
                       {INTENT_MAPPING[selectedData.dimension]}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-[#666]">{selectedData.description}</p>
+                  <p className="mt-1 text-sm text-[#a3a3a3]">{selectedData.description}</p>
                   
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedData.topKeywords.map((keyword, idx) => (
                       <span
                         key={idx}
-                        className="rounded-md border border-[#e5e5e5] bg-white px-3 py-1.5 text-sm text-[#1a1a1a]"
+                        className="rounded-md border border-[#262626] bg-[#111] px-3 py-1.5 text-sm text-[#ededed]"
                       >
                         {keyword}
                       </span>
@@ -720,16 +720,16 @@ export default function SearchIntentRadar({
       {/* Professional Assessment */}
       <motion.div
         variants={itemVariants}
-        className="border-t border-[#f0f0f0] bg-gradient-to-r from-[#27c3da]/5 via-[#8e24aa]/5 to-transparent p-6"
+        className="border-t border-[#262626] bg-gradient-to-r from-[#27c3da]/5 via-[#b854c7]/5 to-transparent p-6"
       >
         <div className="flex items-start gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#111] shadow-sm">
             <span className="text-sm">💡</span>
           </div>
           <div>
-            <h4 className="mb-2 font-semibold text-[#1a1a1a]">专业评价</h4>
+            <h4 className="mb-2 font-semibold text-[#ededed]">专业评价</h4>
             <p
-              className="text-sm leading-relaxed text-[#666]"
+              className="text-sm leading-relaxed text-[#a3a3a3]"
               dangerouslySetInnerHTML={{ __html: assessment }}
             />
           </div>
@@ -739,7 +739,7 @@ export default function SearchIntentRadar({
       {/* Footer */}
       <motion.div
         variants={itemVariants}
-        className="border-t border-[#f0f0f0] bg-[#fafafa] px-6 py-4"
+        className="border-t border-[#262626] bg-[#141414] px-6 py-4"
       >
         <div className="flex flex-col gap-2 text-xs text-[#999] sm:flex-row sm:items-center sm:justify-between">
           <p>数据来源: Google Search Console · 基于 maidinhk.com 流量分析</p>
