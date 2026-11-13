@@ -352,20 +352,6 @@ export default function HomeContent() {
         ))}
       </section>
 
-      {/* ===== Landing Page Demo ===== */}
-      <ScrollReveal>
-        <section className={styles.section} style={{ paddingBottom: 80 }}>
-          <p className={styles.sectionLabel}>Demo</p>
-          <h2 className={styles.sectionHeading}>{copy.demoTitle}</h2>
-          <p className={styles.aboutText}>{copy.demoDescription}</p>
-          <div className={styles.ctaButtons} style={{ marginTop: 24 }}>
-            <Link href="/lp/showroom" className={styles.ctaButton}>
-              {copy.demoLink}
-            </Link>
-          </div>
-        </section>
-      </ScrollReveal>
-
       {/* ===== CTA ===== */}
       <ScrollReveal>
         <section className={styles.cta}>

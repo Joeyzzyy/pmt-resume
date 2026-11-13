@@ -1496,7 +1496,7 @@
   .roadCards {
     position: static;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: 12px;
     margin-top: 20px;
     pointer-events: auto;

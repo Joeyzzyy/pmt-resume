@@ -59,9 +59,6 @@ type HomeCopy = {
   toolboxHeading: string;
   toolboxIntro: string;
   toolCategories: ToolCategory[];
-  demoTitle: string;
-  demoDescription: string;
-  demoLink: string;
   ctaHeading: string;
   ctaDescription: string;
   ctaLink: string;
@@ -238,9 +235,6 @@ const homeCopy: Record<Locale, HomeCopy> = {
         ],
       },
     ],
-    demoTitle: "Landing Page 還原 Demo",
-    demoDescription: "用 Next.js + Tailwind CSS + Framer Motion 還原了 YouMind 官方落地頁，包含 Hero Section、Feature Cards、Use Cases 等核心模塊。這個 Demo 展示了我在前端開發和 UI 還原方面的能力。",
-    demoLink: "查看 Landing Page Demo →",
     ctaHeading: "我正在寻找 SEO / 内容运营相关的工作机会",
     ctaDescription: "如果你正在寻找一个懂内容、懂数据、有 SEO 实战经验的运营人，欢迎联系我",
     ctaLink: "阅读 SEO 实战笔记 →",
@@ -415,9 +409,6 @@ const homeCopy: Record<Locale, HomeCopy> = {
         ],
       },
     ],
-    demoTitle: "Landing Page Recreation Demo",
-    demoDescription: "I recreated YouMind's official landing page with Next.js, Tailwind CSS, and Framer Motion, including core modules such as the hero section, feature cards, and use cases. This demo demonstrates my front-end development and UI implementation skills.",
-    demoLink: "View Landing Page Demo →",
     ctaHeading: "I'm looking for opportunities in SEO / Content Operations",
     ctaDescription: "If you need someone who understands content and data and has hands-on SEO experience, I'd love to hear from you",
     ctaLink: "Read My SEO Field Notes →",
