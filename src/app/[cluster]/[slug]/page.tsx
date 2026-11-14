@@ -2,19 +2,39 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { contentfulClient } from "@/lib/contentful/client";
 import {
   documentToReactComponents,
   type Options,
 } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
-import type { Block, Inline, TopLevelBlock } from "@contentful/rich-text-types";
+import type {
+  Block,
+  Document,
+  Inline,
+  TopLevelBlock,
+} from "@contentful/rich-text-types";
+import postsData from "@/data/blogPosts.json";
 import ScrollToTop from "@/components/blog/ScrollToTop";
 import ClusterSideNav from "@/components/blog/ClusterSideNav";
 
 type Props = {
   params: Promise<{ cluster: string; slug: string }>;
 };
+
+type LocalPost = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  shortTitle: string;
+  cluster: string;
+  author: string;
+  keywords: string;
+  createdAt: string;
+  content: Document;
+};
+
+const posts = postsData as unknown as LocalPost[];
 
 const renderOptions: Options = {
   renderNode: {
@@ -82,47 +102,27 @@ const renderOptions: Options = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function parsePost(entry: any) {
-  return {
-    id: entry.sys.id,
-    title: entry.fields.title as string,
-    slug: entry.fields.slug as string,
-    description: (entry.fields.description || "") as string,
-    content: entry.fields.content,
-    cluster: (entry.fields.cluster || "") as string,
-    author: (entry.fields.author || "") as string,
-    keywords: (entry.fields.keywords || "") as string,
-    createdAt: entry.sys.createdAt as string,
-  };
+function getClusterPosts(cluster: string) {
+  return posts
+    .filter((post) => post.cluster === cluster)
+    .sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    )
+    .map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      shortTitle: post.shortTitle,
+      cluster: post.cluster,
+    }));
 }
 
-async function getClusterPosts(cluster: string) {
-  const result = await contentfulClient.getEntries({
-    content_type: "blogPost",
-    "fields.cluster": cluster,
-    select: ["fields.title", "fields.slug", "fields.cluster"],
-    order: ["sys.createdAt"],
-    limit: 50,
-  });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return result.items.map((entry: any) => ({
-    slug: entry.fields.slug as string,
-    title: entry.fields.title as string,
-    shortTitle: (entry.fields.shortTitle || "") as string,
-    cluster: (entry.fields.cluster || "") as string,
-  }));
+function getPostBySlug(slug: string) {
+  return posts.find((post) => post.slug === slug) ?? null;
 }
 
-async function getPostBySlug(slug: string) {
-  const result = await contentfulClient.getEntries({
-    content_type: "blogPost",
-    "fields.slug": slug,
-    limit: 1,
-    include: 2,
-  });
-  if (result.items.length === 0) return null;
-  return parsePost(result.items[0]);
+export function generateStaticParams() {
+  return posts.map((post) => ({ cluster: post.cluster, slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -1,19 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { contentfulClient } from "@/lib/contentful/client";
+import postsData from "@/data/blogPosts.json";
 import ArticlesSideNav from "@/components/articles/ArticlesSideNav";
 import ScrollToTop from "@/components/blog/ScrollToTop";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: "博客 — 庞梦桐",
-  description: "来自 Contentful 的博客文章",
+  description: "SEO 实战笔记：独立站从 0 到 1 的完整复盘",
   robots: {
     index: true,
     follow: true,
   },
 };
+
+type BlogListPost = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  shortTitle: string;
+  cluster: string;
+  author: string;
+  keywords: string;
+  createdAt: string;
+};
+
+const posts = postsData as BlogListPost[];
 
 const clusterMeta: Record<
   string,
@@ -70,47 +82,19 @@ const slugOrder: Record<string, string[]> = {
   ],
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function parsePost(entry: any) {
-  return {
-    id: entry.sys.id,
-    title: entry.fields.title,
-    slug: entry.fields.slug,
-    description: entry.fields.description || "",
-    cluster: entry.fields.cluster || "",
-    author: entry.fields.author || "",
-    createdAt: entry.sys.createdAt,
-  };
-}
-
-export default async function ArticlesPage() {
-  let posts;
-  try {
-    const result = await contentfulClient.getEntries({
-      content_type: "blogPost",
-      order: ["-sys.createdAt"],
-      limit: 100,
-    });
-    posts = result.items.map(parsePost);
-  } catch (e) {
-    console.error("Articles fetch error:", e);
-    posts = null;
-  }
-
+export default function ArticlesPage() {
   // 按 cluster 分组
-  const grouped: Record<string, typeof posts> = {};
-  if (posts) {
-    for (const post of posts) {
-      const key = post.cluster || "other";
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key]!.push(post);
-    }
+  const grouped: Record<string, BlogListPost[]> = {};
+  for (const post of posts) {
+    const key = post.cluster || "other";
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(post);
   }
 
   // 按自定义 slug 顺序排列 cluster 内文章
   for (const [cluster, order] of Object.entries(slugOrder)) {
     if (grouped[cluster]) {
-      grouped[cluster]!.sort((a, b) => {
+      grouped[cluster].sort((a, b) => {
         const ai = order.indexOf(a.slug);
         const bi = order.indexOf(b.slug);
         return (ai === -1 ? Infinity : ai) - (bi === -1 ? Infinity : bi);
@@ -131,7 +115,7 @@ export default async function ArticlesPage() {
 
   return (
     <>
-      {posts && posts.length > 0 && <ArticlesSideNav sections={sections} />}
+      {posts.length > 0 && <ArticlesSideNav sections={sections} />}
       <div id="articles-top" className="mx-auto max-w-[860px] px-5 py-12">
         <div className="mb-10">
           <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-[#999]">
@@ -142,14 +126,8 @@ export default async function ArticlesPage() {
           </h1>
         </div>
 
-        {posts === null ? (
-          <p className="text-sm text-[#999]">
-            暂时无法加载文章，请稍后再试。
-          </p>
-        ) : posts.length === 0 ? (
-          <p className="text-sm text-[#999]">
-            暂无文章，敬请期待。
-          </p>
+        {posts.length === 0 ? (
+          <p className="text-sm text-[#999]">暂无文章，敬请期待。</p>
         ) : (
           <div className="space-y-16">
             {sortedClusters.map((cluster) => (
@@ -172,8 +150,12 @@ export default async function ArticlesPage() {
                   </h2>
                 )}
                 <div className="grid grid-cols-1 gap-5">
-                  {grouped[cluster]!.map((post) => (
-                    <Link key={post.id} href={`/${post.cluster || cluster}/${post.slug}`} className="block">
+                  {grouped[cluster].map((post) => (
+                    <Link
+                      key={post.id}
+                      href={`/${post.cluster || cluster}/${post.slug}`}
+                      className="block"
+                    >
                       <article className="group overflow-hidden rounded-sm bg-[#141414] border border-[#262626] transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:-translate-y-1 hover:border-[#2e2e2e] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
                         <div className="p-6">
                           <h3 className="mb-2 font-serif text-xl font-semibold leading-tight tracking-tight text-[#ededed] transition-colors group-hover:text-[#a0a0a0]">

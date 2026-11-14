@@ -1,26 +1,23 @@
 import type { MetadataRoute } from "next";
-import { contentfulClient } from "@/lib/contentful/client";
+import postsData from "@/data/blogPosts.json";
 
 const BASE_URL = "https://itspmt.com";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  let articleEntries: MetadataRoute.Sitemap = [];
-  try {
-    const result = await contentfulClient.getEntries({
-      content_type: "blogPost",
-      select: ["fields.slug", "sys.updatedAt"],
-      order: ["-sys.createdAt"],
-      limit: 100,
-    });
-    articleEntries = result.items.map((item) => ({
-      url: `${BASE_URL}/blogs/${item.fields.slug}`,
-      lastModified: new Date(item.sys.updatedAt),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    }));
-  } catch {
-    // Contentful 不可用时跳过
-  }
+type SitemapPost = {
+  slug: string;
+  cluster: string;
+  createdAt: string;
+};
+
+const posts = postsData as SitemapPost[];
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const articleEntries: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${BASE_URL}/${post.cluster}/${post.slug}`,
+    lastModified: new Date(post.createdAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
 
   return [
     {
