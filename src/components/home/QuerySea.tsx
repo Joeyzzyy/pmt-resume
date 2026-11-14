@@ -175,9 +175,12 @@ export default function QuerySea() {
 
             return (
               <div className={`${styles.querySeaItem} ${active ? styles.querySeaItemActive : ""}`} key={query.name}>
-                <button
-                  type="button"
+                <a
+                  href={`https://www.google.com/search?q=${encodeURIComponent(query.name)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={`${styles.queryWord} ${sizeClass} ${active ? styles.queryWordActive : ""}`}
+                  aria-label={`在 Google 搜索「${query.name}」（新窗口打开）`}
                   aria-expanded={active}
                   aria-controls={`query-tooltip-${index}`}
                   onPointerEnter={(event) => {
@@ -189,13 +192,9 @@ export default function QuerySea() {
                   onFocus={(event) => {
                     if (event.currentTarget.matches(":focus-visible")) showQuery(index, event.currentTarget);
                   }}
-                  onClick={(event) => {
-                    if (active) setActiveIndex(null);
-                    else showQuery(index, event.currentTarget);
-                  }}
                 >
                   {query.name}
-                </button>
+                </a>
                 {active && (
                   <HoverTooltip
                     id={`query-tooltip-${index}`}
@@ -219,7 +218,7 @@ export default function QuerySea() {
           })}
         </div>
         <p className={styles.querySeaHint}>
-          桌面悬停弹出 · 离开词汇自动收起 · 手机点击弹出 · 再次点击当前词或按 Esc 收起
+          点击词汇在新窗口打开 Google 搜索结果 · 桌面悬停查看数据 · 离开词汇或按 Esc 收起浮层
         </p>
       </section>
     </ScrollReveal>

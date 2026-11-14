@@ -116,13 +116,13 @@ const VB_W = 1200;
 const VB_H = 720;
 // 一条线：左下角（最早）蜿蜒升至右上角（最新）
 const ROAD_D =
-  "M 580 690 C 530 660 620 640 595 600 C 570 555 670 540 660 480 C 650 430 560 420 545 365 C 535 325 620 325 645 280 C 670 245 635 190 655 140";
+  "M 500 690 C 450 660 540 640 515 600 C 490 555 590 540 580 480 C 570 430 480 420 465 365 C 455 325 540 325 565 280 C 590 245 555 190 575 140";
 const NODE_T = [0.1, 0.36, 0.62, 0.92];
 const CARD_POS: React.CSSProperties[] = [
   { left: 140, bottom: 0 },
-  { right: 0, bottom: 40 },
+  { right: 0, bottom: 24 },
   { left: 140, top: 170 },
-  { right: 0, top: 16 },
+  { right: 0, top: 24 },
 ];
 const CARD_SIDE = ["sm", "lg", "sm", "lg"] as const;
 
@@ -230,9 +230,9 @@ export default function ExperienceTimeline() {
             fill="none"
           />
           {/* 路的尽头：省略号，未完待续 */}
-          <circle cx={668} cy={124} r={4.5} className={styles.roadTailDot} />
-          <circle cx={677} cy={110} r={3.5} className={styles.roadTailDot2} />
-          <circle cx={684} cy={96} r={2.5} className={styles.roadTailDot3} />
+          <circle cx={588} cy={124} r={4.5} className={styles.roadTailDot} />
+          <circle cx={597} cy={110} r={3.5} className={styles.roadTailDot2} />
+          <circle cx={604} cy={96} r={2.5} className={styles.roadTailDot3} />
           {/* 节点 */}
           {nodePts.map((p, i) => (
             <g

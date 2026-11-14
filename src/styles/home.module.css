@@ -1452,7 +1452,7 @@
 
 /* 左侧卡片：恢复旧版尺寸与字号 */
 .roadCardSm {
-  width: 350px;
+  width: 300px;
 }
 
 .roadCardSm .roadCardCompany {
@@ -1483,6 +1483,12 @@
   font-size: 0.8rem;
 }
 
+/* 右侧卡片：加宽加高，缩小两张卡之间的间隙 */
+.roadCardLg {
+  width: 48%;
+  min-height: 240px;
+}
+
 /* 右侧卡片：展开时详情区加高 */
 .roadCardLg .roadCardScroll {
   transition: max-height 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -1505,6 +1511,7 @@
   .roadCard {
     position: static;
     width: auto;
+    min-height: 0;
     transform: none;
   }
 
@@ -3086,6 +3093,7 @@
   font-weight: 600;
   line-height: 1.35;
   overflow-wrap: anywhere;
+  text-decoration: none;
   background: none;
   border: 0;
   border-radius: 4px;
