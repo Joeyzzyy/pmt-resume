@@ -1,49 +1,21 @@
-
-> pmt-resume-next@0.1.0 dev
-> next dev
-
 ▲ Next.js 16.2.0 (Turbopack)
-- Local:         http://localhost:3000
-- Network:       http://192.168.0.127:3000
+- Local:         http://localhost:3100
+- Network:       http://192.168.0.222:3100
 - Environments: .env.local
-✓ Ready in 325ms
+✓ Ready in 210ms
 
- GET / 200 in 439ms (next.js: 151ms, application-code: 288ms)
- GET / 200 in 76ms (next.js: 8ms, application-code: 68ms)
- GET /data-master 200 in 86ms (next.js: 65ms, application-code: 21ms)
+ GET / 200 in 1345ms (next.js: 1217ms, application-code: 128ms)
+ GET /data-master 200 in 2.7s (next.js: 2.6s, application-code: 100ms)
+ GET /data-master 200 in 36ms (next.js: 5ms, application-code: 31ms)
+ GET /data-master 200 in 22ms (next.js: 4ms, application-code: 18ms)
+ GET / 200 in 32ms (next.js: 4ms, application-code: 28ms)
+ GET /data-master 200 in 35ms (next.js: 21ms, application-code: 14ms)
+ GET /data-master 200 in 25ms (next.js: 1732µs, application-code: 24ms)
+ GET /data-master 200 in 61ms (next.js: 12ms, application-code: 50ms)
+ GET / 200 in 38ms (next.js: 24ms, application-code: 14ms)
+ GET /data-master 200 in 43ms (next.js: 8ms, application-code: 34ms)
+ GET / 200 in 31ms (next.js: 7ms, application-code: 24ms)
 [browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
- GET /api/data-master-stats 200 in 1302ms (next.js: 82ms, application-code: 1221ms)
-[browser] The width(-1) and height(-1) of chart should be greater than 0,
-       please check the style of container, or the props width(100%) and height(100%),
-       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-       height and width.
-[browser] The width(-1) and height(-1) of chart should be greater than 0,
-       please check the style of container, or the props width(100%) and height(100%),
-       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-       height and width.
-[browser] The width(-1) and height(-1) of chart should be greater than 0,
-       please check the style of container, or the props width(100%) and height(100%),
-       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-       height and width.
-[browser] The width(-1) and height(-1) of chart should be greater than 0,
-       please check the style of container, or the props width(100%) and height(100%),
-       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-       height and width.
- GET /api/data-master-stats 200 in 405ms (next.js: 3ms, application-code: 402ms)
-[GSC Trends] 3个月: 2026-01-05 到 2026-04-04
-[GSC Trends] 实际数据范围: 2026-01-05 到 2026-04-04
- GET /api/gsc-trends?range=3m 200 in 4.0s (next.js: 27ms, application-code: 4.0s)
-[GSC Trends] 3个月: 2026-01-05 到 2026-04-04
-[GSC Trends] 实际数据范围: 2026-01-05 到 2026-04-04
- GET /api/gsc-trends?range=3m 200 in 2.7s (next.js: 5ms, application-code: 2.7s)
- GET /api/gsc-current-pages 200 in 492ms (next.js: 47ms, application-code: 445ms)
- GET /api/page-history?page=https%3A%2F%2Fmaidinhk.com%2Fblog%2Fhelper-blacklist 200 in 221ms (next.js: 35ms, application-code: 186ms)
-[browser] The width(-1) and height(-1) of chart should be greater than 0,
-       please check the style of container, or the props width(100%) and height(100%),
-       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-       height and width.
-[browser] The width(-1) and height(-1) of chart should be greater than 0,
-       please check the style of container, or the props width(100%) and height(100%),
-       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-       height and width.
- GET /api/gsc-current-pages 200 in 937ms (next.js: 4ms, application-code: 934ms)
+ GET /data-master 200 in 32ms (next.js: 3ms, application-code: 29ms)
+[browser] Image with src "/images/feishu-logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /seo-results 200 in 299ms (next.js: 285ms, application-code: 14ms)

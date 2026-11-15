@@ -17,8 +17,10 @@ export default function DataMasterPage() {
             <h1 className="font-serif text-3xl font-bold tracking-tight text-[#ededed] sm:text-4xl">
               GSC 流量目标与排名工作区
             </h1>
-            <span className="rounded-full border border-[#404040] bg-[#141414] px-3 py-1 text-xs font-medium text-[#a3a3a3]">
+            <span className="rounded-full border border-[#404040] bg-[#141414] px-3 py-1 text-[1.125rem] font-medium text-[#a3a3a3]">
               仅阅读
+              <span className="mx-1.5 text-[#555]">·</span>
+              <span className="text-[#BD0858]">加载约 10s</span>
             </span>
           </div>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-[#a3a3a3]">
